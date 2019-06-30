@@ -67,8 +67,18 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
 
   .df[,ncol(.df)+1] <- 1:nrow(.df)
   #Figure out (within groups if present) first period so it can be skipped
-  .df[,ncol(.df)+1] <- (.df %>%
+  if (.skip == TRUE) {
+    if (.backwards == FALSE) {
+      .df[,ncol(.df)+1] <- (.df %>%
                               dplyr::mutate_at(inp$t,min))[[inp$t]]
+    } else {
+      .df[,ncol(.df)+1] <- (.df %>%
+                              dplyr::mutate_at(inp$t,max))[[inp$t]]
+    }
+  } else {
+    .df[,.ncol(df)+1] <- min(.df[[inp$t]])-1
+  }
+
   indexnames <- names(.df)[(ncol(.df)-1):ncol(.df)]
 
   #Do an explicit loop because each iteration needs to complete before moving on
