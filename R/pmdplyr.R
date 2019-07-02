@@ -23,7 +23,6 @@
 #'
 #' @docType package
 #' @name pmdplyr
-#' @export
 NULL
 #' @importFrom magrittr %>%
 #' @importFrom lubridate %m-%
