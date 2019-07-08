@@ -41,7 +41,7 @@ library(magrittr)
 data(SPrail)
 #Calculate within- and between-route variation in price and add it to the data
 SPrail <- SPrail \%>\%
-    dplyr::mutate(within_route = within(price,.i=c('origin','destination')),
-    between_route = between(price,.i=c('origin','destination')))
+    dplyr::mutate(within_route = within_i(price,.i=c('origin','destination')),
+    between_route = between_i(price,.i=c('origin','destination')))
 
 }
