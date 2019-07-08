@@ -12,7 +12,9 @@ Imports:
     lubridate,
     magrittr,
     tidyr,
-    utils
+    utils, 
+    vctrs, 
+    rlang
 Suggests: 
     knitr,
     rmarkdown

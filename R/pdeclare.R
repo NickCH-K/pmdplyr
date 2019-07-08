@@ -50,8 +50,6 @@ pdeclare <- function(.df, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
   # Check inputs
   check_panel_inputs(.df, .i, .t, .d, .uniqcheck)
 
-  if (is.na(.d)) { .d <- 1 }
-
   #### Assign panel indicators
   build_pdeclare(.df,
                  .i = .i,
@@ -62,9 +60,23 @@ pdeclare <- function(.df, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
 
 
 #' @export
-new_pdeclare <- function(x, ..., class = NULL){
+#' @importFrom tibble new_tibble
+new_pdeclare <- function(x, ..., class = NULL) {
   x <- new_tibble(x, ..., nrow = NROW(x), class = "tbl_pd")
 }
+
+#' @importFrom vctrs vec_restore
+#' @method vec_restore tbl_pd
+#' @export
+#' @export vec_restore.tbl_pd
+vec_restore.tbl_pd <- function(x, to) {
+  .i <- x %@% ".i"
+  .t <- x %@% ".t"
+  .d <- x %@% ".d"
+
+  build_pdeclare(to, .i = .i, .t = .t, .d = .d)
+}
+
 
 #' Coerce to a pdeclare tibble
 #'
@@ -112,32 +124,39 @@ as_pdeclare.NULL <- function(x, ...) {
 }
 
 #' @export
-build_pdeclare <- function(tbl, .i, .d, .t, .uniqcheck = FALSE){
+#' @importFrom rlang %@%
+build_pdeclare <- function(tbl,
+                           .i = NULL,
+                           .d = 1,
+                           .t = NULL,
+                           .uniqcheck = FALSE){
+  # check_panel_inputs(tbl,
+  #                    .i = .i,
+  #                    .t = .t,
+  #                    .d = .d,
+  #                    .uniqcheck = .uniqcheck)
+
   grp_data <- tbl %@% "groups"
 
-  tbl <- new_tibble(tbl,
-                    .i = .i,
-                    .d = .d,
-                    .t = .t,
-                    groups = NULL,
-                    nrow = NROW(tbl),
-                    class = "tbl_pd")
+  tbl <- new_pdeclare(tbl,
+                      .i = .i,
+                      .d = .d,
+                      .t = .t,
+                      groups = NULL)
 
   is_grped <- dplyr::is_grouped_df(tbl)
 
   if (is_grped) {
     cls <- c("grouped_pd", "grouped_df")
-    tbl <- new_pdeclare(tbl, groups = grp_data, class = cls)
+    tbl <- new_pdeclare(tbl,
+                        groups = grp_data,
+                        class = cls)
   }
 
-  check_panel_inputs(tbl,
-                     .i = .i,
-                     .t = .t,
-                     .d = .d,
-                     .uniqcheck = .uniqcheck)
   tbl
 }
 
+#' @export
 check_panel_inputs <- function(.df,.i,.t,.d,.uniqcheck) {
   ####CHECK INPUTS
   if (sum(class(.df) %in% c('data.frame','tbl','tbl_df')) == 0) {
