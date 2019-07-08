@@ -2,7 +2,7 @@
 #'
 #' WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.
 #'
-#' This function performs the standard between and within transformations on panel data.
+#' Thesese functions perform the standard between and within transformations on panel data.
 #'
 #' @param .var Vector to be transformed
 #' @param .df Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
@@ -25,7 +25,7 @@ NULL
 
 #' @rdname panel_calculations
 #' @export
-within <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) mean(x,na.rm=TRUE),.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE) {
+within_i <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) mean(x,na.rm=TRUE),.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE) {
   if (!is.vector(.var)) {
     stop('.var must be a vector.')
   }
@@ -36,7 +36,7 @@ within <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) me
   #Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df,.i,.t,.d,.uniqcheck,.setpanel=FALSE)
   if (max(is.na(inp$i)) == 1) {
-    stop('within() requires that .i be declared either in the function or by pdeclare().')
+    stop('within_i() requires that .i be declared either in the function or by pdeclare().')
   }
 
   #We only need these
@@ -55,7 +55,7 @@ within <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) me
 
 #' @rdname panel_calculations
 #' @export
-between <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) mean(x,na.rm=TRUE),.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE) {
+between_i <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) mean(x,na.rm=TRUE),.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE) {
   if (!is.vector(.var)) {
     stop('.var must be a vector.')
   }
@@ -66,7 +66,7 @@ between <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) m
   #Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df,.i,.t,.d,.uniqcheck,.setpanel=FALSE)
   if (max(is.na(inp$i)) == 1) {
-    stop('within() requires that .i be declared either in the function or by pdeclare().')
+    stop('between_i() requires that .i be declared either in the function or by pdeclare().')
   }
 
   #We only need these

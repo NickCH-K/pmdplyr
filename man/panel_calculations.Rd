@@ -2,15 +2,15 @@
 % Please edit documentation in R/between_within.R
 \name{panel_calculations}
 \alias{panel_calculations}
-\alias{within}
-\alias{between}
+\alias{within_i}
+\alias{between_i}
 \title{Functions to perform standard panel-data calculations}
 \usage{
-within(.var, .df = get(".", envir = parent.frame()), .fcn = function(x)
-  mean(x, na.rm = TRUE), .i = NA, .t = NA, .d = NA,
-  .uniqcheck = FALSE)
+within_i(.var, .df = get(".", envir = parent.frame()),
+  .fcn = function(x) mean(x, na.rm = TRUE), .i = NA, .t = NA,
+  .d = NA, .uniqcheck = FALSE)
 
-between(.var, .df = get(".", envir = parent.frame()),
+between_i(.var, .df = get(".", envir = parent.frame()),
   .fcn = function(x) mean(x, na.rm = TRUE), .i = NA, .t = NA,
   .d = NA, .uniqcheck = FALSE)
 }
@@ -33,7 +33,7 @@ between(.var, .df = get(".", envir = parent.frame()),
 WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.
 }
 \details{
-This function performs the standard between and within transformations on panel data.
+Thesese functions perform the standard between and within transformations on panel data.
 }
 \examples{
 

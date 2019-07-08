@@ -52,9 +52,10 @@ This allows matching, for example, if one data set contains data from multiple d
 The available methods for matching are:
 
 \itemize{
-  \item \code{method = 'last'} matches \code{.var} to the closest value of \code{jvar} that is *lower*.
-  \item \code{method = 'next'} matches \code{.var} to the closest value of \code{jvar} that is *higher*.
-  \item \code{method = 'between'} requires two variables in \code{jvar} which constitute the beginning and end of a range, and matches \code{.var} to the range it is in. Make sure that the ranges are non-overlapping within the joining variables, or else you will get strange results (specifically, it should join to the earliest-starting range). If the end of one range is the exact start of another, \code{exact = c(TRUE,FALSE)} or \code{exact = c(FALSE,TRUE)} is recommended to avoid overlaps. Defaults to \code{exact = c(TRUE,FALSE)}.
+  \item \code{method = 'last'} matches \code{var} to the closest value of \code{jvar} that is *lower*.
+  \item \code{method = 'next'} matches \code{var} to the closest value of \code{jvar} that is *higher*.
+  \item \code{method = 'closest'} matches \code{var} to the closest value of \code{jvar}, above or below. If equidistant between two values, picks the lower of the two.
+  \item \code{method = 'between'} requires two variables in \code{jvar} which constitute the beginning and end of a range, and matches \code{var} to the range it is in. Make sure that the ranges are non-overlapping within the joining variables, or else you will get strange results (specifically, it should join to the earliest-starting range). If the end of one range is the exact start of another, \code{exact = c(TRUE,FALSE)} or \code{exact = c(FALSE,TRUE)} is recommended to avoid overlaps. Defaults to \code{exact = c(TRUE,FALSE)}.
 }
 
 Note that if, given the method, \code{var} finds no proper match, it will be merged with any \code{is.na(jvar[1])} values.

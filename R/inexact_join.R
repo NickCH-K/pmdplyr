@@ -7,9 +7,10 @@
 #' The available methods for matching are:
 #'
 #' \itemize{
-#'   \item \code{method = 'last'} matches \code{.var} to the closest value of \code{jvar} that is *lower*.
-#'   \item \code{method = 'next'} matches \code{.var} to the closest value of \code{jvar} that is *higher*.
-#'   \item \code{method = 'between'} requires two variables in \code{jvar} which constitute the beginning and end of a range, and matches \code{.var} to the range it is in. Make sure that the ranges are non-overlapping within the joining variables, or else you will get strange results (specifically, it should join to the earliest-starting range). If the end of one range is the exact start of another, \code{exact = c(TRUE,FALSE)} or \code{exact = c(FALSE,TRUE)} is recommended to avoid overlaps. Defaults to \code{exact = c(TRUE,FALSE)}.
+#'   \item \code{method = 'last'} matches \code{var} to the closest value of \code{jvar} that is *lower*.
+#'   \item \code{method = 'next'} matches \code{var} to the closest value of \code{jvar} that is *higher*.
+#'   \item \code{method = 'closest'} matches \code{var} to the closest value of \code{jvar}, above or below. If equidistant between two values, picks the lower of the two.
+#'   \item \code{method = 'between'} requires two variables in \code{jvar} which constitute the beginning and end of a range, and matches \code{var} to the range it is in. Make sure that the ranges are non-overlapping within the joining variables, or else you will get strange results (specifically, it should join to the earliest-starting range). If the end of one range is the exact start of another, \code{exact = c(TRUE,FALSE)} or \code{exact = c(FALSE,TRUE)} is recommended to avoid overlaps. Defaults to \code{exact = c(TRUE,FALSE)}.
 #' }
 #'
 #' Note that if, given the method, \code{var} finds no proper match, it will be merged with any \code{is.na(jvar[1])} values.
@@ -212,6 +213,15 @@ inexact_join_prep <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"),var,jva
   if (max(jvar %in% names(x)) == 1) {
     stop('The variable names in jvar should not be in x')
   }
+  if (method == 'closest' & is.character(x[[var]])) {
+    stop('The \'closest\' method requires var/jvar to be a variable type that supports subtraction, like numeric or Date.')
+  }
+  if (method == 'closest' & !exact) {
+    warning('exact=FALSE is ignored for the \'closest\' method.')
+  }
+  if (!method %in% c('last','next','closest','between')) {
+    stop('Acceptable values of \'method\' are \'last\', \'next\', \'closest\', and \'between\'.')
+  }
 
   #set .exact length properly
   if (length(exact) == 1 & method == 'between') {
@@ -243,7 +253,7 @@ inexact_join_prep <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"),var,jva
     rem_flag <- TRUE
   } else {rem_flag <- FALSE}
 
-  #We need a unique data set of Group by the set of matching variables and the mvars
+  #We need a unique data set of Group by the set of matching variables and the jvars
   z <- y %>%
     dplyr::select_at(c(matchvars,jvar))
 
@@ -254,12 +264,6 @@ inexact_join_prep <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"),var,jva
   z <- z %>%
     #and one observation each
     dplyr::distinct()
-  #For these methods, go from lowest/highest to highest/lowest so we get the closest match
-  if (method == 'last') {
-    z <- z[order(z[[jvar]],decreasing=TRUE),]
-  } else if (method == 'next' | method == 'between') {
-    z <- z[order(z[[jvar[1]]]),]
-  }
 
   #similar one-column ID for x
   x[,ncol(x)+1] <- id_variable(x %>% dplyr::select_at(matchvars),.method='character')
@@ -268,24 +272,88 @@ inexact_join_prep <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"),var,jva
   #We'll be matching additionally on jvar[1]
   x[,jvar[1]] <- NA
 
-  #Go through each of the values in z and add them to the appropriate x rows
-  for (i in 1:nrow(z)) {
-    if (method == 'last') {
-      #If it's the same ID, hasn't been matched yet, and x >= y (as appropriate) we have our match
-      x[Vectorize(isTRUE)(is.na(x[[jvar]]) & x[[xidname]] == z[i,yidname] &
-          (x[[var]] > z[i,jvar] | (exact == TRUE & x[[var]] == z[i,jvar]))),jvar] <- z[i,jvar]
-    } else if (method == 'next') {
-      #If it's the same ID, hasn't been matched yet, and x <= y (as appropriate) we have our match
-      x[Vectorize(isTRUE)(is.na(x[[jvar]]) & x[[xidname]] == z[i,yidname] &
-          (x[[var]] < z[i,jvar] | (exact == TRUE & x[[var]] == z[i,jvar]))),jvar] <- z[i,jvar]
-    } else if (method == 'between') {
+  #findIntervals lets us do the 'last' method quickly
+  if (method == 'last') {
+    for (i in unique(z[[yidname]])) {
+      #get list of jvar values present for this id
+      vals <- sort(z[z[[yidname]] == i,jvar])
+      vals <- vals[!is.na(vals)]
+
+      #find, by index, which interval each observation fits in
+      intervals <- findInterval(x[x[[xidname]]==i,var],vals,left.open=!exact)
+      #Create a version without 0s so it doesn't mess up indexing
+      intervalsno0 <- ifelse(intervals == 0,1,intervals)
+
+      #If it's 0, that's a NA. Otherwise, map back to actual jvar values
+      x[x[[xidname]] == i,jvar] <- ifelse(intervals == 0,NA,
+                                          vals[intervalsno0])
+    }
+  } else if (method == 'next') {
+    for (i in unique(z[[yidname]])) {
+      #get list of jvar values present for this id
+      vals <- sort(z[z[[yidname]] == i,jvar])
+      vals <- vals[!is.na(vals)]
+
+      #find, by index, which interval each observation fits in
+      intervals <- findInterval(x[x[[xidname]]==i,var],vals,left.open=TRUE)
+      #If it's an exact match but exact == FALSE, findInterval will shunt you to the gap BELOW
+      #but we want you in the gap ABOVE
+      #also, we want to shift the index by 1 so as to match that upper-end number
+      if (exact) {
+        intervals <- intervals + 1
+      } else {
+        intervals <- intervals + sapply(x[x[[xidname]]==i,var],
+                            function(w) ifelse(max(w %in% vals) == 1,2,1))
+      }
+
+      #If it's above the highest number, that will mess things up.
+      intervalsno0 <- ifelse(intervals > length(vals),1,intervals)
+
+      #If it's 0, that's a NA. Otherwise, map back to actual jvar values
+      x[x[[xidname]] == i,jvar] <- ifelse(intervals > length(vals),NA,
+                                          vals[intervalsno0])
+    }
+  } else if (method == 'closest') {
+    for (i in unique(z[[yidname]])) {
+      #get list of jvar values present for this id
+      vals <- sort(z[z[[yidname]] == i,jvar])
+      vals <- vals[!is.na(vals)]
+
+      #find, by index, which interval each observation fits in
+      intervals <- findInterval(x[x[[xidname]]==i,var],vals)
+      #Create a version without 0s so it doesn't mess up indexing
+      intervalsno0 <- ifelse(intervals == 0,1,intervals)
+
+      #Get the appropriate NA type for case_when
+      naw <- NA
+      class(naw) <- class(vals)
+
+      #fill in appropriate values
+      x[x[[xidname]] == i,jvar] <- dplyr::case_when(
+        #If x is missing, y is too
+        is.na(intervals) ~ naw,
+        #if it's 0, take the first value
+        intervals == 0 ~ vals[1],
+        #if it's beyond the last, take the last value
+        intervals >= length(vals) ~ vals[length(vals)],
+        #If it's anywhere in the middle, then if the lower one is closer, take that
+        abs(vals[intervalsno0] - x[x[[xidname]] == i,var]) <= abs(vals[intervalsno0+1] - x[x[[xidname]] == i,var]) ~ vals[intervalsno0],
+        #otherwise, take the higher
+        TRUE ~ vals[intervalsno0+1]
+      )
+    }
+  } else if (method == 'between') {
+    z <- z[order(z[[jvar[1]]]),]
+
+    # 'between' unfortunately needs this slower version because of potential corner cases
+    # Go through each of the values in z and add them to the appropriate x rows
+    for (i in 1:nrow(z)) {
       #If it's the same ID, hasn't been matched yet, and x is between the two y's we have our match
       x[Vectorize(isTRUE)(is.na(x[[jvar[1]]]) & x[[xidname]] == z[i,yidname] &
-          (x[[var]] > z[i,jvar[1]] | (exact[1] == TRUE & x[[var]] == z[i,jvar[1]])) &
-            (x[[var]] < z[i,jvar[2]] | (exact[2] == TRUE & x[[var]] == z[i,jvar[2]]))),jvar[1]] <- z[i,jvar[1]]
+                            (x[[var]] > z[i,jvar[1]] | (exact[1] == TRUE & x[[var]] == z[i,jvar[1]])) &
+                            (x[[var]] < z[i,jvar[2]] | (exact[2] == TRUE & x[[var]] == z[i,jvar[2]]))),jvar[1]] <- z[i,jvar[1]]
     }
   }
-
   #Get rid of the ID variable we were using
   x[[xidname]] <- NULL
 
