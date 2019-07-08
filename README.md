@@ -9,7 +9,7 @@ Install this package using `devtools::install_github('NickCH-K/pmdplyr')` and us
 
 Functions included in the package:
 
-1. `between` and `within`: Standard between and within panel calculations.
+1. `between_i` and `within_i`: Standard between and within panel calculations.
 2. `fixed_check`: Checks a list of variables for consistency within a panel structure.
 3. `fixed_force`: Forces a list of variables to be constant within a panel structure.
 4. `id_variable`: Takes a list of variables that make up an individual identifier and turns it into a single variable.
