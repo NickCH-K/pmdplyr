@@ -156,12 +156,12 @@ mutate_subset <- function(.data, ..., .filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.u
 
   inp <- declare_in_fcn_check(.df,.i,.t,.d,.uniqcheck,.setpanel,.noneed=TRUE)
 
-  # #Panel-declare data if any changes have been made.
-  # if (min(is.na(.i)) == 0 | !is.na(.t) | !is.na(.d)) {
-  #   .df <- pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
-  #   #.d might be unspecified and so inp$d is NA, but now .d is 1 from pdeclare default
-  #   inp$d <- attr(.df,'.d')
-  # }
+  #Panel-declare data if any changes have been made.
+  if (min(is.na(.i)) == 0 | !is.na(.t) | !is.na(.d)) {
+    .df <- pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
+    #.d might be unspecified and so inp$d is NA, but now .d is 1 from pdeclare default
+    inp$d <- attr(.df,'.d')
+  }
 
   if (.group_i == TRUE & (min(is.na(inp$i)) == 0)) {
     .df <- .df %>%
