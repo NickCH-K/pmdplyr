@@ -7,7 +7,7 @@
 #' \code{pmdplyr} contains the following functions:
 #'
 #' \itemize{
-#'     \item{\code{\link{between}} and \code{\link{within}}}{ Standard between and within panel calculations.}
+#'     \item{\code{\link{between_i}} and \code{\link{within_i}}}{ Standard between and within panel calculations.}
 #'     \item{\code{\link{fixed_check}}}{ Checks a list of variables for consistency within a panel structure.}
 #'     \item{\code{\link{fixed_force}}}{ Forces a list of variables to be constant within a panel structure.}
 #'     \item{\code{\link{id_variable}}}{ Takes a list of variables that make up an individual identifier and turns it into a single variable.}
