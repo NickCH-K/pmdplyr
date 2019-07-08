@@ -25,7 +25,10 @@
 #' #I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
 #' #If I want to use 'insert_date' for t,
 #' #I need to transform it into an integer first; see time_variable()
-#' SP <- pdeclare(SPrail,.i=c('origin','destination'),.t='insert_date',.d=0)
+#' SP <- pdeclare(SPrail,
+#'                .i = c('origin', 'destination'),
+#'                .t = 'insert_date',
+#'                .d = 0)
 #' is_pdeclare(SP)
 #' attr(SP,'.i')
 #' attr(SP,'.t')
@@ -42,21 +45,98 @@ NULL
 #' @export
 
 
-pdeclare <- function(.df,.i=NA,.t=NA,.d=1,.uniqcheck=FALSE) {
+pdeclare <- function(.df, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
 
-  #Check inputs
-  check_panel_inputs(.df,.i,.t,.d,.uniqcheck)
+  # Check inputs
+  check_panel_inputs(.df, .i, .t, .d, .uniqcheck)
 
   if (is.na(.d)) { .d <- 1 }
 
   #### Assign panel indicators
-  attr(.df,'.i') <- .i
-  attr(.df,'.t') <- .t
-  attr(.df,'.d') <- .d
-
-  return(.df)
+  build_pdeclare(.df,
+                 .i = .i,
+                 .t = .t,
+                 .d = .d,
+                 .uniqcheck = .uniqcheck)
 }
 
+
+#' @export
+new_pdeclare <- function(x, ..., class = NULL){
+  x <- new_tibble(x, ..., nrow = NROW(x), class = "tbl_pd")
+}
+
+#' Coerce to a pdeclare tibble
+#'
+#' @param x A data frame, tibble or list
+#' @inheritParams pdeclare
+#' @examples
+#' SP <- as_pdeclare(SPrail,
+#'                   .i = c('origin', 'destination'),
+#'                   .t = 'insert_date',
+#'                   .d = 0)
+#' @rdname as-pdeclare
+#' @export
+as_pdeclare <- function(x,
+                        .i = NULL,
+                        .d = NULL,
+                        .t = NULL,
+                        ...) {
+  UseMethod("as_pdeclare")
+}
+
+#' @rdname as-pdeclare
+#' @export
+as_pdeclare.tbl_df <- function(x,
+                               .i = NULL,
+                               .d = NULL,
+                               .t = NULL,
+                               ...) {
+
+  build_pdeclare(x, .i = .i, .d = .d, .t = .t, ...)
+}
+
+
+#' @rdname as-pdeclare
+#' @export
+as_pdeclare.data.frame <- as_pdeclare.tbl_df
+
+#' @rdname as-pdeclare
+#' @export
+as_pdeclare.list <- as_pdeclare.tbl_df
+
+#' @keywords internal
+#' @export
+as_pdeclare.NULL <- function(x, ...) {
+  abort("A pdeclare must not be NULL.")
+}
+
+#' @export
+build_pdeclare <- function(tbl, .i, .d, .t, .uniqcheck = FALSE){
+  grp_data <- tbl %@% "groups"
+
+  tbl <- new_tibble(tbl,
+                    .i = .i,
+                    .d = .d,
+                    .t = .t,
+                    groups = NULL,
+                    nrow = NROW(tbl),
+                    class = "tbl_pd")
+
+  is_grped <- dplyr::is_grouped_df(tbl)
+
+  if (is_grped) {
+    cls <- c("grouped_pd", "grouped_df")
+    tbl <- new_pdeclare(tbl, groups = grp_data, class = cls)
+  }
+
+  check_panel_inputs(tbl,
+                     .i = .i,
+                     .t = .t,
+                     .d = .d,
+                     .uniqcheck = .uniqcheck)
+  tbl
+}
 
 check_panel_inputs <- function(.df,.i,.t,.d,.uniqcheck) {
   ####CHECK INPUTS
