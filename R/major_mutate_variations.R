@@ -140,9 +140,7 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
 #'
 #'
 #' @export
-mutate_subset <- function(.data, ..., .filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE,.setpanel=TRUE) {
-  .df <- .data
-
+mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE,.setpanel=TRUE) {
   ####CHECK INPUTS
   if (sum(class(.df) %in% c('data.frame','tbl','tbl_df')) == 0) {
     stop('Requires data to be a data frame or tibble.')
@@ -159,9 +157,11 @@ mutate_subset <- function(.data, ..., .filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.u
   #Panel-declare data if any changes have been made.
   if (min(is.na(.i)) == 0 | !is.na(.t) | !is.na(.d)) {
     .df <- pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
+
     #.d might be unspecified and so inp$d is NA, but now .d is 1 from pdeclare default
     inp$d <- attr(.df,'.d')
   }
+
 
   if (.group_i == TRUE & (min(is.na(inp$i)) == 0)) {
     .df <- .df %>%
@@ -174,7 +174,7 @@ mutate_subset <- function(.data, ..., .filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.u
     dplyr::summarize(...)
   #See what variables were created not counting the groupings
   #First, get the grouping variables
-  groups <- names(attr(.df, "groups"))
+  groups <- names(attr(.df,"groups"))
   #Last element is .rows
   if (!is.null(groups)) {groups <- groups[1:(length(groups)-1)]}
   #now, find which variables in summ are not grouping variables
@@ -187,21 +187,22 @@ mutate_subset <- function(.data, ..., .filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.u
     suppressWarnings(try(.df <- .df %>%
                            dplyr::select(-dplyr::one_of(notgroups))))
     suppressWarnings(.df <- .df %>%
-      dplyr::bind_cols(summdf))
-  } else {
+                       dplyr::bind_cols(summdf))
+  }
+  else {
     suppressWarnings(try(.df <- .df %>%
                            dplyr::select(-dplyr::one_of(notgroups))))
     suppressWarnings(.df <- .df %>%
-      dplyr::left_join(summ,by=groups))
+                       dplyr::left_join(summ,by=groups))
   }
 
-  # If it wants the original panel setting back, do that
+  #If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
     attr(.df,'.i') <- inp$orig_i
     attr(.df,'.t') <- inp$orig_t
     attr(.df,'.d') <- inp$orig_d
   }
 
-  vec_restore(.data, .df)
+  return(.df)
 }
 

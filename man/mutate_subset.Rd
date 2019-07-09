@@ -4,10 +4,12 @@
 \alias{mutate_subset}
 \title{Function to propogate a calculation performed on a subset of data to the rest of the data}
 \usage{
-mutate_subset(.data, ..., .filter, .group_i = TRUE, .i = NA, .t = NA,
+mutate_subset(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA,
   .d = NA, .uniqcheck = FALSE, .setpanel = TRUE)
 }
 \arguments{
+\item{.df}{Data frame or tibble.}
+
 \item{...}{Specification to be passed to \code{dplyr::summarize()}.}
 
 \item{.filter}{A vector of the logical condition for which observations \code{dplyr::summarize()} operations are to be run on.}
@@ -23,8 +25,6 @@ mutate_subset(.data, ..., .filter, .group_i = TRUE, .i = NA, .t = NA,
 \item{.uniqcheck}{Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.}
 
 \item{.setpanel}{Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.}
-
-\item{.df}{Data frame or tibble.}
 }
 \description{
 WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE WHEN USING THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.
