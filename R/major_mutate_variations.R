@@ -34,7 +34,6 @@
 #'
 #'
 #' @export
-
 mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE,.setpanel=TRUE) {
   if (!is.logical(.backwards)) {
     stop('.backwards must be TRUE or FALSE')
@@ -107,7 +106,6 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
     attr(.df,'.t') <- inp$orig_t
     attr(.df,'.d') <- inp$orig_d
   }
-
   return(.df)
 }
 
@@ -142,7 +140,6 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
 #'
 #'
 #' @export
-
 mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE,.setpanel=TRUE) {
   ####CHECK INPUTS
   if (sum(class(.df) %in% c('data.frame','tbl','tbl_df')) == 0) {
@@ -190,13 +187,13 @@ mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqc
     suppressWarnings(try(.df <- .df %>%
                            dplyr::select(-dplyr::one_of(notgroups))))
     suppressWarnings(.df <- .df %>%
-      dplyr::bind_cols(summdf))
+                       dplyr::bind_cols(summdf))
   }
   else {
     suppressWarnings(try(.df <- .df %>%
                            dplyr::select(-dplyr::one_of(notgroups))))
     suppressWarnings(.df <- .df %>%
-      dplyr::left_join(summ,by=groups))
+                       dplyr::left_join(summ,by=groups))
   }
 
   #If it wants the original panel setting back, do that
@@ -208,3 +205,4 @@ mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqc
 
   return(.df)
 }
+

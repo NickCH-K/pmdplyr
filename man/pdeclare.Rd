@@ -34,7 +34,10 @@ data(SPrail)
 #I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
 #If I want to use 'insert_date' for t,
 #I need to transform it into an integer first; see time_variable()
-SP <- pdeclare(SPrail,.i=c('origin','destination'),.t='insert_date',.d=0)
+SP <- pdeclare(SPrail,
+               .i = c('origin', 'destination'),
+               .t = 'insert_date',
+               .d = 0)
 is_pdeclare(SP)
 attr(SP,'.i')
 attr(SP,'.t')

@@ -12,10 +12,14 @@ Imports:
     lubridate,
     magrittr,
     tidyr,
-    utils
+    tibble,
+    utils, 
+    vctrs, 
+    rlang
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 2.1.0)
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 LazyData: true
