@@ -62,7 +62,6 @@ Note that if, given the method, \code{var} finds no proper match, it will be mer
 }
 \examples{
 
-library(magrittr)
 data(Scorecard)
 #We also have this data on the December unemployment rate for US college grads nationally
 #but only every other year

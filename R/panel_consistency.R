@@ -27,7 +27,6 @@
 #' #Examples too slow to run
 #' if (interactive()) {
 #'
-#' library(magrittr)
 #' data(Scorecard)
 #' #Notice that, in the Scorecard data, the gap between one year and the next is not always constant
 #' table((Scorecard %>% dplyr::arrange(year) %>%
@@ -285,7 +284,6 @@ panel_fill <- function(.df,.set_NA=FALSE,.min=NA,.max=NA,.backwards=FALSE,.group
 #' #Examples are too slow to run
 #' if(interactive()) {
 #'
-#' library(magrittr)
 #' #The SPrail data has some missing price values.
 #' #Let's fill them in!
 #' #Note .d=0 tells it to ignore how big the gaps are
@@ -439,7 +437,6 @@ panel_locf <- function(.var,.df=get(".", envir=parent.frame()),.fill=NA,.backwar
 #' @param .within Character vector of variable names that the \code{.var} variables should be consistent within.
 #' @examples
 #'
-#' library(magrittr)
 #' #In the Scorecard data, it should be the case that
 #' #state_abbr and inst_name never change within university.
 #' #Let's see if that's true
@@ -510,7 +507,6 @@ fixed_check <- function(.df,.var=NA,.within) {
 #' @param .flag String indicating the name of a new variable that flags any observations altered by \code{fixed_force()}.
 #' @examples
 #'
-#' library(magrittr)
 #' data(Scorecard)
 #' #The variables pred_degree_awarded_ipeds and state_abbr should be constant within unitid
 #' #However, sometimes colleges change what they offer.

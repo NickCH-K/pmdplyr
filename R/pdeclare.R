@@ -20,7 +20,6 @@
 #' @name pdeclare
 #'
 #' @examples
-#' library(magrittr)
 #' data(SPrail)
 #' #I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
 #' #If I want to use 'insert_date' for t,
@@ -82,6 +81,7 @@ vec_restore.tbl_pd <- function(x, to) {
 #'
 #' @param x A data frame, tibble or list
 #' @inheritParams pdeclare
+#' @param ... Other arguments passed on to individual methods.
 #' @examples
 #' SP <- as_pdeclare(SPrail,
 #'                   .i = c('origin', 'destination'),
@@ -123,6 +123,11 @@ as_pdeclare.NULL <- function(x, ...) {
   abort("A pdeclare must not be NULL.")
 }
 
+#' Low-level constructor for a pdeclare object
+#'
+#' `build_pdeclare()` creates a `tbl_pd` object with more controls. It is useful
+#' for creating a `tbl_pd` internally inside a function.
+#'
 #' @export
 #' @importFrom rlang %@%
 build_pdeclare <- function(tbl,
@@ -212,7 +217,6 @@ check_panel_inputs <- function(.df,.i,.t,.d,.uniqcheck) {
 #' @param .silent Set to TRUE to suppress output reporting what the panel identifiers are. Defaults to FALSE
 #' @examples
 #'
-#' library(magrittr)
 #' data(Scorecard)
 #' Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
 #' is_pdeclare(Scorecard)

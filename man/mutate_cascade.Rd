@@ -39,7 +39,6 @@ To apply \code{mutate_cascade()} to non-panel data and without any grouping (per
 }
 \examples{
 
-library(magrittr)
 data(Scorecard)
 #I'd like to build a decaying function that remembers previous earnings but at a declining rate
 #Let's only use nonmissing earnings

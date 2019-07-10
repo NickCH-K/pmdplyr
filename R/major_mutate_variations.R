@@ -18,7 +18,6 @@
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
 #' @examples
 #'
-#' library(magrittr)
 #' data(Scorecard)
 #' #I'd like to build a decaying function that remembers previous earnings but at a declining rate
 #' #Let's only use nonmissing earnings
@@ -128,7 +127,6 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
 #' @examples
 #'
-#' library(magrittr)
 #' data(SPrail)
 #' #In preparation for fitting a choice model for how people choose ticket type,
 #' #I'd like to know the price of a "Promo" ticket for a given route

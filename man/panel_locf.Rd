@@ -40,7 +40,6 @@ This function looks for a list of values (usually, just \code{NA}) in a variable
 #Examples are too slow to run
 if(interactive()) {
 
-library(magrittr)
 #The SPrail data has some missing price values.
 #Let's fill them in!
 #Note .d=0 tells it to ignore how big the gaps are

@@ -33,7 +33,6 @@
 #' @param .turnover_start A numeric vector the same length as the number of variables included indicating the minimum value that the corresponding variable in the list of variables takes, where NA indicates no minimum value, for use with \code{method='turnover'}. For example, if the variable list is \code{year,month} then you might have \code{.turnover=c(NA,1)}. Or if the variable list is \code{days-since-jan1-1970,hour,minute,second} you might have \code{.turnover=c(NA,0,0,0)}. By default this is a vector of 1s the same length as the number of variables, except for the first element, which is NA. Note that in almost all cases, the first element of \code{.turnover_start} should be \code{NA}, and all others should be non-NA.
 #' @examples
 #'
-#' library(magrittr)
 #' data(SPrail)
 #'
 #' #Since we have a date variable, we can easily create integers that increment for each

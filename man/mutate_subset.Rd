@@ -36,7 +36,6 @@ One application of this is to partially widen data. For example, if your analysi
 }
 \examples{
 
-library(magrittr)
 data(SPrail)
 #In preparation for fitting a choice model for how people choose ticket type,
 #I'd like to know the price of a "Promo" ticket for a given route
