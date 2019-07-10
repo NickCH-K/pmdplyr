@@ -9,7 +9,6 @@
 #' @param .minwidth If \code{.method = 'character'}, omits the additional spacing that makes the ID variable fixed-width and ensures uniqueness. WARNING: This option saves space but may cause two individuals to have the same ID. Defaults to \code{FALSE}.
 #' @examples
 #'
-#' library(magrittr)
 #' data(SPrail)
 #' #I want to identify observations at the route (origin-destination)/year level
 #' #Let's make it a character variable so we can tell at a glance what route we're talking

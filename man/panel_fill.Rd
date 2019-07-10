@@ -50,7 +50,6 @@ This function requires \code{.t} and \code{.d} to be declared in the function or
 #Examples too slow to run
 if (interactive()) {
 
-library(magrittr)
 data(Scorecard)
 #Notice that, in the Scorecard data, the gap between one year and the next is not always constant
 table((Scorecard \%>\% dplyr::arrange(year) \%>\%

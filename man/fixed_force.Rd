@@ -26,7 +26,6 @@ Inconsistencies will be resolved by the function \code{.resolve}. Or, set \code{
 }
 \examples{
 
-library(magrittr)
 data(Scorecard)
 #The variables pred_degree_awarded_ipeds and state_abbr should be constant within unitid
 #However, sometimes colleges change what they offer.

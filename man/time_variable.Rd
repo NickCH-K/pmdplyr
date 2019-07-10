@@ -51,7 +51,6 @@ Methods available include:
 }
 \examples{
 
-library(magrittr)
 data(SPrail)
 
 #Since we have a date variable, we can easily create integers that increment for each

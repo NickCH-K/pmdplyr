@@ -21,7 +21,6 @@ By default, id_variable() will create a unique numeric identifier out of your ID
 }
 \examples{
 
-library(magrittr)
 data(SPrail)
 #I want to identify observations at the route (origin-destination)/year level
 #Let's make it a character variable so we can tell at a glance what route we're talking

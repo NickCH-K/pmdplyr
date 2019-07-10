@@ -24,6 +24,8 @@ as_pdeclare(x, .i = NULL, .d = NULL, .t = NULL, ...)
 \item{.d}{Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.}
 
 \item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
+
+\item{...}{Other arguments passed on to individual methods.}
 }
 \description{
 Coerce to a pdeclare tibble

@@ -29,7 +29,6 @@ This function declares a tibble or data frame as a panel by adding three attribu
 Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session) if they do not.
 }
 \examples{
-library(magrittr)
 data(SPrail)
 #I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
 #If I want to use 'insert_date' for t,

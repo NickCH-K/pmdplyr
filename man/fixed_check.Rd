@@ -18,7 +18,6 @@ This function checks whether one set of variables is consistent within values of
 }
 \examples{
 
-library(magrittr)
 #In the Scorecard data, it should be the case that
 #state_abbr and inst_name never change within university.
 #Let's see if that's true

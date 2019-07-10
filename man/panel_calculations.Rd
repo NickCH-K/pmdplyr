@@ -37,7 +37,6 @@ Thesese functions perform the standard between and within transformations on pan
 }
 \examples{
 
-library(magrittr)
 data(SPrail)
 #Calculate within- and between-route variation in price and add it to the data
 SPrail <- SPrail \%>\%
