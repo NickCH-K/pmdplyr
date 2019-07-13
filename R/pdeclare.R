@@ -22,6 +22,7 @@
 #' @name pdeclare
 #'
 #' @examples
+<<<<<<< HEAD
 #' #Creating a pdeclare from scratch
 #' pd <- pdeclare(i = c(1,1,1,2,2,2),
 #'                t = c(1,2,3,1,2,2),
@@ -29,6 +30,27 @@
 #'                .i = 'i',
 #'                .t = 't')
 #' is_pdeclare(pd)
+=======
+#' data(SPrail)
+#' #I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
+#' #If I want to use 'insert_date' for t,
+#' #I need to transform it into an integer first; see time_variable()
+#' SP <- pdeclare(SPrail,
+#'                .i = c('origin', 'destination'),
+#'                .t = 'insert_date',
+#'                .d = 0)
+#' is_pdeclare(SP)
+#' attr(SP,'.i')
+#' attr(SP,'.t')
+#' attr(SP,'.d')
+#'
+#' data(Scorecard)
+#' #Here, year is an integer, so I can use it with .d = 1 to
+#' #indicate that one period is a change of one unit in year
+#' #Conveniently, .d = 1 is the default
+#' Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
+#' is_pdeclare(Scorecard)
+>>>>>>> 7e2913474e048ac14379b7bdfedfc53f9c673542
 #'
 NULL
 #' @export
@@ -87,6 +109,7 @@ vec_restore.tbl_pd <- function(x, to) {
 #'
 #' @param x A data frame, tibble or list
 #' @inheritParams pdeclare
+#' @param ... Other arguments passed on to individual methods.
 #' @examples
 #' data(SPrail)
 #' #I set .d=0 here to indicate that I don't care how large the gap
@@ -147,6 +170,11 @@ as_pdeclare.NULL <- function(x, ...) {
   abort("A pdeclare must not be NULL.")
 }
 
+#' Low-level constructor for a pdeclare object
+#'
+#' `build_pdeclare()` creates a `tbl_pd` object with more controls. It is useful
+#' for creating a `tbl_pd` internally inside a function.
+#'
 #' @export
 #' @importFrom rlang %@%
 build_pdeclare <- function(tbl,

@@ -39,7 +39,6 @@ This function retrieves the time-lagged values of a variable, using the time var
 }
 \examples{
 
-library(magrittr)
 data(Scorecard)
 
 #The Scorecard data is uniquely identified by unitid and year.

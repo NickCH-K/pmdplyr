@@ -17,7 +17,6 @@
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
 #' @examples
 #'
-#' library(magrittr)
 #' data(Scorecard)
 #'
 #' #The Scorecard data is uniquely identified by unitid and year.
