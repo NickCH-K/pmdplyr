@@ -13,7 +13,7 @@
 #'     \item{\code{\link{id_variable}}}{ Takes a list of variables that make up an individual identifier and turns it into a single variable.}
 #'     \item{\code{\link{time_variable}}}{ Takes a time variable, or set of time variables, and turns them into a single well-behaved integer time variable of the kind required by most panel functions.}
 #'     \item{\code{\link{inexact_join}}}{ Set of wrappers for the \code{dplyr} \code{\link[dplyr]{join}} functions which allows for a variable to be matched inexactly, for example joining a time variable in \code{x} to the most recent previous value in \code{y}.}
-#'     \item{\code{\link{pdeclare}} and \code{\link{is_pdeclare}}}{ Set the panel structure for a data set, or check if it is already set.}
+#'     \item{\code{\link{pdeclare}}, \code{\link{as_pdeclare}}, and \code{\link{is_pdeclare}}}{ Set the panel structure for a data set, or check if it is already set.}
 #'     \item{\code{\link{mutate_cascade}}}{ A wrapper for \code{dplyr} \code{\link[dplyr]{mutate}} which runs one period at a time, allowing changes in one period to finalize before the next period is calculated.}
 #'     \item{\code{\link{mutate_subset}}}{ A wrapper for \code{dplyr} \code{\link[dplyr]{mutate}} that performs a calculation on a subset of data, and then applies the result to all the observations (within group).}
 #'     \item{\code{\link{panel_fill}}}{ Fills in gaps in the panel. Can also fill in at the beginning or end of the data to create a perfectly balanced panel.}

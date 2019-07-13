@@ -16,7 +16,7 @@ mutate_subset(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA,
 
 \item{.group_i}{By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, overwriting any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
+\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
 
 \item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
@@ -36,7 +36,6 @@ One application of this is to partially widen data. For example, if your analysi
 }
 \examples{
 
-library(magrittr)
 data(SPrail)
 #In preparation for fitting a choice model for how people choose ticket type,
 #I'd like to know the price of a "Promo" ticket for a given route

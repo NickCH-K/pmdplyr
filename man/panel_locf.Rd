@@ -6,12 +6,12 @@
 \usage{
 panel_locf(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   .backwards = FALSE, .resolve = "error", .group_i = TRUE, .i = NA,
-  .t = NA, .d = NA, .uniqcheck = FALSE)
+  .t = NA, .d = 1, .uniqcheck = FALSE)
 }
 \arguments{
 \item{.var}{Vector to be modified.}
 
-\item{.df}{Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
+\item{.df}{Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
 
 \item{.fill}{Vector of values to be overwritten. Just \code{NA} by default.}
 
@@ -21,7 +21,7 @@ panel_locf(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
 \item{.group_i}{By default, if \code{.i} is specified or found in the data, \code{panel_locf()} will group the data by \code{.i}, ignoring any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
+\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
 
 \item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
@@ -40,7 +40,6 @@ This function looks for a list of values (usually, just \code{NA}) in a variable
 #Examples are too slow to run
 if(interactive()) {
 
-library(magrittr)
 #The SPrail data has some missing price values.
 #Let's fill them in!
 #Note .d=0 tells it to ignore how big the gaps are

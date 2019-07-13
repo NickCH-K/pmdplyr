@@ -17,11 +17,11 @@ between_i(.var, .df = get(".", envir = parent.frame()),
 \arguments{
 \item{.var}{Vector to be transformed}
 
-\item{.df}{Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
+\item{.df}{Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
 
 \item{.fcn}{The function to be passed to \code{dplyr::summarize()}. \code{x - .fcn(x)} within \code{.i} is the within tranformation. \code{.fcn(x)} within \code{.i} minus \code{.fcn} overall is the between transformation. This will almost always be the default \code{.fcn = function(x) mean(x,na.rm=TRUE)}.}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
+\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
 
 \item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
@@ -37,7 +37,6 @@ Thesese functions perform the standard between and within transformations on pan
 }
 \examples{
 
-library(magrittr)
 data(SPrail)
 #Calculate within- and between-route variation in price and add it to the data
 SPrail <- SPrail \%>\%

@@ -11,7 +11,7 @@ tlag(.var, .df = get(".", envir = parent.frame()), .n = 1,
 \arguments{
 \item{.var}{Vector to be lagged.}
 
-\item{.df}{Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
+\item{.df}{Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
 
 \item{.n}{Number of periods to lag by. 1 by default. Note that this is automatically scaled by \code{.d}. If \code{.d = 2} and \code{.n = 1}, then the lag of \code{.t = 3} will be \code{.t = 1}. Allows negative values, equivalent to \code{tlead()} with the same value but positive.}
 
@@ -23,7 +23,7 @@ tlag(.var, .df = get(".", envir = parent.frame()), .n = 1,
 
 \item{.group_i}{By default, if \code{.i} is specified or found in the data, \code{tlag()} will group the data by \code{.i}, ignoring any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
+\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
 
 \item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
@@ -35,7 +35,7 @@ tlag(.var, .df = get(".", envir = parent.frame()), .n = 1,
 WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.
 }
 \details{
-This function retrieves the time-lagged values of a variable, using the time variable defined in \code{.t} in the function or by \code{pdeclare()}. \code{tlag()} is highly unusual among time-lag functions in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
+This function retrieves the time-lagged values of a variable, using the time variable defined in \code{.t} in the function or by \code{as_pdeclare()}. \code{tlag()} is highly unusual among time-lag functions in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
 }
 \examples{
 

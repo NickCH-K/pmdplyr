@@ -11,14 +11,13 @@
 #' @param .skip Set to \code{TRUE} to skip the first period present in the data (or present within each group for grouped data) when applying \code{mutate()}. Since most uses of \code{mutate_cascade()} will involve a \code{lag()} or \code{tlag()}, this avoids creating an \code{NA} in the first period that then cascades down. By default this is TRUE. If you set this to FALSE you should probably have some method for avoiding a first-period \code{NA} in your \code{...} entry, perhaps using the \code{default} option in \code{dplyr::lag} or the \code{.default} option in \code{tlag}.
 #' @param .backwards Set to \code{TRUE} to run \code{mutate_cascade()} from the last period to the first, rather than from the first to the last.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, ignoring any grouping already implemented (although the original grouping structure will be returned at the end). Set \code{.group_i = FALSE} to avoid this.
-#' @param .i Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .i Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
 #' @examples
 #'
-#' library(magrittr)
 #' data(Scorecard)
 #' #I'd like to build a decaying function that remembers previous earnings but at a declining rate
 #' #Let's only use nonmissing earnings
@@ -48,14 +47,14 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
   #Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df,.i,.t,.d,.uniqcheck,.setpanel)
   if (is.na(inp$t)) {
-    stop('mutate_cascade() requires that .t be declared either in the function or by pdeclare().')
+    stop('mutate_cascade() requires that .t be declared either in the function or by as_pdeclare().')
   }
 
   #Panel-declare data if any changes have been made.
   if (min(is.na(.i)) == 0 | !is.na(.t) | !is.na(.d)) {
-    .df <- pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
+    .df <- as_pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
 
-    #.d might be unspecified and so inp$d is NA, but now .d is 1 from pdeclare default
+    #.d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
     inp$d <- attr(.df,'.d')
   }
 
@@ -121,14 +120,13 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
 #' @param ... Specification to be passed to \code{dplyr::summarize()}.
 #' @param .filter A vector of the logical condition for which observations \code{dplyr::summarize()} operations are to be run on.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, overwriting any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.
-#' @param .i Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .i Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
 #' @examples
 #'
-#' library(magrittr)
 #' data(SPrail)
 #' #In preparation for fitting a choice model for how people choose ticket type,
 #' #I'd like to know the price of a "Promo" ticket for a given route
@@ -156,9 +154,9 @@ mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqc
 
   #Panel-declare data if any changes have been made.
   if (min(is.na(.i)) == 0 | !is.na(.t) | !is.na(.d)) {
-    .df <- pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
+    .df <- as_pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
 
-    #.d might be unspecified and so inp$d is NA, but now .d is 1 from pdeclare default
+    #.d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
     inp$d <- attr(.df,'.d')
   }
 

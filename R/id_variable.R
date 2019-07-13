@@ -4,12 +4,11 @@
 #'
 #' By default, id_variable() will create a unique numeric identifier out of your ID variables, sequential following the order in the original data (\code{.method='number'}). However, you may want to remove the ordering and assign IDs randomly (\code{.method='random'}), or preserve all the original information and create a single fixed-width character ID variable that contains all the original information (\code{.method='character'}).
 #'
-#' @param ... variables (vectors) that, together, make up the ID variables in the data and uniquely identifies the individual. Note that \code{id_variable()} will not check whether you've selected an appropriate set of variables; try running \code{pdeclare()} after getting your ID and time variables.
+#' @param ... variables (vectors) that, together, make up the ID variables in the data and uniquely identifies the individual. Note that \code{id_variable()} will not check whether you've selected an appropriate set of variables; try running \code{as_pdeclare()} after getting your ID and time variables.
 #' @param .method Can be \code{'number'}, \code{'random'}, or \code{'character'}, as described below.
 #' @param .minwidth If \code{.method = 'character'}, omits the additional spacing that makes the ID variable fixed-width and ensures uniqueness. WARNING: This option saves space but may cause two individuals to have the same ID. Defaults to \code{FALSE}.
 #' @examples
 #'
-#' library(magrittr)
 #' data(SPrail)
 #' #I want to identify observations at the route (origin-destination)/year level
 #' #Let's make it a character variable so we can tell at a glance what route we're talking

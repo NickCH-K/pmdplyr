@@ -6,10 +6,10 @@
 \usage{
 panel_fill(.df, .set_NA = FALSE, .min = NA, .max = NA,
   .backwards = FALSE, .group_i = TRUE, .flag = NA, .i = NA,
-  .t = NA, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE)
+  .t = NA, .d = 1, .uniqcheck = FALSE, .setpanel = TRUE)
 }
 \arguments{
-\item{.df}{Tibble or data frame which either has the \code{.t} and \code{.d} (and perhaps \code{.i}) attributes included by \code{pdeclare()}, or the appropriate panel structure is declared in the function.}
+\item{.df}{Tibble or data frame which either has the \code{.t} and \code{.d} (and perhaps \code{.i}) attributes included by \code{as_pdeclare()}, or the appropriate panel structure is declared in the function.}
 
 \item{.set_NA}{Should values in newly-created observations be set to adjacent values or to NA? Set to \code{TRUE} to set all new values to NA except for .i and .t. To make only specific variables NA, list them as a character vector. Defaults to FALSE; all values are filled in using the most recently available data.}
 
@@ -23,7 +23,7 @@ panel_fill(.df, .set_NA = FALSE, .min = NA, .max = NA,
 
 \item{.flag}{The name of a new variable indicating which observations are newly created by \code{panel_fill()}.}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
+\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
 
 \item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
@@ -41,16 +41,15 @@ This function creates new observations to fill in any gaps in panel data. For ex
 
 Note that, in the case where there is more than one observation for a given individual/time period (or just time period if \code{.group_i = FALSE}), \code{panel_fill()} will create copies of *every observation* in the appropriate individual/time period for filling-in purposes. So if there are four t = 1 observations and nothing in t = 2, \code{panel_fill()} will create four new observations with t = 2, copying the original four in t = 1.
 
-By default, the \code{panel_fill()} operation is grouped by \code{.i}, although it will retun the data in the original grouping structure. Leave \code{.i} blank, or, if \code{.i} is already in the data from \code{pdeclare}, set \code{.group_i=FALSE} to run the function ungrouped, or with the existing group structure.
+By default, the \code{panel_fill()} operation is grouped by \code{.i}, although it will retun the data in the original grouping structure. Leave \code{.i} blank, or, if \code{.i} is already in the data from \code{as_pdeclare}, set \code{.group_i=FALSE} to run the function ungrouped, or with the existing group structure.
 
-This function requires \code{.t} and \code{.d} to be declared in the function or already established in the data by \code{pdeclare()}. Also, this requires a cardinal \code{.t}. It must not be the case that \code{.d=0}.
+This function requires \code{.t} and \code{.d} to be declared in the function or already established in the data by \code{as_pdeclare()}. Also, this requires a cardinal \code{.t}. It must not be the case that \code{.d=0}.
 }
 \examples{
 
 #Examples too slow to run
 if (interactive()) {
 
-library(magrittr)
 data(Scorecard)
 #Notice that, in the Scorecard data, the gap between one year and the next is not always constant
 table((Scorecard \%>\% dplyr::arrange(year) \%>\%

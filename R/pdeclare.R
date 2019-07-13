@@ -2,7 +2,7 @@
 #'
 #' WARNING: FOR NOW, BE AWARE THAT AFTER USING PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES.
 #'
-#' This function declares a tibble or data frame as a panel by adding three attributes to it:
+#' This function declares pdeclare tibble with three attributes:
 #'
 #' \itemize{
 #'   \item \code{.i}, a character or character vector indicating the variables that constitute the individual-level panel identifier
@@ -10,7 +10,9 @@
 #'   \item \code{.d}, a number indicating the gap
 #' }
 #'
-#' Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session) if they do not.
+#' The \code{pdeclare()} function is for the purpose of creating \code{pdeclare} objects from scratch. You probably want \code{as_pdeclare}.
+#'
+#' Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
 #'
 #' @param .df Data frame or tibble to declare as a panel.
 #' @param .i Character or character vector with the variable names that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.
@@ -20,12 +22,78 @@
 #' @name pdeclare
 #'
 #' @examples
-#' library(magrittr)
+#' #Creating a pdeclare from scratch
+#' pd <- pdeclare(i = c(1,1,1,2,2,2),
+#'                t = c(1,2,3,1,2,2),
+#'                x = rnorm(6),
+#'                .i = 'i',
+#'                .t = 't')
+#' is_pdeclare(pd)
+#'
+NULL
+#' @export
+
+
+pdeclare <- function(..., .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
+
+  #Create tibble
+  tbl <- tibble::tibble(...)
+
+  #make a pdeclare
+  tbl <- build_pdeclare(tbl,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
+
+  return(tbl)
+}
+
+
+#' @export
+new_pdeclare <- function(x, ..., class = NULL) {
+
+  if (!is.data.frame(x)) {
+    x <- as.data.frame(x)
+  }
+
+  x <- tibble::new_tibble(x, ..., nrow = nrow(x), class = "tbl_pd")
+
+  return(x)
+}
+
+#' @importFrom vctrs vec_restore
+#' @method vec_restore tbl_pd
+#' @export
+#' @export vec_restore.tbl_pd
+vec_restore.tbl_pd <- function(x, to) {
+  .i <- x %@% ".i"
+  .t <- x %@% ".t"
+  .d <- x %@% ".d"
+
+  return(build_pdeclare(to, .i = .i, .t = .t, .d = .d))
+}
+
+
+#' Coerce to a pdeclare tibble
+#'
+#' WARNING: FOR NOW, BE AWARE THAT AFTER USING AS_PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES.
+#'
+#' This function coerces a tibble, data.frame, or list to a pdeclare tibble by adding three attributes to it:
+#'
+#' \itemize{
+#'   \item \code{.i}, a character or character vector indicating the variables that constitute the individual-level panel identifier
+#'   \item \code{.t}, a character vector indicating the time variable
+#'   \item \code{.d}, a number indicating the gap
+#' }
+#'
+#' Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
+#'
+#' @param x A data frame, tibble or list
+#' @inheritParams pdeclare
+#' @examples
 #' data(SPrail)
-#' #I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
-#' #If I want to use 'insert_date' for t,
+#' #I set .d=0 here to indicate that I don't care how large the gap
+#' #between one period and the next is.
+#' #If I want to use 'insert_date' for .t with a fixed gap between periods,
 #' #I need to transform it into an integer first; see time_variable()
-#' SP <- pdeclare(SPrail,
+#' SP <- as_pdeclare(SPrail,
 #'                .i = c('origin', 'destination'),
 #'                .t = 'insert_date',
 #'                .d = 0)
@@ -38,82 +106,38 @@
 #' #Here, year is an integer, so I can use it with .d = 1 to
 #' #indicate that one period is a change of one unit in year
 #' #Conveniently, .d = 1 is the default
-#' Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
+#' Scorecard <- as_pdeclare(Scorecard,.i='unitid',.t='year')
 #' is_pdeclare(Scorecard)
 #'
-NULL
-#' @export
-
-
-pdeclare <- function(.df, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
-
-  # Check inputs
-  check_panel_inputs(.df, .i, .t, .d, .uniqcheck)
-
-  #### Assign panel indicators
-  build_pdeclare(.df,
-                 .i = .i,
-                 .t = .t,
-                 .d = .d,
-                 .uniqcheck = .uniqcheck)
-}
-
-
-#' @export
-#' @importFrom tibble new_tibble
-new_pdeclare <- function(x, ..., class = NULL) {
-  x <- new_tibble(x, ..., nrow = NROW(x), class = "tbl_pd")
-}
-
-#' @importFrom vctrs vec_restore
-#' @method vec_restore tbl_pd
-#' @export
-#' @export vec_restore.tbl_pd
-vec_restore.tbl_pd <- function(x, to) {
-  .i <- x %@% ".i"
-  .t <- x %@% ".t"
-  .d <- x %@% ".d"
-
-  build_pdeclare(to, .i = .i, .t = .t, .d = .d)
-}
-
-
-#' Coerce to a pdeclare tibble
-#'
-#' @param x A data frame, tibble or list
-#' @inheritParams pdeclare
-#' @examples
-#' SP <- as_pdeclare(SPrail,
-#'                   .i = c('origin', 'destination'),
-#'                   .t = 'insert_date',
-#'                   .d = 0)
-#' @rdname as-pdeclare
+#' @rdname as_pdeclare
 #' @export
 as_pdeclare <- function(x,
-                        .i = NULL,
-                        .d = NULL,
-                        .t = NULL,
+                        .i = NA,
+                        .t = NA,
+                        .d = 1,
+                        .uniqcheck = FALSE,
                         ...) {
   UseMethod("as_pdeclare")
 }
 
-#' @rdname as-pdeclare
+#' @rdname as_pdeclare
 #' @export
 as_pdeclare.tbl_df <- function(x,
-                               .i = NULL,
-                               .d = NULL,
-                               .t = NULL,
+                               .i = NA,
+                               .t = NA,
+                               .d = 1,
+                               .uniqcheck = FALSE,
                                ...) {
 
-  build_pdeclare(x, .i = .i, .d = .d, .t = .t, ...)
+  return(build_pdeclare(x, .i = .i, .d = .d, .t = .t, .uniqcheck = .uniqcheck, ...))
 }
 
 
-#' @rdname as-pdeclare
+#' @rdname as_pdeclare
 #' @export
 as_pdeclare.data.frame <- as_pdeclare.tbl_df
 
-#' @rdname as-pdeclare
+#' @rdname as_pdeclare
 #' @export
 as_pdeclare.list <- as_pdeclare.tbl_df
 
@@ -126,15 +150,16 @@ as_pdeclare.NULL <- function(x, ...) {
 #' @export
 #' @importFrom rlang %@%
 build_pdeclare <- function(tbl,
-                           .i = NULL,
+                           .i = NA,
+                           .t = NA,
                            .d = 1,
-                           .t = NULL,
                            .uniqcheck = FALSE){
-  # check_panel_inputs(tbl,
-  #                    .i = .i,
-  #                    .t = .t,
-  #                    .d = .d,
-  #                    .uniqcheck = .uniqcheck)
+
+  check_panel_inputs(tbl,
+                    .i = .i,
+                    .t = .t,
+                    .d = .d,
+                    .uniqcheck = .uniqcheck)
 
   grp_data <- tbl %@% "groups"
 
@@ -153,17 +178,18 @@ build_pdeclare <- function(tbl,
                         class = cls)
   }
 
-  tbl
+  return(tbl)
 }
 
 #' @export
 check_panel_inputs <- function(.df,.i,.t,.d,.uniqcheck) {
   ####CHECK INPUTS
-  if (sum(class(.df) %in% c('data.frame','tbl','tbl_df')) == 0) {
-    stop('Requires data to be a data frame or tibble.')
+  if (sum(class(.df) %in% c('data.frame','tbl','tbl_df','list')) == 0) {
+    stop('Requires data to be a data frame, tibble, or list.')
   }
-  if (sum(class(.df) == 'data.table') > 0) {
-    warning('pmdplyr functions have not been tested with data.tables')
+  if (sum(class(.df) %in% c('data.table','list')) > 0) {
+    warning('data.tables and lists will be coerced to pdeclare tibbles.')
+    .df <- as.data.frame(.df)
   }
   if (!(max(is.character(.i))) & min(is.na(.i)) == 0) {
     stop('.i must be a character variable or a character vector.')
@@ -198,7 +224,7 @@ check_panel_inputs <- function(.df,.i,.t,.d,.uniqcheck) {
     groupvec <- c(.i,.t)
     groupvec <- groupvec[!is.na(groupvec)]
     if (anyDuplicated(.df[,groupvec]) > 0) {
-      message('Note that the selected .i and .t do not uniquely identify observations in the data.\nThis message will be displayed only once per session unless the uniqcheck option is set to TRUE.')
+      message('Note that the selected .i and .t do not uniquely identify observations in the data.\nThis message will be displayed only once per session unless the .uniqcheck option is set to TRUE.')
       options("pdeclare.warning4.0"=FALSE)
     }
   }
@@ -212,7 +238,6 @@ check_panel_inputs <- function(.df,.i,.t,.d,.uniqcheck) {
 #' @param .silent Set to TRUE to suppress output reporting what the panel identifiers are. Defaults to FALSE
 #' @examples
 #'
-#' library(magrittr)
 #' data(Scorecard)
 #' Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
 #' is_pdeclare(Scorecard)
@@ -259,12 +284,12 @@ declare_in_fcn_check <- function(.df,.i,.t,.d,.uniqcheck,.setpanel,.noneed=FALSE
 
   #If uniqcheck is TRUE but panel is not being reset, run through check_panel_inputs
   #just to check, using already-set panel info
-  if (min(is.na(.i)) > 0 & is.na(.t) & is.na(.d) & .uniqcheck == TRUE) {
+  if (min(is.na(.i)) > 0 & is.na(.t) & .uniqcheck == TRUE) {
     check_panel_inputs(.df,.i=orig_i,.t=orig_t,.d=orig_d,.uniqcheck=TRUE)
   }
 
   #If nothing was declared, use the original values
-  if (min(is.na(.i)) > 0 & is.na(.t) & is.na(.d)) {
+  if (min(is.na(.i)) > 0 & is.na(.t)) {
     .i <- orig_i
     .t <- orig_t
     .d <- orig_d

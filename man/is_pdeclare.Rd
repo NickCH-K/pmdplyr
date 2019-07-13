@@ -16,7 +16,6 @@ Checks whether a data set (\code{data.frame} or \code{tibble}) has been assigned
 }
 \examples{
 
-library(magrittr)
 data(Scorecard)
 Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
 is_pdeclare(Scorecard)
