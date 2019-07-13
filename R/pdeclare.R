@@ -22,7 +22,6 @@
 #' @name pdeclare
 #'
 #' @examples
-<<<<<<< HEAD
 #' #Creating a pdeclare from scratch
 #' pd <- pdeclare(i = c(1,1,1,2,2,2),
 #'                t = c(1,2,3,1,2,2),
@@ -30,7 +29,6 @@
 #'                .i = 'i',
 #'                .t = 't')
 #' is_pdeclare(pd)
-=======
 #' data(SPrail)
 #' #I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
 #' #If I want to use 'insert_date' for t,
@@ -50,7 +48,6 @@
 #' #Conveniently, .d = 1 is the default
 #' Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
 #' is_pdeclare(Scorecard)
->>>>>>> 7e2913474e048ac14379b7bdfedfc53f9c673542
 #'
 NULL
 #' @export
