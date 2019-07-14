@@ -15,7 +15,7 @@ Functions included in the package:
 4. `id_variable`: Takes a list of variables that make up an individual identifier and turns it into a single variable.
 5. `time_variable`: Takes a time variable, or set of time variables, and turns them into a single well-behaved integer time variable of the kind required by most panel functions.
 6. `inexact_join`: Set of wrappers for the `dplyr` `join` functions which allows for a variable to be matched inexactly, for example joining a time variable in `x` to the most recent previous value in `y`.
-7. `pdeclare` and `is_pdeclare`: Set the panel structure for a data set, or check if it is already set.
+7. `pdeclare`, `as_pdeclare`, and `is_pdeclare`: Set the panel structure for a data set, or check if it is already set.
 8. `mutate_cascade`: A wrapper for `dplyr::mutate` which runs one period at a time, allowing changes in one period to finalize before the next period is calculated.
 9. `mutate_subset`: A wrapper for `dplyr::mutate` that performs a calculation on a subset of data, and then applies the result to all the observations (within group).
 10. `panel_fill`: Fills in gaps in the panel. Can also fill in at the beginning or end of the data to create a perfectly balanced panel.
