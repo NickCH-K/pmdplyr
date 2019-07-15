@@ -261,6 +261,7 @@ inexact_join_prep <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"),var,jva
   yidname <- names(z)[ncol(z)]
   z[,matchvars] <- NULL
   z <- z %>%
+    ungroup() %>%
     #and one observation each
     dplyr::distinct()
 
@@ -275,11 +276,11 @@ inexact_join_prep <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"),var,jva
   if (method == 'last') {
     for (i in unique(z[[yidname]])) {
       #get list of jvar values present for this id
-      vals <- sort(z[z[[yidname]] == i,jvar])
+      vals <- sort(z[z[[yidname]] == i,][[jvar]])
       vals <- vals[!is.na(vals)]
 
       #find, by index, which interval each observation fits in
-      intervals <- findInterval(x[x[[xidname]]==i,var],vals,left.open=!exact)
+      intervals <- findInterval(x[x[[xidname]]==i,][[var]],vals,left.open=!exact)
       #Create a version without 0s so it doesn't mess up indexing
       intervalsno0 <- ifelse(intervals == 0,1,intervals)
 

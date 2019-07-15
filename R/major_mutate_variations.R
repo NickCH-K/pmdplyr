@@ -55,7 +55,7 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
     .df <- as_pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
 
     #.d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
-    inp$d <- attr(.df,'.d')
+    inp$d <- df %@% '.d'
   }
 
   if (.group_i == TRUE & (min(is.na(inp$i)) == 0)) {
@@ -101,9 +101,9 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
 
   #If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    attr(.df,'.i') <- inp$orig_i
-    attr(.df,'.t') <- inp$orig_t
-    attr(.df,'.d') <- inp$orig_d
+    .df %@% '.i' <- inp$orig_i
+    .df %@% '.t' <- inp$orig_t
+    .df %@% '.d' <- inp$orig_d
   }
   return(.df)
 }
@@ -157,7 +157,7 @@ mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqc
     .df <- as_pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
 
     #.d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
-    inp$d <- attr(.df,'.d')
+    inp$d <- .df %@% '.d'
   }
 
 
@@ -172,7 +172,7 @@ mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqc
     dplyr::summarize(...)
   #See what variables were created not counting the groupings
   #First, get the grouping variables
-  groups <- names(attr(.df,"groups"))
+  groups <- names(.df %@% 'groups')
   #Last element is .rows
   if (!is.null(groups)) {groups <- groups[1:(length(groups)-1)]}
   #now, find which variables in summ are not grouping variables
@@ -196,9 +196,9 @@ mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqc
 
   #If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    attr(.df,'.i') <- inp$orig_i
-    attr(.df,'.t') <- inp$orig_t
-    attr(.df,'.d') <- inp$orig_d
+    .df %@% '.i' <- inp$orig_i
+    .df %@% '.t' <- inp$orig_t
+    .df %@% '.d' <- inp$orig_d
   }
 
   return(.df)

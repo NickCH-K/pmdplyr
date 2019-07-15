@@ -28,6 +28,8 @@ as_pdeclare(x, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE, ...)
 \item{.d}{Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.}
 
 \item{.uniqcheck}{Logical parameter. Set to TRUE to perform a check of whether \code{.i} and \code{.t} uniquely identify observations, and present a message if not. By default this is set to FALSE and the warning message occurs only once per session.}
+
+\item{...}{Other arguments passed on to individual methods.}
 }
 \description{
 WARNING: FOR NOW, BE AWARE THAT AFTER USING AS_PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES.

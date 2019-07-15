@@ -82,7 +82,7 @@ panel_fill <- function(.df,.set_NA=FALSE,.min=NA,.max=NA,.backwards=FALSE,.group
   }
 
   #original grouping structure
-  origgroups <- names(attr(.df,'groups'))
+  origgroups <- names(.df %@% 'groups')
   origgroups <- origgroups[1:(length(origgroups)-1)]
   if (is.null(origgroups)) { origgroups <- NA }
 
@@ -97,7 +97,7 @@ panel_fill <- function(.df,.set_NA=FALSE,.min=NA,.max=NA,.backwards=FALSE,.group
     .df <- as_pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
 
     #.d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
-    inp$d <- attr(.df,'.d')
+    inp$d <- .df %@% '.d'
   }
 
   #we need a positive numeric .d, and a .t
@@ -244,7 +244,7 @@ panel_fill <- function(.df,.set_NA=FALSE,.min=NA,.max=NA,.backwards=FALSE,.group
     dplyr::arrange_at(arrnames)
   .df[[copyname]] <- NULL
   #Check if grouping has changed and there WAS an original grouping
-  if (!setequal(c(origgroups,'.rows'),attr(.df,'groups'))) {
+  if (!setequal(c(origgroups,'.rows'),.df %@% 'groups')) {
     if (max(is.na(origgroups)) == 1) {
       .df <- .df %>% dplyr::ungroup()
     }
@@ -255,9 +255,9 @@ panel_fill <- function(.df,.set_NA=FALSE,.min=NA,.max=NA,.backwards=FALSE,.group
 
   #If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    attr(data,'.i') <- inp$orig_i
-    attr(data,'.t') <- inp$orig_t
-    attr(data,'.d') <- inp$orig_d
+    .df %@% '.i' <- inp$orig_i
+    .df %@% '.t' <- inp$orig_t
+    .df %@% '.d' <- inp$orig_d
   }
 
   return(.df)
@@ -337,7 +337,7 @@ panel_locf <- function(.var,.df=get(".", envir=parent.frame()),.fill=NA,.backwar
   }
 
   #original grouping structure
-  origgroups <- names(attr(.df,'groups'))
+  origgroups <- names(.df %@% 'groups')
   origgroups <- origgroups[1:(length(origgroups)-1)]
   if (is.null(origgroups)) { origgroups <- NA }
 
@@ -551,7 +551,7 @@ fixed_force <- function(.df,.var=NA,.within,.resolve=function(x) unique(x)[which
   }
 
   #original grouping structure
-  origgroups <- names(attr(.df,'groups'))
+  origgroups <- names(.df %@% 'groups')
   origgroups <- origgroups[1:(length(origgroups)-1)]
   if (is.null(origgroups)) { origgroups <- NA }
 

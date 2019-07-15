@@ -6,7 +6,7 @@
 #'
 #' @param .var Vector to be lagged.
 #' @param .df Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
-#' @param .n Number of periods to lag by. 1 by default. Note that this is automatically scaled by \code{.d}. If \code{.d = 2} and \code{.n = 1}, then the lag of \code{.t = 3} will be \code{.t = 1}. Allows negative values, equivalent to \code{tlead()} with the same value but positive.
+#' @param .n Number of periods to lag by. 1 by default. Note that this is automatically scaled by \code{.d}. If \code{.d = 2} and \code{.n = 1}, then the lag of \code{.t = 3} will be \code{.t = 1}. Allows negative values, equivalent to \code{tlead()} with the same value but positive. Note that \code{.n} is ignored if \code{.d=0}.
 #' @param .default Fill-in value used when lagged observation is not present. Defaults to NA.
 #' @param .quick If \code{.i} and \code{.t} uniquely identify observations in your data, **and** there either \code{.d = 0} or there are no time gaps for any individuals (perhaps use \code{panel_fill()} first), set \code{.quick = TRUE} to improve speed. \code{tlag()} will not check if either of these things are true (except unique identification, which will be checked if \code{.uniqcheck = 1} or if \code{.i} or \code{.t} are specified in-function), so make sure they are or you will get strange results.
 #' @param .resolve If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{tlag()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = function(x) mean(x)} to get the mean value of all observations present for that individual/period.
@@ -55,6 +55,14 @@
 #' Scorecard <- Scorecard %>%
 #'   dplyr::mutate(last_year_earnings_all = tlag(earnings_med,.t='year',
 #'                                               .resolve=function(x) mean(x,na.rm=TRUE)))
+#' #Curious why the first nonmissing obs show up in 2012?
+#' #It's because there's no 2008 or 2010 in the data, so when 2009 or 2011 look back
+#' #a year, they find nothing!
+#' #We could get around this by setting .d = 0 to ignore gap length
+#' #Note this can be a little slow
+#' Scorecard <- Scorecard %>%
+#'   dplyr::mutate(last_year_earnings_all = tlag(earnings_med,.t='year',.d=0,
+#'                                               .resolve=function(x) mean(x,na.rm=TRUE)))
 #'
 #' @export
 
@@ -87,7 +95,7 @@ tlag <- function(.var,.df=get(".", envir=parent.frame()),.n=1,.default=NA,.quick
   }
 
   #original grouping structure
-  origgroups <- names(attr(.df,'groups'))
+  origgroups <- names(.df %@% 'groups')
   origgroups <- origgroups[1:(length(origgroups)-1)]
   if (is.null(origgroups)) { origgroups <- NA }
 
@@ -157,8 +165,27 @@ tlag <- function(.var,.df=get(".", envir=parent.frame()),.n=1,.default=NA,.quick
   foundmatch <- names(lookup)[ncol(lookup)]
 
   #Do the linkup and return the lagged value
-  .df <- .df %>%
-    dplyr::left_join(lookup,by=arrnames)
+  #note that if .d = 0 we need to look for the most recent value
+  if (inp$d > 0) {
+    .df <- .df %>%
+      dplyr::left_join(lookup,by=arrnames)
+  } else {
+    #prepare for an inexact_join. We need the name of .t in lookup to be different
+    lookup[,ncol(lookup)+1] <- lookup[[inp$t]]
+    jvarname <- names(lookup)[ncol(lookup)]
+    #and get rid of the actual one
+    lookup[[inp$t]] <- NULL
+
+    #work separately based on whether we have .i or not
+    if (length(arrnames) == 1) {
+      suppressMessages(.df <- .df %>%
+        inexact_left_join(lookup,var=inp$t,jvar=jvarname,method='last',exact=FALSE))
+    } else {
+      suppressMessages(.df <- .df %>%
+                         inexact_left_join(lookup,by=arrnames[1:length(arrnames)-1],var=inp$t,
+                                           jvar=jvarname,method='last',exact=FALSE))
+    }
+  }
   if (!is.na(.default)) {
     .df <- .df %>% dplyr::mutate_at(varname,.funs=function(x)
       ifelse(is.na(.df[[foundmatch]]),.default,.df[[varname]]))

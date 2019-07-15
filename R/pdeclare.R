@@ -58,6 +58,13 @@ pdeclare <- function(..., .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
   #Create tibble
   tbl <- tibble::tibble(...)
 
+  #check inputs
+  check_panel_inputs(tbl,
+                     .i = .i,
+                     .t = .t,
+                     .d = .d,
+                     .uniqcheck = .uniqcheck)
+
   #make a pdeclare
   tbl <- build_pdeclare(tbl,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
 
@@ -149,6 +156,13 @@ as_pdeclare.tbl_df <- function(x,
                                .uniqcheck = FALSE,
                                ...) {
 
+  #check inputs
+  check_panel_inputs(x,
+                     .i = .i,
+                     .t = .t,
+                     .d = .d,
+                     .uniqcheck = .uniqcheck)
+
   return(build_pdeclare(x, .i = .i, .d = .d, .t = .t, .uniqcheck = .uniqcheck, ...))
 }
 
@@ -172,6 +186,8 @@ as_pdeclare.NULL <- function(x, ...) {
 #' `build_pdeclare()` creates a `tbl_pd` object with more controls. It is useful
 #' for creating a `tbl_pd` internally inside a function.
 #'
+#' Note that, for speed, `build_pdeclare()` does not check the adequacy of the inputs.
+#'
 #' @export
 #' @importFrom rlang %@%
 build_pdeclare <- function(tbl,
@@ -179,12 +195,6 @@ build_pdeclare <- function(tbl,
                            .t = NA,
                            .d = 1,
                            .uniqcheck = FALSE){
-
-  check_panel_inputs(tbl,
-                    .i = .i,
-                    .t = .t,
-                    .d = .d,
-                    .uniqcheck = .uniqcheck)
 
   grp_data <- tbl %@% "groups"
 
@@ -277,9 +287,9 @@ is_pdeclare <- function(.df,.silent=FALSE) {
     stop('silent must be TRUE or FALSE.')
   }
 
-  i <- ifelse(is.null(attr(.df,'.i')),NA,paste0(attr(.df,'.i'),collapse=', '))
-  t <- ifelse(is.null(attr(.df,'.t')),NA,attr(.df,'.t'))
-  d <- ifelse(is.null(attr(.df,'.d')),NA,attr(.df,'.d'))
+  i <- ifelse(is.null(.df %@% '.i'),NA,paste0(.df %@% '.i',collapse=', '))
+  t <- ifelse(is.null(.df %@% '.t'),NA,.df %@% '.t')
+  d <- ifelse(is.null(.df %@% '.d'),NA,.df %@% '.d')
 
   if (is.na(i) & is.na(t) & is.na(d)) {
     return(FALSE)
@@ -303,9 +313,9 @@ declare_in_fcn_check <- function(.df,.i,.t,.d,.uniqcheck,.setpanel,.noneed=FALSE
 
   #Collect original panel settings, if any.
   #To be consistent with other input checking, make them NA not NULL if appropriate
-  orig_i <- ifelse(is.null(attr(.df,'.i')),NA,attr(.df,'.i'))
-  orig_t <- ifelse(is.null(attr(.df,'.t')),NA,attr(.df,'.t'))
-  orig_d <- ifelse(is.null(attr(.df,'.d')),NA,attr(.df,'.d'))
+  orig_i <- ifelse(is.null(.df %@% '.i'),NA,.df %@% '.i')
+  orig_t <- ifelse(is.null(.df %@% '.t'),NA,.df %@% '.t')
+  orig_d <- ifelse(is.null(.df %@% '.d'),NA,.df %@% '.d')
 
   #If uniqcheck is TRUE but panel is not being reset, run through check_panel_inputs
   #just to check, using already-set panel info

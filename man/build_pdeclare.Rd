@@ -4,10 +4,12 @@
 \alias{build_pdeclare}
 \title{Low-level constructor for a pdeclare object}
 \usage{
-build_pdeclare(tbl, .i = NULL, .d = 1, .t = NULL,
-  .uniqcheck = FALSE)
+build_pdeclare(tbl, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE)
 }
 \description{
 `build_pdeclare()` creates a `tbl_pd` object with more controls. It is useful
 for creating a `tbl_pd` internally inside a function.
+}
+\details{
+Note that, for speed, `build_pdeclare()` does not check the adequacy of the inputs.
 }

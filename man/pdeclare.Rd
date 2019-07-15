@@ -31,7 +31,6 @@ The \code{pdeclare()} function is for the purpose of creating \code{pdeclare} ob
 Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
 }
 \examples{
-<<<<<<< HEAD
 #Creating a pdeclare from scratch
 pd <- pdeclare(i = c(1,1,1,2,2,2),
                t = c(1,2,3,1,2,2),
@@ -39,7 +38,6 @@ pd <- pdeclare(i = c(1,1,1,2,2,2),
                .i = 'i',
                .t = 't')
 is_pdeclare(pd)
-=======
 data(SPrail)
 #I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
 #If I want to use 'insert_date' for t,
@@ -59,6 +57,5 @@ data(Scorecard)
 #Conveniently, .d = 1 is the default
 Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
 is_pdeclare(Scorecard)
->>>>>>> 7e2913474e048ac14379b7bdfedfc53f9c673542
 
 }

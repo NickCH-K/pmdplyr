@@ -77,5 +77,13 @@ Scorecard <- Scorecard \%>\%
 Scorecard <- Scorecard \%>\%
   dplyr::mutate(last_year_earnings_all = tlag(earnings_med,.t='year',
                                               .resolve=function(x) mean(x,na.rm=TRUE)))
+#Curious why the first nonmissing obs show up in 2012?
+#It's because there's no 2008 or 2010 in the data, so when 2009 or 2011 look back
+#a year, they find nothing!
+#We could get around this by setting .d = 0 to ignore gap length
+#Note this can be a little slow
+Scorecard <- Scorecard \%>\%
+  dplyr::mutate(last_year_earnings_all = tlag(earnings_med,.t='year',.d=0,
+                                              .resolve=function(x) mean(x,na.rm=TRUE)))
 
 }
