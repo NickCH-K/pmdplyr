@@ -30,3 +30,25 @@ The \code{pdeclare()} function is for the purpose of creating \code{pdeclare} ob
 
 Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
 }
+\examples{
+# Creating a pdeclare from scratch
+pd <- pdeclare(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(1, 2, 3, 1, 2, 2),
+  x = rnorm(6),
+  .i = "i",
+  .t = "t"
+)
+is_pdeclare(pd)
+# I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
+# If I want to use 'seconds' for t.
+# See time_variable() to turn unruly variables into well-behaved integers, as well
+pd2 <- pdeclare(
+  i = c(1, 1, 1, 2, 2, 2),
+  seconds = c(123, 456, 789, 103, 234, 238),
+  .i = ".i",
+  .t = "seconds",
+  .d = 0
+)
+is_pdeclare(pd2)
+}

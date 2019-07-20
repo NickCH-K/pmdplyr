@@ -37,13 +37,13 @@ One application of this is to partially widen data. For example, if your analysi
 \examples{
 
 data(SPrail)
-#In preparation for fitting a choice model for how people choose ticket type,
-#I'd like to know the price of a "Promo" ticket for a given route
-#So that I can compare each other type of ticket price to that type
+# In preparation for fitting a choice model for how people choose ticket type,
+# I'd like to know the price of a "Promo" ticket for a given route
+# So that I can compare each other type of ticket price to that type
 SPrail <- SPrail \%>\%
-mutate_subset(promo_price = mean(price,na.rm=TRUE),
-             .filter=SPrail$fare=='Promo',
-             .i = c('origin','destination'))
-
-
+  mutate_subset(
+    promo_price = mean(price, na.rm = TRUE),
+    .filter = SPrail$fare == "Promo",
+    .i = c("origin", "destination")
+  )
 }

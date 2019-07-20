@@ -53,60 +53,68 @@ Methods available include:
 
 data(SPrail)
 
-#Since we have a date variable, we can easily create integers that increment for each
-#year, or for each month, etc.
-#Likely we'd only really need one of these four, depending on our purposes
+# Since we have a date variable, we can easily create integers that increment for each
+# year, or for each month, etc.
+# Likely we'd only really need one of these four, depending on our purposes
 SPrail <- SPrail \%>\%
-  dplyr::mutate(year_time_id = time_variable(insert_date,.method='year'),
-                month_time_id = time_variable(insert_date,.method='month'),
-                week_time_id = time_variable(insert_date,.method='week'),
-                day_time_id = time_variable(insert_date,.method='day'))
+  dplyr::mutate(
+    year_time_id = time_variable(insert_date, .method = "year"),
+    month_time_id = time_variable(insert_date, .method = "month"),
+    week_time_id = time_variable(insert_date, .method = "week"),
+    day_time_id = time_variable(insert_date, .method = "day")
+  )
 
-#Perhaps I'd like quarterly data
-#(although in this case there are only two months, not much variation there)
+# Perhaps I'd like quarterly data
+# (although in this case there are only two months, not much variation there)
 SPrail <- SPrail \%>\%
-  dplyr::mutate(quarter_time_id = time_variable(insert_date,.method='month',.breaks=c(1,4,7,10)))
-table(SPrail$month_time_id,SPrail$quarter_time_id)
+  dplyr::mutate(quarter_time_id = time_variable(insert_date, .method = "month", .breaks = c(1, 4, 7, 10)))
+table(SPrail$month_time_id, SPrail$quarter_time_id)
 
-#Maybe I'd like Monday to come immediately after Friday!
+# Maybe I'd like Monday to come immediately after Friday!
 SPrail <- SPrail \%>\%
-  dplyr::mutate(weekday_id = time_variable(insert_date,.method='day',.skip=c(6,7)))
+  dplyr::mutate(weekday_id = time_variable(insert_date, .method = "day", .skip = c(6, 7)))
 
-#Perhaps I'm interested in ANY time period in the data and just want to enumerate them in order
+# Perhaps I'm interested in ANY time period in the data and just want to enumerate them in order
 SPrail <- SPrail \%>\%
-  dplyr::mutate(any_present_time_id = time_variable(insert_date,.method='present'))
+  dplyr::mutate(any_present_time_id = time_variable(insert_date, .method = "present"))
 
 
-#Maybe instead of being given a nice time variable, I was given it in string form
+# Maybe instead of being given a nice time variable, I was given it in string form
 SPrail <- SPrail \%>\% dplyr::mutate(time_string = as.character(insert_date))
-#As long as the character positions are consistent we can still use it
+# As long as the character positions are consistent we can still use it
 SPrail <- SPrail \%>\%
-  dplyr::mutate(day_from_string_id = time_variable(time_string,.method='day',
-                                                   .datepos=c(3,4,6,7,9,10)))
-#Results are identical
-cor(SPrail$day_time_id,SPrail$day_from_string_id)
+  dplyr::mutate(day_from_string_id = time_variable(time_string,
+    .method = "day",
+    .datepos = c(3, 4, 6, 7, 9, 10)
+  ))
+# Results are identical
+cor(SPrail$day_time_id, SPrail$day_from_string_id)
 
 
-#Or, maybe instead of being given a nice time variable, we have separate year and month variables
+# Or, maybe instead of being given a nice time variable, we have separate year and month variables
 SPrail <- SPrail \%>\%
-  dplyr::mutate(year = lubridate::year(insert_date),
-                month = lubridate::month(insert_date))
-#We can use the turnover method to tell it that there are 12 months in a year,
-#and get an integer year-month variable
+  dplyr::mutate(
+    year = lubridate::year(insert_date),
+    month = lubridate::month(insert_date)
+  )
+# We can use the turnover method to tell it that there are 12 months in a year,
+# and get an integer year-month variable
 SPrail <- SPrail \%>\%
-  dplyr::mutate(month_from_two_vars_id = time_variable(year,month,.method='turnover',
-                                                       .turnover=c(NA,12)))
-#Results are identical
-cor(SPrail$month_time_id,SPrail$month_from_two_vars_id)
+  dplyr::mutate(month_from_two_vars_id = time_variable(year, month,
+    .method = "turnover",
+    .turnover = c(NA, 12)
+  ))
+# Results are identical
+cor(SPrail$month_time_id, SPrail$month_from_two_vars_id)
 
-#I could also use turnover to make the data hourly.
-#Note that I'm using the day variable from earlier to avoid having
-#to specify when day turns over (since that could be 28, 30, or 31)
+# I could also use turnover to make the data hourly.
+# Note that I'm using the day variable from earlier to avoid having
+# to specify when day turns over (since that could be 28, 30, or 31)
 SPrail <- SPrail \%>\%
-  dplyr::mutate(hour_id = time_variable(day_time_id,lubridate::hour(insert_date),
-                                        .method='turnover',
-                                        .turnover=c(NA,23),
-                                        .turnover_start=c(NA,0)))
-#This could be easily extended to make the data by-minute, by-second, etc.
-
+  dplyr::mutate(hour_id = time_variable(day_time_id, lubridate::hour(insert_date),
+    .method = "turnover",
+    .turnover = c(NA, 23),
+    .turnover_start = c(NA, 0)
+  ))
+# This could be easily extended to make the data by-minute, by-second, etc.
 }

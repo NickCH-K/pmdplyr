@@ -41,51 +41,58 @@ This function retrieves the time-lagged values of a variable, using the time var
 
 data(Scorecard)
 
-#The Scorecard data is uniquely identified by unitid and year.
-#However, there are sometimes gaps between years.
-#In cases like this, using dplyr::lag() will still use the row before,
-#whereas tlag() will respect the gap and give a NA, much like plm::lag()
-#(although tlag is slower than either, sorry)
+# The Scorecard data is uniquely identified by unitid and year.
+# However, there are sometimes gaps between years.
+# In cases like this, using dplyr::lag() will still use the row before,
+# whereas tlag() will respect the gap and give a NA, much like plm::lag()
+# (although tlag is slower than either, sorry)
 Scorecard <- Scorecard \%>\%
-  dplyr::mutate(pmdplyr_tlag = tlag(earnings_med,.i='unitid',.t='year'))
+  dplyr::mutate(pmdplyr_tlag = tlag(earnings_med, .i = "unitid", .t = "year"))
 Scorecard <- Scorecard \%>\%
   dplyr::arrange(year) \%>\%
   dplyr::group_by(unitid) \%>\%
   dplyr::mutate(dplyr_lag = dplyr::lag(earnings_med)) \%>\%
   dplyr::ungroup()
 
-#more NAs in the pmdplyr version - observations with a gap and thus no real lag present in data
+# more NAs in the pmdplyr version - observations with a gap and thus no real lag present in data
 sum(is.na(Scorecard$pmdplyr_tlag))
 sum(is.na(Scorecard$dplyr_lag))
 
-#If we want to ignore gaps, or have .d = 0, and .i and .t uniquely identify observations,
-#we can use the .quick option to match dplyr::lag()
+# If we want to ignore gaps, or have .d = 0, and .i and .t uniquely identify observations,
+# we can use the .quick option to match dplyr::lag()
 Scorecard <- Scorecard \%>\%
-  dplyr::mutate(pmdplyr_quick_tlag = tlag(earnings_med,.i='unitid',.t='year',.d=0,.quick=TRUE))
-sum(Scorecard$dplyr_lag != Scorecard$pmdplyr_quick_tlag,na.rm=TRUE)
+  dplyr::mutate(pmdplyr_quick_tlag = tlag(earnings_med, .i = "unitid", .t = "year", .d = 0, .quick = TRUE))
+sum(Scorecard$dplyr_lag != Scorecard$pmdplyr_quick_tlag, na.rm = TRUE)
 
-#Where tlag shines is when you have multiple observations per .i/.t
-#If the value of .var is constant within .i/.t, it will work just as you expect.
-#If it's not, it will throw an error, or you can set
-#.resolve to tell tlag how to select a single value from the many
-#Maybe we want to get the lagged average earnings within degree award type
+# Where tlag shines is when you have multiple observations per .i/.t
+# If the value of .var is constant within .i/.t, it will work just as you expect.
+# If it's not, it will throw an error, or you can set
+# .resolve to tell tlag how to select a single value from the many
+# Maybe we want to get the lagged average earnings within degree award type
 Scorecard <- Scorecard \%>\%
-  dplyr::mutate(last_year_earnings_by_category =
-  tlag(earnings_med,.i='pred_degree_awarded_ipeds',.t='year',
-  .resolve=function(x) mean(x,na.rm=TRUE)))
-#Or maybe I want the lagged earnings across all types - .i isn't necessary!
+  dplyr::mutate(
+    last_year_earnings_by_category =
+      tlag(earnings_med,
+        .i = "pred_degree_awarded_ipeds", .t = "year",
+        .resolve = function(x) mean(x, na.rm = TRUE)
+      )
+  )
+# Or maybe I want the lagged earnings across all types - .i isn't necessary!
 Scorecard <- Scorecard \%>\%
-  dplyr::mutate(last_year_earnings_all = tlag(earnings_med,.t='year',
-                                              .resolve=function(x) mean(x,na.rm=TRUE)))
-#Curious why the first nonmissing obs show up in 2012?
-#It's because there's no 2008 or 2010 in the data, so when 2009 or 2011 look back
-#a year, they find nothing!
-#We could get around this by setting .d = 0 to ignore gap length
-#Note this can be a little slow.
+  dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
+    .t = "year",
+    .resolve = function(x) mean(x, na.rm = TRUE)
+  ))
+# Curious why the first nonmissing obs show up in 2012?
+# It's because there's no 2008 or 2010 in the data, so when 2009 or 2011 look back
+# a year, they find nothing!
+# We could get around this by setting .d = 0 to ignore gap length
+# Note this can be a little slow.
 if (interactive()) {
-Scorecard <- Scorecard \%>\%
-  dplyr::mutate(last_year_earnings_all = tlag(earnings_med,.t='year',.d=0,
-                                              .resolve=function(x) mean(x,na.rm=TRUE)))
+  Scorecard <- Scorecard \%>\%
+    dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
+      .t = "year", .d = 0,
+      .resolve = function(x) mean(x, na.rm = TRUE)
+    ))
 }
-
 }

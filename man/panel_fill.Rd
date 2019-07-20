@@ -47,39 +47,39 @@ This function requires \code{.t} and \code{.d} to be declared in the function or
 }
 \examples{
 
-#Examples too slow to run
+# Examples too slow to run
 if (interactive()) {
-
-data(Scorecard)
-#Notice that, in the Scorecard data, the gap between one year and the next is not always constant
-table((Scorecard \%>\% dplyr::arrange(year) \%>\%
+  data(Scorecard)
+  # Notice that, in the Scorecard data, the gap between one year and the next is not always constant
+  table((Scorecard \%>\% dplyr::arrange(year) \%>\%
     dplyr::group_by(unitid) \%>\%
     dplyr::mutate(diff = year - dplyr::lag(year)))$diff)
-#And also that not all universities show up for the first or last times in the same year
-year_range <- Scorecard \%>\% dplyr::group_by(unitid) \%>\%
-    dplyr::summarize(first_year = min(year),last_year = max(year))
-table(year_range$first_year)
-table(year_range$last_year)
-rm(year_range)
+  # And also that not all universities show up for the first or last times in the same year
+  year_range <- Scorecard \%>\%
+    dplyr::group_by(unitid) \%>\%
+    dplyr::summarize(first_year = min(year), last_year = max(year))
+  table(year_range$first_year)
+  table(year_range$last_year)
+  rm(year_range)
 
-#We can deal with the inconsistent-gaps problem by creating new obs to fill in
-#this version will fill in the new obs with the most recently observed data, and flag them
-Scorecard_filled <- panel_fill(Scorecard,.i='unitid',.t='year',.flag='new')
+  # We can deal with the inconsistent-gaps problem by creating new obs to fill in
+  # this version will fill in the new obs with the most recently observed data, and flag them
+  Scorecard_filled <- panel_fill(Scorecard, .i = "unitid", .t = "year", .flag = "new")
 
-#Or maybe we want those observations in there but don't want to treat them as real data
-#so instead of filling them in, just leave all the data in the new obs blank
-#(note this sets EVERYTHING not in .i or .t to NA - if you only want some variables NA,
-#make .set_NA a character vector of those variable names)
-Scorecard_filled <- panel_fill(Scorecard,.i='unitid',.t='year',.flag='new',.set_NA=TRUE)
+  # Or maybe we want those observations in there but don't want to treat them as real data
+  # so instead of filling them in, just leave all the data in the new obs blank
+  # (note this sets EVERYTHING not in .i or .t to NA - if you only want some variables NA,
+  # make .set_NA a character vector of those variable names)
+  Scorecard_filled <- panel_fill(Scorecard, .i = "unitid", .t = "year", .flag = "new", .set_NA = TRUE)
 
-#Perhaps we want a perfectly balanced panel. So let's set .max and .min to the start and end
-#of the data, and it will fill in everything.
-Scorecard_filled <- panel_fill(Scorecard,.i='unitid',.t='year',.flag='new',
-    .min=min(Scorecard$year),.max=max(Scorecard$year))
-#how many obs of each college? Should be identical, and equal to the number of years there are
-table(table(Scorecard_filled$unitid))
-length(unique(Scorecard_filled$year))
-
+  # Perhaps we want a perfectly balanced panel. So let's set .max and .min to the start and end
+  # of the data, and it will fill in everything.
+  Scorecard_filled <- panel_fill(Scorecard,
+    .i = "unitid", .t = "year", .flag = "new",
+    .min = min(Scorecard$year), .max = max(Scorecard$year)
+  )
+  # how many obs of each college? Should be identical, and equal to the number of years there are
+  table(table(Scorecard_filled$unitid))
+  length(unique(Scorecard_filled$year))
 }
-
 }
