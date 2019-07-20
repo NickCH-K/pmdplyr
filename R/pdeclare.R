@@ -183,6 +183,7 @@ as_pdeclare.NULL <- function(x, ...) {
 #'
 #' @export
 #' @inheritParams pdeclare
+#' @keywords internal
 #' @importFrom rlang %@%
 build_pdeclare <- function(tbl,
                            .i = NA,
