@@ -29,25 +29,16 @@
 #'                .i = 'i',
 #'                .t = 't')
 #' is_pdeclare(pd)
-#' data(SPrail)
 #' #I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
-#' #If I want to use 'insert_date' for t,
-#' #I need to transform it into an integer first; see time_variable()
-#' SP <- pdeclare(SPrail,
-#'                .i = c('origin', 'destination'),
-#'                .t = 'insert_date',
+#' #If I want to use 'seconds' for t.
+#' #See time_variable() to turn unruly variables into well-behaved integers, as well
+#' pd2 <- pdeclare(i = c(1,1,1,2,2,2),
+#'                seconds = c(123,456,789,103,234,238),
+#'                .i = '.i,
+#'                .t = 'seconds',
 #'                .d = 0)
-#' is_pdeclare(SP)
-#' attr(SP,'.i')
-#' attr(SP,'.t')
-#' attr(SP,'.d')
+#' is_pdeclare(pd2)
 #'
-#' data(Scorecard)
-#' #Here, year is an integer, so I can use it with .d = 1 to
-#' #indicate that one period is a change of one unit in year
-#' #Conveniently, .d = 1 is the default
-#' Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
-#' is_pdeclare(Scorecard)
 #'
 NULL
 #' @export
@@ -71,23 +62,19 @@ pdeclare <- function(..., .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
   return(tbl)
 }
 
-
-#' @export
-new_pdeclare <- function(x, ..., class = NULL) {
+new_pdeclare <- function(x, ...,class=NULL) {
 
   if (!is.data.frame(x)) {
     x <- as.data.frame(x)
   }
 
-  x <- tibble::new_tibble(x, ..., nrow = nrow(x), class = "tbl_pd")
+  x <- tibble::new_tibble(x, ..., nrow = nrow(x), class = c('tbl_pd',class))
 
   return(x)
 }
 
 #' @importFrom vctrs vec_restore
 #' @method vec_restore tbl_pd
-#' @export
-#' @export vec_restore.tbl_pd
 vec_restore.tbl_pd <- function(x, to) {
   .i <- x %@% ".i"
   .t <- x %@% ".t"
@@ -166,6 +153,9 @@ as_pdeclare.tbl_df <- function(x,
   return(build_pdeclare(x, .i = .i, .d = .d, .t = .t, .uniqcheck = .uniqcheck, ...))
 }
 
+#' @rdname as_pdeclare
+#' @export
+as_pdeclare.grouped_df <- as_pdeclare.tbl_df
 
 #' @rdname as_pdeclare
 #' @export
@@ -189,6 +179,7 @@ as_pdeclare.NULL <- function(x, ...) {
 #' Note that, for speed, `build_pdeclare()` does not check the adequacy of the inputs.
 #'
 #' @export
+#' @inheritParams pdeclare
 #' @importFrom rlang %@%
 build_pdeclare <- function(tbl,
                            .i = NA,
@@ -198,25 +189,25 @@ build_pdeclare <- function(tbl,
 
   grp_data <- tbl %@% "groups"
 
-  tbl <- new_pdeclare(tbl,
-                      .i = .i,
-                      .d = .d,
-                      .t = .t,
-                      groups = NULL)
-
-  is_grped <- dplyr::is_grouped_df(tbl)
-
-  if (is_grped) {
-    cls <- c("grouped_pd", "grouped_df")
+  if (dplyr::is_grouped_df(tbl)) {
+    cls <- 'grouped_df'
     tbl <- new_pdeclare(tbl,
                         groups = grp_data,
+                        .i = .i,
+                        .t = .t,
+                        .d = .d,
                         class = cls)
+  } else {
+    tbl <- new_pdeclare(tbl,
+                        .i = .i,
+                        .d = .d,
+                        .t = .t,
+                        groups = NULL)
   }
 
   return(tbl)
 }
 
-#' @export
 check_panel_inputs <- function(.df,.i,.t,.d,.uniqcheck) {
   ####CHECK INPUTS
   if (sum(class(.df) %in% c('data.frame','tbl','tbl_df','list')) == 0) {
@@ -274,7 +265,7 @@ check_panel_inputs <- function(.df,.i,.t,.d,.uniqcheck) {
 #' @examples
 #'
 #' data(Scorecard)
-#' Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
+#' Scorecard <- as_pdeclare(Scorecard,.i='unitid',.t='year')
 #' is_pdeclare(Scorecard)
 #'
 #' @export
@@ -291,13 +282,13 @@ is_pdeclare <- function(.df,.silent=FALSE) {
   t <- ifelse(is.null(.df %@% '.t'),NA,.df %@% '.t')
   d <- ifelse(is.null(.df %@% '.d'),NA,.df %@% '.d')
 
-  if (is.na(i) & is.na(t) & is.na(d)) {
-    return(FALSE)
-  } else {
+  if ((!is.na(i) | !is.na(t)) & 'tbl_pd' %in% class(.df)) {
     if (.silent == FALSE) {
       message(paste('.i = ',i,'; .t = ',t,'; .d = ',d,'.',sep=''))
     }
     return(TRUE)
+  } else {
+    return(FALSE)
   }
 }
 

@@ -13,7 +13,7 @@ tlag(.var, .df = get(".", envir = parent.frame()), .n = 1,
 
 \item{.df}{Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
 
-\item{.n}{Number of periods to lag by. 1 by default. Note that this is automatically scaled by \code{.d}. If \code{.d = 2} and \code{.n = 1}, then the lag of \code{.t = 3} will be \code{.t = 1}. Allows negative values, equivalent to \code{tlead()} with the same value but positive.}
+\item{.n}{Number of periods to lag by. 1 by default. Note that this is automatically scaled by \code{.d}. If \code{.d = 2} and \code{.n = 1}, then the lag of \code{.t = 3} will be \code{.t = 1}. Allows negative values, equivalent to \code{tlead()} with the same value but positive. Note that \code{.n} is ignored if \code{.d=0}.}
 
 \item{.default}{Fill-in value used when lagged observation is not present. Defaults to NA.}
 
@@ -81,9 +81,11 @@ Scorecard <- Scorecard \%>\%
 #It's because there's no 2008 or 2010 in the data, so when 2009 or 2011 look back
 #a year, they find nothing!
 #We could get around this by setting .d = 0 to ignore gap length
-#Note this can be a little slow
+#Note this can be a little slow.
+if (interactive()) {
 Scorecard <- Scorecard \%>\%
   dplyr::mutate(last_year_earnings_all = tlag(earnings_med,.t='year',.d=0,
                                               .resolve=function(x) mean(x,na.rm=TRUE)))
+}
 
 }

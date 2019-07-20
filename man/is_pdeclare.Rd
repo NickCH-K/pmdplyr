@@ -17,7 +17,7 @@ Checks whether a data set (\code{data.frame} or \code{tibble}) has been assigned
 \examples{
 
 data(Scorecard)
-Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
+Scorecard <- as_pdeclare(Scorecard,.i='unitid',.t='year')
 is_pdeclare(Scorecard)
 
 }

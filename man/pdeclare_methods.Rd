@@ -3,16 +3,72 @@
 \name{pdeclare_methods}
 \alias{pdeclare_methods}
 \alias{mutate.tbl_pd}
+\alias{distinct.tbl_pd}
+\alias{group_by.tbl_pd}
+\alias{ungroup.tbl_pd}
+\alias{bind_cols.tbl_pd}
+\alias{left_join.tbl_pd}
+\alias{inner_join.tbl_pd}
+\alias{right_join.tbl_pd}
+\alias{full_join.tbl_pd}
+\alias{semi_join.tbl_pd}
+\alias{nest_join.tbl_pd}
+\alias{anti_join.tbl_pd}
 \alias{select.tbl_pd}
+\alias{rename.tbl_pd}
+\alias{summarize.tbl_pd}
+\alias{summarise.tbl_pd}
+\alias{transmute.tbl_pd}
 \title{pdeclare methods}
 \usage{
 \method{mutate}{tbl_pd}(.data, ...)
 
+\method{distinct}{tbl_pd}(.data, ...)
+
+\method{group_by}{tbl_pd}(.data, ...)
+
+\method{ungroup}{tbl_pd}(.data, ...)
+
+\method{bind_cols}{tbl_pd}(.data, ...)
+
+\method{left_join}{tbl_pd}(.data, ...)
+
+\method{inner_join}{tbl_pd}(.data, ...)
+
+\method{right_join}{tbl_pd}(.data, ...)
+
+\method{full_join}{tbl_pd}(.data, ...)
+
+\method{semi_join}{tbl_pd}(.data, ...)
+
+\method{nest_join}{tbl_pd}(.data, ...)
+
+\method{anti_join}{tbl_pd}(.data, ...)
+
 \method{select}{tbl_pd}(.data, ...)
+
+\method{rename}{tbl_pd}(.data, ...)
+
+\method{summarize}{tbl_pd}(.data, ...)
+
+\method{summarise}{tbl_pd}(.data, ...)
+
+\method{transmute}{tbl_pd}(.data, ...)
+}
+\arguments{
+\item{.data}{These functions take a \code{tbl_pd} (i.e. \code{pdeclare}) object as input}
+
+\item{...}{and pass other arguments onto the relevant functions.}
 }
 \description{
 These are variants of existing functions that are designed to retain the \code{pdeclare} status of the object, as well as its \code{.i}, \code{.t}, and \code{.d} attributes.
 }
 \details{
-If a function is not on this list, then you may need to re-\code{as_pdeclare} your object after using the function.
+Some functions that already preserve \code{pdeclare} status and so don't need special methods include:
+
+\code{dplyr::filter, dplyr::arrange, dplyr::sample_frac, dplyr::slice, dplyr::sample_n, dplyr::top_n, dplyr::add_row, tibble:add_column}
+
+Also note that any function that takes two data frames/tibbles as inputs will retain the panel structure of the \emph{first} argument.
+
+If a function is not on the above list or elsewhere in this help file, then you may need to re-\code{as_pdeclare} your object after using the function.
 }

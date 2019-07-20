@@ -3,6 +3,7 @@
 \name{as_pdeclare}
 \alias{as_pdeclare}
 \alias{as_pdeclare.tbl_df}
+\alias{as_pdeclare.grouped_df}
 \alias{as_pdeclare.data.frame}
 \alias{as_pdeclare.list}
 \title{Coerce to a pdeclare tibble}
@@ -10,6 +11,9 @@
 as_pdeclare(x, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE, ...)
 
 \method{as_pdeclare}{tbl_df}(x, .i = NA, .t = NA, .d = 1,
+  .uniqcheck = FALSE, ...)
+
+\method{as_pdeclare}{grouped_df}(x, .i = NA, .t = NA, .d = 1,
   .uniqcheck = FALSE, ...)
 
 \method{as_pdeclare}{data.frame}(x, .i = NA, .t = NA, .d = 1,

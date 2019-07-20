@@ -11,7 +11,7 @@ tibble(a = 1:4,
        b = LETTERS[1:4],
        c = 5,
        d = 7) %>%
-  pdeclare(.i = "b", .t = "a") %>%
+  as_pdeclare(.i = "b", .t = "a") %>%
   select_dummy_wrapper(a:c) -> select_cols
 
 test_that("vec_restore returns tbl_pd", {

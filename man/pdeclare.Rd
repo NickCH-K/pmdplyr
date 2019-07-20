@@ -30,32 +30,3 @@ The \code{pdeclare()} function is for the purpose of creating \code{pdeclare} ob
 
 Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
 }
-\examples{
-#Creating a pdeclare from scratch
-pd <- pdeclare(i = c(1,1,1,2,2,2),
-               t = c(1,2,3,1,2,2),
-               x = rnorm(6),
-               .i = 'i',
-               .t = 't')
-is_pdeclare(pd)
-data(SPrail)
-#I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
-#If I want to use 'insert_date' for t,
-#I need to transform it into an integer first; see time_variable()
-SP <- pdeclare(SPrail,
-               .i = c('origin', 'destination'),
-               .t = 'insert_date',
-               .d = 0)
-is_pdeclare(SP)
-attr(SP,'.i')
-attr(SP,'.t')
-attr(SP,'.d')
-
-data(Scorecard)
-#Here, year is an integer, so I can use it with .d = 1 to
-#indicate that one period is a change of one unit in year
-#Conveniently, .d = 1 is the default
-Scorecard <- pdeclare(Scorecard,.i='unitid',.t='year')
-is_pdeclare(Scorecard)
-
-}
