@@ -1,0 +1,41 @@
+reference:
+- title: Overview
+  contents:
+    pmdplyr
+
+- title: Setting panel structure
+  contents:
+    ends_with("pdeclare")
+
+- title: dplyr verb variants for pdeclare objects
+  contents:
+    - inexact_inner_join
+    - inexact_left_join
+    - inexact_right_join
+    - inexact_full_join
+    - inexact_semi_join
+    - inexact_nest_join
+    - inexact_anti_join
+    - mutate_cascade
+    - mutate_subset
+
+- title: Panel data tools
+  contents:
+    - id_variable
+    - fixed_check
+    - fixed_force
+    - within_i
+    - between_i
+    - panel_fill
+    - panel_locf
+    - time_variable
+    - tlag
+
+- title: Datasets
+  contents:
+    - Scorecard
+    - SPrail
+
+- title: pdeclare methods for dplyr verbs
+  contents:
+    - pdeclare_methods
