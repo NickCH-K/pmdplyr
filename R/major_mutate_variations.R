@@ -19,43 +19,41 @@
 #' @examples
 #'
 #' data(Scorecard)
-#' #I'd like to build a decaying function that remembers previous earnings but at a declining rate
-#' #Let's only use nonmissing earnings
+#' # I'd like to build a decaying function that remembers previous earnings but at a declining rate
+#' # Let's only use nonmissing earnings
 #' Scorecard <- Scorecard %>%
-#'     dplyr::filter(!is.na(earnings_med))
+#'   dplyr::filter(!is.na(earnings_med))
 #' Scorecard <- Scorecard %>%
-#'     #Almost all instances involve a variable being set to a function of a lag of itself
-#'     #we don't want to overwrite so let's make another
-#'     dplyr::mutate(decay_earnings = earnings_med) %>%
-#'     #Now we can cascade
-#'     dplyr::mutate(decay_earnings = decay_earnings +
-#'     .5*tlag(decay_earnings,Scorecard,.i='unitid',.t='year',.quick=TRUE))
-#'
-#'
+#'   # Almost all instances involve a variable being set to a function of a lag of itself
+#'   # we don't want to overwrite so let's make another
+#'   dplyr::mutate(decay_earnings = earnings_med) %>%
+#'   # Now we can cascade
+#'   dplyr::mutate(decay_earnings = decay_earnings +
+#'     .5 * tlag(decay_earnings, Scorecard, .i = "unitid", .t = "year", .quick = TRUE))
 #' @export
-mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE,.setpanel=TRUE) {
+mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i = TRUE, .i = NA, .t = NA, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
   if (!is.logical(.backwards)) {
-    stop('.backwards must be TRUE or FALSE')
+    stop(".backwards must be TRUE or FALSE")
   }
   if (!is.logical(.skip)) {
-    stop('.skip must be TRUE or FALSE.')
+    stop(".skip must be TRUE or FALSE.")
   }
   if (!is.logical(.group_i)) {
-    stop('.group_i must be TRUE or FALSE.')
+    stop(".group_i must be TRUE or FALSE.")
   }
 
-  #Check inputs and pull out panel info
-  inp <- declare_in_fcn_check(.df,.i,.t,.d,.uniqcheck,.setpanel)
+  # Check inputs and pull out panel info
+  inp <- declare_in_fcn_check(.df, .i, .t, .d, .uniqcheck, .setpanel)
   if (is.na(inp$t)) {
-    stop('mutate_cascade() requires that .t be declared either in the function or by as_pdeclare().')
+    stop("mutate_cascade() requires that .t be declared either in the function or by as_pdeclare().")
   }
 
-  #Panel-declare data if any changes have been made.
+  # Panel-declare data if any changes have been made.
   if (min(is.na(.i)) == 0 | !is.na(.t) | !is.na(.d)) {
-    .df <- as_pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
+    .df <- as_pdeclare(.df, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck)
 
-    #.d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
-    inp$d <- df %@% '.d'
+    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
+    inp$d <- df %@% ".d"
   }
 
   if (.group_i == TRUE & (min(is.na(inp$i)) == 0)) {
@@ -63,47 +61,47 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
       dplyr::group_by_at(inp$i)
   }
 
-  .df[,ncol(.df)+1] <- 1:nrow(.df)
-  #Figure out (within groups if present) first period so it can be skipped
+  .df[, ncol(.df) + 1] <- 1:nrow(.df)
+  # Figure out (within groups if present) first period so it can be skipped
   if (.skip == TRUE) {
     if (.backwards == FALSE) {
-      .df[,ncol(.df)+1] <- (.df %>%
-                              dplyr::mutate_at(inp$t,min))[[inp$t]]
+      .df[, ncol(.df) + 1] <- (.df %>%
+        dplyr::mutate_at(inp$t, min))[[inp$t]]
     } else {
-      .df[,ncol(.df)+1] <- (.df %>%
-                              dplyr::mutate_at(inp$t,max))[[inp$t]]
+      .df[, ncol(.df) + 1] <- (.df %>%
+        dplyr::mutate_at(inp$t, max))[[inp$t]]
     }
   } else {
-    .df[,.ncol(df)+1] <- min(.df[[inp$t]])-1
+    .df[, .ncol(df) + 1] <- min(.df[[inp$t]]) - 1
   }
 
-  indexnames <- names(.df)[(ncol(.df)-1):ncol(.df)]
+  indexnames <- names(.df)[(ncol(.df) - 1):ncol(.df)]
 
-  #Do an explicit loop because each iteration needs to complete before moving on
+  # Do an explicit loop because each iteration needs to complete before moving on
   list_of_times <- sort(unique(.df[[.t]]))
-  if (.backwards==TRUE) {
+  if (.backwards == TRUE) {
     list_of_times <- rev(list_of_times)
   }
 
   for (t in list_of_times) {
-    #Perform manipulation on the whole thing (it will need access for lags)
-    #but only store the current working part
+    # Perform manipulation on the whole thing (it will need access for lags)
+    # but only store the current working part
     .df <- dplyr::bind_rows(
-      #part of data being kept
-      .df[.df[[inp$t]] != t | .df[[indexnames[2]]] == t,],
-      #and the part of the data not kept, and mutated
-      (.df %>% dplyr::mutate(...))[.df[[inp$t]] == t & .df[[indexnames[2]]] != t,]
+      # part of data being kept
+      .df[.df[[inp$t]] != t | .df[[indexnames[2]]] == t, ],
+      # and the part of the data not kept, and mutated
+      (.df %>% dplyr::mutate(...))[.df[[inp$t]] == t & .df[[indexnames[2]]] != t, ]
     ) %>%
       dplyr::arrange_at(indexnames[1])
   }
 
-  .df[,indexnames] <- NULL
+  .df[, indexnames] <- NULL
 
-  #If it wants the original panel setting back, do that
+  # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    .df %@% '.i' <- inp$orig_i
-    .df %@% '.t' <- inp$orig_t
-    .df %@% '.d' <- inp$orig_d
+    .df %@% ".i" <- inp$orig_i
+    .df %@% ".t" <- inp$orig_t
+    .df %@% ".d" <- inp$orig_d
   }
   return(.df)
 }
@@ -128,36 +126,36 @@ mutate_cascade <- function(.df,...,.skip=TRUE,.backwards=FALSE,.group_i=TRUE,.i=
 #' @examples
 #'
 #' data(SPrail)
-#' #In preparation for fitting a choice model for how people choose ticket type,
-#' #I'd like to know the price of a "Promo" ticket for a given route
-#' #So that I can compare each other type of ticket price to that type
+#' # In preparation for fitting a choice model for how people choose ticket type,
+#' # I'd like to know the price of a "Promo" ticket for a given route
+#' # So that I can compare each other type of ticket price to that type
 #' SPrail <- SPrail %>%
-#' mutate_subset(promo_price = mean(price,na.rm=TRUE),
-#'              .filter=SPrail$fare=='Promo',
-#'              .i = c('origin','destination'))
-#'
-#'
+#'   mutate_subset(
+#'     promo_price = mean(price, na.rm = TRUE),
+#'     .filter = SPrail$fare == "Promo",
+#'     .i = c("origin", "destination")
+#'   )
 #' @export
-mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE,.setpanel=TRUE) {
-  ####CHECK INPUTS
-  if (sum(class(.df) %in% c('data.frame','tbl','tbl_df')) == 0) {
-    stop('Requires data to be a data frame or tibble.')
+mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
+  #### CHECK INPUTS
+  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
+    stop("Requires data to be a data frame or tibble.")
   }
-  if (sum(class(.df) == 'data.table') > 0) {
-    warning('pmdplyr functions have not been tested with data.tables')
+  if (sum(class(.df) == "data.table") > 0) {
+    warning("pmdplyr functions have not been tested with data.tables")
   }
   if (!is.vector(.filter) | !is.logical(.filter)) {
-    stop('.filter must be a logical vector.')
+    stop(".filter must be a logical vector.")
   }
 
-  inp <- declare_in_fcn_check(.df,.i,.t,.d,.uniqcheck,.setpanel,.noneed=TRUE)
+  inp <- declare_in_fcn_check(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed = TRUE)
 
-  #Panel-declare data if any changes have been made.
+  # Panel-declare data if any changes have been made.
   if (min(is.na(.i)) == 0 | !is.na(.t) | !is.na(.d)) {
-    .df <- as_pdeclare(.df,.i=.i,.t=.t,.d=.d,.uniqcheck=.uniqcheck)
+    .df <- as_pdeclare(.df, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck)
 
-    #.d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
-    inp$d <- .df %@% '.d'
+    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
+    inp$d <- .df %@% ".d"
   }
 
 
@@ -166,41 +164,42 @@ mutate_subset <- function(.df,...,.filter,.group_i=TRUE,.i=NA,.t=NA,.d=NA,.uniqc
       dplyr::group_by_at(inp$i)
   }
 
-  #Perform the summary on the subset
-  summ <- .df[.filter,]
+  # Perform the summary on the subset
+  summ <- .df[.filter, ]
   summ <- summ %>%
     dplyr::summarize(...)
-  #See what variables were created not counting the groupings
-  #First, get the grouping variables
-  groups <- names(.df %@% 'groups')
-  #Last element is .rows
-  if (!is.null(groups)) {groups <- groups[1:(length(groups)-1)]}
-  #now, find which variables in summ are not grouping variables
+  # See what variables were created not counting the groupings
+  # First, get the grouping variables
+  groups <- names(.df %@% "groups")
+  # Last element is .rows
+  if (!is.null(groups)) {
+    groups <- groups[1:(length(groups) - 1)]
+  }
+  # now, find which variables in summ are not grouping variables
   notgroups <- names(summ)[!(names(summ) %in% groups)]
-  #and drop those variables from .df, then bring in summ!
+  # and drop those variables from .df, then bring in summ!
   if (is.null(groups)) {
-    summdf <- as.data.frame(summ[rep(1,nrow(.df)),])
+    summdf <- as.data.frame(summ[rep(1, nrow(.df)), ])
     names(summdf) <- notgroups
 
     suppressWarnings(try(.df <- .df %>%
-                           dplyr::select(-dplyr::one_of(notgroups))))
+      dplyr::select(-dplyr::one_of(notgroups))))
     suppressWarnings(.df <- .df %>%
-                       dplyr::bind_cols(summdf))
+      dplyr::bind_cols(summdf))
   }
   else {
     suppressWarnings(try(.df <- .df %>%
-                           dplyr::select(-dplyr::one_of(notgroups))))
+      dplyr::select(-dplyr::one_of(notgroups))))
     suppressWarnings(.df <- .df %>%
-                       dplyr::left_join(summ,by=groups))
+      dplyr::left_join(summ, by = groups))
   }
 
-  #If it wants the original panel setting back, do that
+  # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    .df %@% '.i' <- inp$orig_i
-    .df %@% '.t' <- inp$orig_t
-    .df %@% '.d' <- inp$orig_d
+    .df %@% ".i" <- inp$orig_i
+    .df %@% ".t" <- inp$orig_t
+    .df %@% ".d" <- inp$orig_d
   }
 
   return(.df)
 }
-

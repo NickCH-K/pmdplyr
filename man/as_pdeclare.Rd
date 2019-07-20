@@ -51,24 +51,24 @@ Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identi
 }
 \examples{
 data(SPrail)
-#I set .d=0 here to indicate that I don't care how large the gap
-#between one period and the next is.
-#If I want to use 'insert_date' for .t with a fixed gap between periods,
-#I need to transform it into an integer first; see time_variable()
+# I set .d=0 here to indicate that I don't care how large the gap
+# between one period and the next is.
+# If I want to use 'insert_date' for .t with a fixed gap between periods,
+# I need to transform it into an integer first; see time_variable()
 SP <- as_pdeclare(SPrail,
-               .i = c('origin', 'destination'),
-               .t = 'insert_date',
-               .d = 0)
+  .i = c("origin", "destination"),
+  .t = "insert_date",
+  .d = 0
+)
 is_pdeclare(SP)
-attr(SP,'.i')
-attr(SP,'.t')
-attr(SP,'.d')
+attr(SP, ".i")
+attr(SP, ".t")
+attr(SP, ".d")
 
 data(Scorecard)
-#Here, year is an integer, so I can use it with .d = 1 to
-#indicate that one period is a change of one unit in year
-#Conveniently, .d = 1 is the default
-Scorecard <- as_pdeclare(Scorecard,.i='unitid',.t='year')
+# Here, year is an integer, so I can use it with .d = 1 to
+# indicate that one period is a change of one unit in year
+# Conveniently, .d = 1 is the default
+Scorecard <- as_pdeclare(Scorecard, .i = "unitid", .t = "year")
 is_pdeclare(Scorecard)
-
 }

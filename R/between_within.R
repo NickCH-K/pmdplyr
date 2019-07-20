@@ -14,39 +14,40 @@
 #' @examples
 #'
 #' data(SPrail)
-#' #Calculate within- and between-route variation in price and add it to the data
+#' # Calculate within- and between-route variation in price and add it to the data
 #' SPrail <- SPrail %>%
-#'     dplyr::mutate(within_route = within_i(price,.i=c('origin','destination')),
-#'     between_route = between_i(price,.i=c('origin','destination')))
-#'
+#'   dplyr::mutate(
+#'     within_route = within_i(price, .i = c("origin", "destination")),
+#'     between_route = between_i(price, .i = c("origin", "destination"))
+#'   )
 #' @name panel_calculations
 NULL
 
 #' @rdname panel_calculations
 #' @export
-within_i <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) mean(x,na.rm=TRUE),.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE) {
+within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = function(x) mean(x, na.rm = TRUE), .i = NA, .t = NA, .d = NA, .uniqcheck = FALSE) {
   if (!is.vector(.var)) {
-    stop('.var must be a vector.')
+    stop(".var must be a vector.")
   }
   if (!is.character(.fcn) & !is.function(.fcn)) {
-    stop('.fcn must be a function.')
+    stop(".fcn must be a function.")
   }
 
-  #Check inputs and pull out panel info
-  inp <- declare_in_fcn_check(.df,.i,.t,.d,.uniqcheck,.setpanel=FALSE)
+  # Check inputs and pull out panel info
+  inp <- declare_in_fcn_check(.df, .i, .t, .d, .uniqcheck, .setpanel = FALSE)
   if (max(is.na(inp$i)) == 1) {
-    stop('within_i() requires that .i be declared either in the function or by as_pdeclare().')
+    stop("within_i() requires that .i be declared either in the function or by as_pdeclare().")
   }
 
-  #We only need these
+  # We only need these
   .df <- .df %>% dplyr::select_at(inp$i)
-  .df[,ncol(.df)+1] <- .var
+  .df[, ncol(.df) + 1] <- .var
   varname <- names(.df)[ncol(.df)]
 
-  #Calculate within transformation
+  # Calculate within transformation
   .df <- .df %>%
     dplyr::group_by_at(inp$i) %>%
-    dplyr::mutate_at(varname,.funs=function(x) x - .fcn(x)) %>%
+    dplyr::mutate_at(varname, .funs = function(x) x - .fcn(x)) %>%
     dplyr::ungroup()
 
   return(.df[[varname]])
@@ -54,34 +55,33 @@ within_i <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) 
 
 #' @rdname panel_calculations
 #' @export
-between_i <- function(.var,.df=get(".", envir=parent.frame()),.fcn = function(x) mean(x,na.rm=TRUE),.i=NA,.t=NA,.d=NA,.uniqcheck=FALSE) {
+between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = function(x) mean(x, na.rm = TRUE), .i = NA, .t = NA, .d = NA, .uniqcheck = FALSE) {
   if (!is.vector(.var)) {
-    stop('.var must be a vector.')
+    stop(".var must be a vector.")
   }
   if (!is.character(.fcn) & !is.function(.fcn)) {
-    stop('.fcn must be a function.')
+    stop(".fcn must be a function.")
   }
 
-  #Check inputs and pull out panel info
-  inp <- declare_in_fcn_check(.df,.i,.t,.d,.uniqcheck,.setpanel=FALSE)
+  # Check inputs and pull out panel info
+  inp <- declare_in_fcn_check(.df, .i, .t, .d, .uniqcheck, .setpanel = FALSE)
   if (max(is.na(inp$i)) == 1) {
-    stop('between_i() requires that .i be declared either in the function or by as_pdeclare().')
+    stop("between_i() requires that .i be declared either in the function or by as_pdeclare().")
   }
 
-  #We only need these
+  # We only need these
   .df <- .df %>% dplyr::select_at(inp$i)
-  .df[,ncol(.df)+1] <- .var
+  .df[, ncol(.df) + 1] <- .var
   varname <- names(.df)[ncol(.df)]
 
-  #Grand mean
+  # Grand mean
   gm <- .fcn(.df[[varname]])
 
-  #Calculate within transformation
+  # Calculate within transformation
   .df <- .df %>%
     dplyr::group_by_at(inp$i) %>%
-    dplyr::mutate_at(varname,.funs=function(x) .fcn(x) - gm) %>%
+    dplyr::mutate_at(varname, .funs = function(x) .fcn(x) - gm) %>%
     dplyr::ungroup()
 
   return(.df[[varname]])
 }
-

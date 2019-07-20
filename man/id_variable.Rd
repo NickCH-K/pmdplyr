@@ -22,9 +22,8 @@ By default, id_variable() will create a unique numeric identifier out of your ID
 \examples{
 
 data(SPrail)
-#I want to identify observations at the route (origin-destination)/year level
-#Let's make it a character variable so we can tell at a glance what route we're talking
+# I want to identify observations at the route (origin-destination)/year level
+# Let's make it a character variable so we can tell at a glance what route we're talking
 SPrail <- SPrail \%>\%
-    dplyr::mutate(route_id = id_variable(origin,destination,.method='character'))
-
+  dplyr::mutate(route_id = id_variable(origin, destination, .method = "character"))
 }

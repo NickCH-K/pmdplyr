@@ -27,15 +27,16 @@ Inconsistencies will be resolved by the function \code{.resolve}. Or, set \code{
 \examples{
 
 data(Scorecard)
-#The variables pred_degree_awarded_ipeds and state_abbr should be constant within unitid
-#However, sometimes colleges change what they offer.
-#For the purpose of my analysis, though,
-#I want to treat any changers as whatever they are most often (the mode).
-#So let's enforce that with fixed_force
-Scorecard <- fixed_force(Scorecard,.var=c('pred_degree_awarded_ipeds','state_abbr'),
-   .within='unitid',.flag='changed')
-#Did we catch any changers?
+# The variables pred_degree_awarded_ipeds and state_abbr should be constant within unitid
+# However, sometimes colleges change what they offer.
+# For the purpose of my analysis, though,
+# I want to treat any changers as whatever they are most often (the mode).
+# So let's enforce that with fixed_force
+Scorecard <- fixed_force(Scorecard,
+  .var = c("pred_degree_awarded_ipeds", "state_abbr"),
+  .within = "unitid", .flag = "changed"
+)
+# Did we catch any changers?
 table(Scorecard$changed)
-#We did!
-
+# We did!
 }

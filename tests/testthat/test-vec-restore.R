@@ -7,10 +7,12 @@ select_dummy_wrapper <- function(.data, ...) {
   .df <- select(.data, ...)
   vec_restore(.data, .df)
 }
-tibble(a = 1:4,
-       b = LETTERS[1:4],
-       c = 5,
-       d = 7) %>%
+tibble(
+  a = 1:4,
+  b = LETTERS[1:4],
+  c = 5,
+  d = 7
+) %>%
   as_pdeclare(.i = "b", .t = "a") %>%
   select_dummy_wrapper(a:c) -> select_cols
 

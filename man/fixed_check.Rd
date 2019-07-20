@@ -18,15 +18,15 @@ This function checks whether one set of variables is consistent within values of
 }
 \examples{
 
-#In the Scorecard data, it should be the case that
-#state_abbr and inst_name never change within university.
-#Let's see if that's true
+# In the Scorecard data, it should be the case that
+# state_abbr and inst_name never change within university.
+# Let's see if that's true
 data(Scorecard)
-fixed_check(Scorecard,.var=c('state_abbr','inst_name'),.within='unitid')
-#it returns TRUE! We're good to go
+fixed_check(Scorecard, .var = c("state_abbr", "inst_name"), .within = "unitid")
+# it returns TRUE! We're good to go
 
-#count_not_working has no reason to be constant within unitid,
-#but let's see what happens if we run it through
-fixed_check(Scorecard,.var=c('count_not_working'),.within='unitid')
-#It gives back a tibble with inconsistent obs!
+# count_not_working has no reason to be constant within unitid,
+# but let's see what happens if we run it through
+fixed_check(Scorecard, .var = c("count_not_working"), .within = "unitid")
+# It gives back a tibble with inconsistent obs!
 }

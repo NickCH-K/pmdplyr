@@ -63,23 +63,24 @@ Note that if, given the method, \code{var} finds no proper match, it will be mer
 \examples{
 
 data(Scorecard)
-#We also have this data on the December unemployment rate for US college grads nationally
-#but only every other year
-unemp_data <- data.frame(unemp_year = c(2006,2008,2010,2012,2014,2016,2018),
-                         unemp = c(.017,.036,.048,.040,.028,.025,.020))
-#I want to match the most recent unemployment data I have to each college
+# We also have this data on the December unemployment rate for US college grads nationally
+# but only every other year
+unemp_data <- data.frame(
+  unemp_year = c(2006, 2008, 2010, 2012, 2014, 2016, 2018),
+  unemp = c(.017, .036, .048, .040, .028, .025, .020)
+)
+# I want to match the most recent unemployment data I have to each college
 Scorecard <- Scorecard \%>\%
-    inexact_left_join(unemp_data,method='last',var='year',jvar='unemp_year')
+  inexact_left_join(unemp_data, method = "last", var = "year", jvar = "unemp_year")
 
-#Or perhaps I want to find the most recent lagged value (i.e. no exact matches, only recent ones)
+# Or perhaps I want to find the most recent lagged value (i.e. no exact matches, only recent ones)
 data(Scorecard)
 Scorecard <- Scorecard \%>\%
-    inexact_left_join(unemp_data,method='last',var='year',jvar='unemp_year',exact=FALSE)
+  inexact_left_join(unemp_data, method = "last", var = "year", jvar = "unemp_year", exact = FALSE)
 
-#Another way to do the same thing would be to specify the range of unemp_years I want exactly
+# Another way to do the same thing would be to specify the range of unemp_years I want exactly
 data(Scorecard)
 unemp_data$unemp_year2 <- unemp_data$unemp_year + 2
 Scorecard <- Scorecard \%>\%
-    inexact_left_join(unemp_data,method='between',var='year',jvar=c('unemp_year','unemp_year2'))
-
+  inexact_left_join(unemp_data, method = "between", var = "year", jvar = c("unemp_year", "unemp_year2"))
 }

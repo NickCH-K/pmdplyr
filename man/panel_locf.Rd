@@ -37,43 +37,44 @@ This function looks for a list of values (usually, just \code{NA}) in a variable
 }
 \examples{
 
-#Examples are too slow to run
-if(interactive()) {
+# Examples are too slow to run
+if (interactive()) {
 
-#The SPrail data has some missing price values.
-#Let's fill them in!
-#Note .d=0 tells it to ignore how big the gaps are
-#between one period and the next, just look for the most recent insert_date
-#.resolve tells it what value to pick if there are multiple
-#observed prices for that route/insert_date
-#(.resolve is not necessary if .i and .t uniquely identify obs,
-#or if .var is either NA or constant within them)
-#Also note - this will fill in using CURRENT-period
-#data first (if available) before looking for lagged data.
-data(SPrail)
-sum(is.na(SPrail$price))
-SPrail <- SPrail \%>\%
+  # The SPrail data has some missing price values.
+  # Let's fill them in!
+  # Note .d=0 tells it to ignore how big the gaps are
+  # between one period and the next, just look for the most recent insert_date
+  # .resolve tells it what value to pick if there are multiple
+  # observed prices for that route/insert_date
+  # (.resolve is not necessary if .i and .t uniquely identify obs,
+  # or if .var is either NA or constant within them)
+  # Also note - this will fill in using CURRENT-period
+  # data first (if available) before looking for lagged data.
+  data(SPrail)
+  sum(is.na(SPrail$price))
+  SPrail <- SPrail \%>\%
     dplyr::mutate(price = panel_locf(price,
-       .i=c('origin','destination'),.t='insert_date',.d=0,
-       .resolve=function(x) mean(x,na.rm=TRUE)))
+      .i = c("origin", "destination"), .t = "insert_date", .d = 0,
+      .resolve = function(x) mean(x, na.rm = TRUE)
+    ))
 
-#The spec is a little easier with data like Scorecard where
-#.i and .t uniquely identify observations.
-#Note that when the raw Scorecard data came in, it had -3 in place of NA. Let's restore that
-data(Scorecard)
-sum(is.na(Scorecard$earnings_med))
-Scorecard <- Scorecard \%>\%
-  dplyr::mutate(earnings_med = dplyr::case_when(
-    is.na(earnings_med) ~ as.double(-3),
-    TRUE ~ as.double(earnings_med)
-  )) \%>\%
-  #Now let's fill in NAs and also -3s
-  dplyr::mutate(earnings_med = panel_locf(earnings_med,
-                                          .fill=c(NA,-3),
-                                          .i='unitid',.t='year'))
- #Note that there are still some missings - these are missings that come before the first
- #non-missing value in that unitid, so there's nothing to pull from.
- sum(is.na(Scorecard$earnings_med))
+  # The spec is a little easier with data like Scorecard where
+  # .i and .t uniquely identify observations.
+  # Note that when the raw Scorecard data came in, it had -3 in place of NA. Let's restore that
+  data(Scorecard)
+  sum(is.na(Scorecard$earnings_med))
+  Scorecard <- Scorecard \%>\%
+    dplyr::mutate(earnings_med = dplyr::case_when(
+      is.na(earnings_med) ~ as.double(-3),
+      TRUE ~ as.double(earnings_med)
+    )) \%>\%
+    # Now let's fill in NAs and also -3s
+    dplyr::mutate(earnings_med = panel_locf(earnings_med,
+      .fill = c(NA, -3),
+      .i = "unitid", .t = "year"
+    ))
+  # Note that there are still some missings - these are missings that come before the first
+  # non-missing value in that unitid, so there's nothing to pull from.
+  sum(is.na(Scorecard$earnings_med))
 }
-
 }
