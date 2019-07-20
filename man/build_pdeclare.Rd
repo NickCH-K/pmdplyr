@@ -22,3 +22,4 @@ for creating a `tbl_pd` internally inside a function.
 \details{
 Note that, for speed, `build_pdeclare()` does not check the adequacy of the inputs.
 }
+\keyword{internal}
