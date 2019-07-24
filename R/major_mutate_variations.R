@@ -53,7 +53,7 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
     .df <- as_pdeclare(.df, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
-    inp$d <- df %@% ".d"
+    inp$d <- .df %@% ".d"
   }
 
   if (.group_i == TRUE & (min(is.na(inp$i)) == 0)) {
@@ -72,7 +72,7 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
         dplyr::mutate_at(inp$t, max))[[inp$t]]
     }
   } else {
-    .df[, .ncol(df) + 1] <- min(.df[[inp$t]]) - 1
+    .df[, ncol(.df) + 1] <- min(.df[[inp$t]]) - 1
   }
 
   indexnames <- names(.df)[(ncol(.df) - 1):ncol(.df)]
@@ -99,9 +99,9 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    .df %@% ".i" <- inp$orig_i
-    .df %@% ".t" <- inp$orig_t
-    .df %@% ".d" <- inp$orig_d
+    attr(.df,".i") <- inp$orig_i
+    attr(.df,".t") <- inp$orig_t
+    attr(.df,".d") <- inp$orig_d
   }
   return(.df)
 }
@@ -186,8 +186,7 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA, 
       dplyr::select(-dplyr::one_of(notgroups))))
     suppressWarnings(.df <- .df %>%
       dplyr::bind_cols(summdf))
-  }
-  else {
+  } else {
     suppressWarnings(try(.df <- .df %>%
       dplyr::select(-dplyr::one_of(notgroups))))
     suppressWarnings(.df <- .df %>%
@@ -196,9 +195,9 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA, 
 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    .df %@% ".i" <- inp$orig_i
-    .df %@% ".t" <- inp$orig_t
-    .df %@% ".d" <- inp$orig_d
+    attr(.df,".i") <- inp$orig_i
+    attr(.df,".t") <- inp$orig_t
+    attr(.df,".d") <- inp$orig_d
   }
 
   return(.df)

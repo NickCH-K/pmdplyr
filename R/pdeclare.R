@@ -37,7 +37,7 @@
 #' pd2 <- pdeclare(
 #'   i = c(1, 1, 1, 2, 2, 2),
 #'   seconds = c(123, 456, 789, 103, 234, 238),
-#'   .i = ".i",
+#'   .i = "i",
 #'   .t = "seconds",
 #'   .d = 0
 #' )
@@ -171,7 +171,7 @@ as_pdeclare.list <- as_pdeclare.tbl_df
 #' @keywords internal
 #' @export
 as_pdeclare.NULL <- function(x, ...) {
-  abort("A pdeclare must not be NULL.")
+  stop("A pdeclare must not be NULL.")
 }
 
 #' Low-level constructor for a pdeclare object

@@ -19,7 +19,7 @@ tlag(.var, .df = get(".", envir = parent.frame()), .n = 1,
 
 \item{.quick}{If \code{.i} and \code{.t} uniquely identify observations in your data, **and** there either \code{.d = 0} or there are no time gaps for any individuals (perhaps use \code{panel_fill()} first), set \code{.quick = TRUE} to improve speed. \code{tlag()} will not check if either of these things are true (except unique identification, which will be checked if \code{.uniqcheck = 1} or if \code{.i} or \code{.t} are specified in-function), so make sure they are or you will get strange results.}
 
-\item{.resolve}{If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{tlag()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = function(x) mean(x)} to get the mean value of all observations present for that individual/period.}
+\item{.resolve}{If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{tlag()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function (ideally, a vectorized one) that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = mean} to get the mean value of all observations present for that individual/period.}
 
 \item{.group_i}{By default, if \code{.i} is specified or found in the data, \code{tlag()} will group the data by \code{.i}, ignoring any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.}
 
@@ -47,7 +47,9 @@ data(Scorecard)
 # whereas tlag() will respect the gap and give a NA, much like plm::lag()
 # (although tlag is slower than either, sorry)
 Scorecard <- Scorecard \%>\%
-  dplyr::mutate(pmdplyr_tlag = tlag(earnings_med, .i = "unitid", .t = "year"))
+  dplyr::mutate(pmdplyr_tlag = tlag(earnings_med,
+                                    .i = "unitid",
+                                    .t = "year"))
 Scorecard <- Scorecard \%>\%
   dplyr::arrange(year) \%>\%
   dplyr::group_by(unitid) \%>\%
@@ -61,7 +63,11 @@ sum(is.na(Scorecard$dplyr_lag))
 # If we want to ignore gaps, or have .d = 0, and .i and .t uniquely identify observations,
 # we can use the .quick option to match dplyr::lag()
 Scorecard <- Scorecard \%>\%
-  dplyr::mutate(pmdplyr_quick_tlag = tlag(earnings_med, .i = "unitid", .t = "year", .d = 0, .quick = TRUE))
+  dplyr::mutate(pmdplyr_quick_tlag = tlag(earnings_med,
+                                         .i = "unitid",
+                                         .t = "year",
+                                         .d = 0,
+                                         .quick = TRUE))
 sum(Scorecard$dplyr_lag != Scorecard$pmdplyr_quick_tlag, na.rm = TRUE)
 
 # Where tlag shines is when you have multiple observations per .i/.t
@@ -88,11 +94,9 @@ Scorecard <- Scorecard \%>\%
 # a year, they find nothing!
 # We could get around this by setting .d = 0 to ignore gap length
 # Note this can be a little slow.
-if (interactive()) {
-  Scorecard <- Scorecard \%>\%
-    dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
-      .t = "year", .d = 0,
-      .resolve = function(x) mean(x, na.rm = TRUE)
-    ))
-}
+Scorecard <- Scorecard \%>\%
+   dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
+    .t = "year", .d = 0,
+    .resolve = function(x) mean(x, na.rm = TRUE)
+   ))
 }

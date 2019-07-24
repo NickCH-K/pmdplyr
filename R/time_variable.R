@@ -49,16 +49,21 @@
 #' # Perhaps I'd like quarterly data
 #' # (although in this case there are only two months, not much variation there)
 #' SPrail <- SPrail %>%
-#'   dplyr::mutate(quarter_time_id = time_variable(insert_date, .method = "month", .breaks = c(1, 4, 7, 10)))
+#'   dplyr::mutate(quarter_time_id = time_variable(insert_date,
+#'                                                 .method = "month",
+#'                                                 .breaks = c(1, 4, 7, 10)))
 #' table(SPrail$month_time_id, SPrail$quarter_time_id)
 #'
 #' # Maybe I'd like Monday to come immediately after Friday!
 #' SPrail <- SPrail %>%
-#'   dplyr::mutate(weekday_id = time_variable(insert_date, .method = "day", .skip = c(6, 7)))
+#'   dplyr::mutate(weekday_id = time_variable(insert_date,
+#'                                            .method = "day",
+#'                                            .skip = c(6, 7)))
 #'
 #' # Perhaps I'm interested in ANY time period in the data and just want to enumerate them in order
 #' SPrail <- SPrail %>%
-#'   dplyr::mutate(any_present_time_id = time_variable(insert_date, .method = "present"))
+#'   dplyr::mutate(any_present_time_id = time_variable(insert_date,
+#'                                                     .method = "present"))
 #'
 #'
 #' # Maybe instead of being given a nice time variable, I was given it in string form
@@ -103,8 +108,11 @@
 
 time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .skip = NA, .breaks = NA, .turnover = NA, .turnover_start = NA) {
 
-  ###### TODO: EITHER figure out how to get dplyr to pass its data in
-  # OR have this be a function that adds a variable to the data
+  #R seems to think these are global variables because they are created by dplyr
+  #avoid notes
+  newdate.1.1.1 <- NA
+  timevarM <- NA
+  wksb4 <- NA
 
   ########################################## CHECK INPUTS
   if (!(.method %in% c("present", "year", "month", "week", "day", "turnover"))) {
@@ -174,7 +182,7 @@ time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .
 
       # first, check if you're starting your .breaks after the beginning of years in the data and issue a warning
       if (min(td$timevar, na.rm = TRUE) < min(.breaks, na.rm = TRUE)) {
-        warning("The first break in .breaks is after the first year in the data. 
+        warning("The first break in .breaks is after the first year in the data.
 Years earlier than the first break will be given a missing time value.")
         td <- td %>%
           dplyr::mutate(timevar = dplyr::case_when(
@@ -268,8 +276,8 @@ Observations in these years will be given a missing time value.")
       }
       # first, check if you're starting your .breaks after the beginning of months in the data and issue a warning
       if (min(td$timevarM, na.rm = TRUE) < min(.breaks, na.rm = TRUE)) {
-        warning("The first break in .breaks is after the first month of the year present in data. 
-Months earlier than the first break will be given a missing time value. 
+        warning("The first break in .breaks is after the first month of the year present in data.
+Months earlier than the first break will be given a missing time value.
 Note that when .method='month', the first element of .breaks should usually be 1.")
         td <- td %>%
           dplyr::mutate(timevarM = dplyr::case_when(

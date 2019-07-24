@@ -9,7 +9,7 @@
 #' @param .n Number of periods to lag by. 1 by default. Note that this is automatically scaled by \code{.d}. If \code{.d = 2} and \code{.n = 1}, then the lag of \code{.t = 3} will be \code{.t = 1}. Allows negative values, equivalent to \code{tlead()} with the same value but positive. Note that \code{.n} is ignored if \code{.d=0}.
 #' @param .default Fill-in value used when lagged observation is not present. Defaults to NA.
 #' @param .quick If \code{.i} and \code{.t} uniquely identify observations in your data, **and** there either \code{.d = 0} or there are no time gaps for any individuals (perhaps use \code{panel_fill()} first), set \code{.quick = TRUE} to improve speed. \code{tlag()} will not check if either of these things are true (except unique identification, which will be checked if \code{.uniqcheck = 1} or if \code{.i} or \code{.t} are specified in-function), so make sure they are or you will get strange results.
-#' @param .resolve If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{tlag()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = function(x) mean(x)} to get the mean value of all observations present for that individual/period.
+#' @param .resolve If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{tlag()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function (ideally, a vectorized one) that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = mean} to get the mean value of all observations present for that individual/period.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{tlag()} will group the data by \code{.i}, ignoring any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.
 #' @param .i Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
@@ -25,7 +25,9 @@
 #' # whereas tlag() will respect the gap and give a NA, much like plm::lag()
 #' # (although tlag is slower than either, sorry)
 #' Scorecard <- Scorecard %>%
-#'   dplyr::mutate(pmdplyr_tlag = tlag(earnings_med, .i = "unitid", .t = "year"))
+#'   dplyr::mutate(pmdplyr_tlag = tlag(earnings_med,
+#'                                     .i = "unitid",
+#'                                     .t = "year"))
 #' Scorecard <- Scorecard %>%
 #'   dplyr::arrange(year) %>%
 #'   dplyr::group_by(unitid) %>%
@@ -39,7 +41,11 @@
 #' # If we want to ignore gaps, or have .d = 0, and .i and .t uniquely identify observations,
 #' # we can use the .quick option to match dplyr::lag()
 #' Scorecard <- Scorecard %>%
-#'   dplyr::mutate(pmdplyr_quick_tlag = tlag(earnings_med, .i = "unitid", .t = "year", .d = 0, .quick = TRUE))
+#'   dplyr::mutate(pmdplyr_quick_tlag = tlag(earnings_med,
+#'                                          .i = "unitid",
+#'                                          .t = "year",
+#'                                          .d = 0,
+#'                                          .quick = TRUE))
 #' sum(Scorecard$dplyr_lag != Scorecard$pmdplyr_quick_tlag, na.rm = TRUE)
 #'
 #' # Where tlag shines is when you have multiple observations per .i/.t
@@ -66,13 +72,11 @@
 #' # a year, they find nothing!
 #' # We could get around this by setting .d = 0 to ignore gap length
 #' # Note this can be a little slow.
-#' if (interactive()) {
-#'   Scorecard <- Scorecard %>%
-#'     dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
-#'       .t = "year", .d = 0,
-#'       .resolve = function(x) mean(x, na.rm = TRUE)
-#'     ))
-#' }
+#' Scorecard <- Scorecard %>%
+#'    dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
+#'     .t = "year", .d = 0,
+#'     .resolve = function(x) mean(x, na.rm = TRUE)
+#'    ))
 #' @export
 
 # FOR FIXING:
@@ -136,12 +140,6 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
     dat[, ncol(dat) + 1] <- 1:nrow(dat)
     origorder <- names(dat)[ncol(dat)]
 
-    # #There must be a better way to do this
-    # arrnames <- paste('.df[[\'',arrnames,'\']]',sep='')
-    # arrnames[1] <- paste('order(',arrnames[1],sep='')
-    # arrnames[length(arrnames)] <- paste(arrnames[length(arrnames)],')',sep='')
-    # order <- eval(parse(text=paste0(arrnames,collapse=',')))
-
     return((dat %>%
       dplyr::arrange_at(arrnames) %>%
       dplyr::mutate_at(varname, .funs = function(x) dplyr::lag(x, n = .n, default = .default)) %>%
@@ -163,46 +161,75 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
   }
   # Check if there's uniformity, if .resolve = 'error'
   if (is.character(.resolve)) {
-    if (max((lookup %>%
-      dplyr::mutate_at(varname,
-        .funs = function(x) dplyr::n_distinct(x)
-      ))[[varname]]) > 1) {
+    if ((lookup %>%
+             #only need to check for uniformity if there's more than one obs
+             dplyr::filter_at(varname, dplyr::any_vars(dplyr::n() > 1)) %>%
+             #check for uniformity
+             #drop duplicates
+             dplyr::distinct() %>%
+             #go to just arrnames
+             dplyr::select(arrnames) %>%
+             #if there are any duplicated arrnames, that means there were multiple vals within 'em
+             anyDuplicated()) > 0) {
       stop("Values are not consistent within (.i, if specified, and) .t. See .resolve option.")
     }
-    .resolve <- function(x) dplyr::first(x)
+    .resolve <- dplyr::first
   }
 
   # And turn into the lookup table, with adjusted time variable for linking
-  lookup <- lookup %>%
-    dplyr::summarize_at(varname, .resolve) %>%
-    dplyr::mutate_at(inp$t, .funs = function(x) x + .n * inp$d)
+  # Since we're matching time periods, do this differently by whether .d is 0 or not
+  if (inp$d > 0) {
+    lookup <- lookup %>%
+      dplyr::summarize_at(varname, .resolve) %>%
+      dplyr::mutate_at(inp$t, .funs = function(x) x + .n * inp$d)
+  } else {
+    #Flatten with resolve
+    lookup <- lookup %>%
+      dplyr::summarize_at(varname, .resolve)
+
+    #Put grouping to i level for lag
+    if (.group_i & !is.na(inp$i)) {
+      lookup <- lookup %>% dplyr::group_by_at(inp$i)
+    } else {
+      lookup <- lookup %>% dplyr::ungroup()
+    }
+
+    lookup <- lookup %>%
+      dplyr::arrange_at(arrnames) %>%
+      dplyr::mutate_at(inp$t, .funs = dplyr::lag)
+  }
+
   lookup[, ncol(lookup) + 1] <- 1
   foundmatch <- names(lookup)[ncol(lookup)]
 
-  # Do the linkup and return the lagged value
-  # note that if .d = 0 we need to look for the most recent value
-  if (inp$d > 0) {
-    .df <- .df %>%
-      dplyr::left_join(lookup, by = arrnames)
-  } else {
-    # prepare for an inexact_join. We need the name of .t in lookup to be different
-    lookup[, ncol(lookup) + 1] <- lookup[[inp$t]]
-    jvarname <- names(lookup)[ncol(lookup)]
-    # and get rid of the actual one
-    lookup[[inp$t]] <- NULL
 
-    # work separately based on whether we have .i or not
-    if (length(arrnames) == 1) {
-      suppressMessages(.df <- .df %>%
-        inexact_left_join(lookup, var = inp$t, jvar = jvarname, method = "last", exact = FALSE))
-    } else {
-      suppressMessages(.df <- .df %>%
-        inexact_left_join(lookup,
-          by = arrnames[1:length(arrnames) - 1], var = inp$t,
-          jvar = jvarname, method = "last", exact = FALSE
-        ))
-    }
-  }
+
+  # Do the linkup and return the lagged value
+  .df <- .df %>%
+    dplyr::left_join(lookup, by = arrnames)
+
+  # if (inp$d > 0) {
+  #
+  # } else {
+  #   # prepare for an inexact_join. We need the name of .t in lookup to be different
+  #   lookup[, ncol(lookup) + 1] <- lookup[[inp$t]]
+  #   jvarname <- names(lookup)[ncol(lookup)]
+  #   # and get rid of the actual one
+  #   lookup[[inp$t]] <- NULL
+  #
+  #   # work separately based on whether we have .i or not
+  #   if (length(arrnames) == 1) {
+  #     suppressMessages(.df <- .df %>%
+  #       inexact_left_join(lookup, var = inp$t, jvar = jvarname, method = "last", exact = FALSE))
+  #   } else {
+  #     suppressMessages(.df <- .df %>%
+  #       inexact_left_join(lookup,
+  #         by = arrnames[1:length(arrnames) - 1], var = inp$t,
+  #         jvar = jvarname, method = "last", exact = FALSE
+  #       ))
+  #   }
+  # }
+
   if (!is.na(.default)) {
     .df <- .df %>% dplyr::mutate_at(varname, .funs = function(x)
       ifelse(is.na(.df[[foundmatch]]), .default, .df[[varname]]))

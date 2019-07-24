@@ -46,7 +46,7 @@ is_pdeclare(pd)
 pd2 <- pdeclare(
   i = c(1, 1, 1, 2, 2, 2),
   seconds = c(123, 456, 789, 103, 234, 238),
-  .i = ".i",
+  .i = "i",
   .t = "seconds",
   .d = 0
 )
