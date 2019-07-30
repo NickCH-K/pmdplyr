@@ -119,7 +119,7 @@
     </tr>
     <tr>
       <th>.t</th>
-      <td><p>Character variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code>time_variable()</code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
+      <td><p>Character variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code><a href='time_variable.html'>time_variable()</a></code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
     </tr>
     <tr>
       <th>.d</th>
@@ -152,16 +152,17 @@
   <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"i"</span>,
   <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"t"</span>
 )
-<span class='fu'>is_pdeclare</span>(<span class='no'>pd</span>)</div><div class='output co'>#&gt; <span class='message'>.i = i; .t = t; .d = 1.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='co'># I set .d=0 here to indicate that I don't care how large the gap between one period and the next is</span>
+<span class='fu'><a href='is_pdeclare.html'>is_pdeclare</a></span>(<span class='no'>pd</span>)</div><div class='output co'>#&gt; <span class='message'>.i = i; .t = t; .d = 1.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='co'># I set .d=0 here to indicate that I don't care how large the gap between one period and the next is</span>
 <span class='co'># If I want to use 'seconds' for t.</span>
 <span class='co'># See time_variable() to turn unruly variables into well-behaved integers, as well</span>
 <span class='no'>pd2</span> <span class='kw'>&lt;-</span> <span class='fu'>pdeclare</span>(
   <span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>),
   <span class='kw'>seconds</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>123</span>, <span class='fl'>456</span>, <span class='fl'>789</span>, <span class='fl'>103</span>, <span class='fl'>234</span>, <span class='fl'>238</span>),
-  <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>".i"</span>,
+  <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"i"</span>,
   <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"seconds"</span>,
   <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>
-)</div><div class='output co'>#&gt; <span class='error'>Error in check_panel_inputs(tbl, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck): Elements of .i must be variables present in the data.</span></div><div class='input'><span class='fu'>is_pdeclare</span>(<span class='no'>pd2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in class(.df) %in% c("data.frame", "tbl", "tbl_df"): object 'pd2' not found</span></div></pre>
+)
+<span class='fu'><a href='is_pdeclare.html'>is_pdeclare</a></span>(<span class='no'>pd2</span>)</div><div class='output co'>#&gt; <span class='message'>.i = i; .t = seconds; .d = 0.</span></div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

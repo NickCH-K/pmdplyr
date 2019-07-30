@@ -111,18 +111,18 @@
     <p>Unlike other suites dealing with panel data, all functions in <code>pmdplyr</code> are designed to work even when considering a set of variables that do not uniquely identify rows. This is handy when working with any kind of hierarchical data, or panel data where there are multiple observations per individual per time period, like student/term/class education data.</p>
 <p><code>pmdplyr</code> contains the following functions:</p>
 <ul>
-<li><p><code>between_i</code> and <code>within_i</code> Standard between and within panel calculations.</p></li>
-<li><p><code>fixed_check</code> Checks a list of variables for consistency within a panel structure.</p></li>
-<li><p><code>fixed_force</code> Forces a list of variables to be constant within a panel structure.</p></li>
-<li><p><code>id_variable</code> Takes a list of variables that make up an individual identifier and turns it into a single variable.</p></li>
-<li><p><code>time_variable</code> Takes a time variable, or set of time variables, and turns them into a single well-behaved integer time variable of the kind required by most panel functions.</p></li>
-<li><p><code>inexact_join</code> Set of wrappers for the <code>dplyr</code> <code><a href='https://dplyr.tidyverse.org/reference/join.html'>join</a></code> functions which allows for a variable to be matched inexactly, for example joining a time variable in <code>x</code> to the most recent previous value in <code>y</code>.</p></li>
-<li><p><code>pdeclare</code>, <code>as_pdeclare</code>, and <code>is_pdeclare</code> Set the panel structure for a data set, or check if it is already set.</p></li>
-<li><p><code>mutate_cascade</code> A wrapper for <code>dplyr</code> <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></code> which runs one period at a time, allowing changes in one period to finalize before the next period is calculated.</p></li>
-<li><p><code>mutate_subset</code> A wrapper for <code>dplyr</code> <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></code> that performs a calculation on a subset of data, and then applies the result to all the observations (within group).</p></li>
-<li><p><code>panel_fill</code> Fills in gaps in the panel. Can also fill in at the beginning or end of the data to create a perfectly balanced panel.</p></li>
-<li><p><code>panel_locf</code> A last-observation-carried-forward function for panels. Fills in <code>NA</code>s with recent nonmissing observations.</p></li>
-<li><p><code>tlag</code> Lags a variable in time.</p></li>
+<li><p><code><a href='panel_calculations.html'>between_i</a></code> and <code><a href='panel_calculations.html'>within_i</a></code> Standard between and within panel calculations.</p></li>
+<li><p><code><a href='fixed_check.html'>fixed_check</a></code> Checks a list of variables for consistency within a panel structure.</p></li>
+<li><p><code><a href='fixed_force.html'>fixed_force</a></code> Forces a list of variables to be constant within a panel structure.</p></li>
+<li><p><code><a href='id_variable.html'>id_variable</a></code> Takes a list of variables that make up an individual identifier and turns it into a single variable.</p></li>
+<li><p><code><a href='time_variable.html'>time_variable</a></code> Takes a time variable, or set of time variables, and turns them into a single well-behaved integer time variable of the kind required by most panel functions.</p></li>
+<li><p><code><a href='inexact_join.html'>inexact_join</a></code> Set of wrappers for the <code>dplyr</code> <code><a href='https://dplyr.tidyverse.org/reference/join.html'>join</a></code> functions which allows for a variable to be matched inexactly, for example joining a time variable in <code>x</code> to the most recent previous value in <code>y</code>.</p></li>
+<li><p><code><a href='pdeclare.html'>pdeclare</a></code>, <code><a href='as_pdeclare.html'>as_pdeclare</a></code>, and <code><a href='is_pdeclare.html'>is_pdeclare</a></code> Set the panel structure for a data set, or check if it is already set.</p></li>
+<li><p><code><a href='mutate_cascade.html'>mutate_cascade</a></code> A wrapper for <code>dplyr</code> <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></code> which runs one period at a time, allowing changes in one period to finalize before the next period is calculated.</p></li>
+<li><p><code><a href='mutate_subset.html'>mutate_subset</a></code> A wrapper for <code>dplyr</code> <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></code> that performs a calculation on a subset of data, and then applies the result to all the observations (within group).</p></li>
+<li><p><code><a href='panel_fill.html'>panel_fill</a></code> Fills in gaps in the panel. Can also fill in at the beginning or end of the data to create a perfectly balanced panel.</p></li>
+<li><p><code><a href='panel_locf.html'>panel_locf</a></code> A last-observation-carried-forward function for panels. Fills in <code>NA</code>s with recent nonmissing observations.</p></li>
+<li><p><code><a href='tlag.html'>tlag</a></code> Lags a variable in time.</p></li>
 </ul>
     
 
