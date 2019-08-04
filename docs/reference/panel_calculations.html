@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Functions to perform standard panel-data calculations — panel_calculations" />
 
-<meta property="og:description" content="WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS." />
+<meta property="og:description" content="These functions perform the standard between and within transformations on panel data." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -101,17 +101,17 @@
 
     <div class="ref-description">
     
-    <p>WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.</p>
+    <p>These functions perform the standard between and within transformations on panel data.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>within_i</span>(<span class='no'>.var</span>, <span class='kw'>.df</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/get'>get</a></span>(<span class='st'>"."</span>, <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sys.parent'>parent.frame</a></span>()),
-  <span class='kw'>.fcn</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>.fcn</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>between_i</span>(<span class='no'>.var</span>, <span class='kw'>.df</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/get'>get</a></span>(<span class='st'>"."</span>, <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sys.parent'>parent.frame</a></span>()),
-  <span class='kw'>.fcn</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>.fcn</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -122,7 +122,7 @@
     </tr>
     <tr>
       <th>.df</th>
-      <td><p>Data frame or tibble (usually the data frame or tibble that contains <code>.var</code>) which contains the panel structure variables either listed in <code>.i</code> and <code>.t</code>, or earlier declared with <code>as_pdeclare()</code>. If <code>tlag</code> is called inside of a <code>dplyr</code> verb, this can be omitted and the data will be picked up automatically.</p></td>
+      <td><p>Ungrouped data frame or tibble (usually the data frame or tibble that contains <code>.var</code>) which contains the panel structure variables either listed in <code>.i</code> and <code>.t</code>, or earlier declared with <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>. If <code>tlag</code> is called inside of a <code>dplyr</code> verb, this can be omitted and the data will be picked up automatically.</p></td>
     </tr>
     <tr>
       <th>.fcn</th>
@@ -130,15 +130,11 @@
     </tr>
     <tr>
       <th>.i</th>
-      <td><p>Character or character vector with the variable names that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code>as_pdeclare()</code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
+      <td><p>Quoted or unquoted variable(s) that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>.t</th>
-      <td><p>Character variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code>time_variable()</code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
-    </tr>
-    <tr>
-      <th>.d</th>
-      <td><p>Number indicating the gap in <code>.t</code> between one period and the next. For example, if <code>.t</code> indicates a single day but data is collected once a week, you might set <code>.d=7</code>. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set <code>.d=0</code>. By default, <code>.d=1</code>.</p></td>
+      <td><p>Quoted or unquoted variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code><a href='time_variable.html'>time_variable()</a></code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
     </tr>
     <tr>
       <th>.uniqcheck</th>
@@ -148,7 +144,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Thesese functions perform the standard between and within transformations on panel data.</p>
+    <p>These functions do not take a <code>.d</code> argument because it is irrelevant here.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -157,8 +153,8 @@
 <span class='co'># Calculate within- and between-route variation in price and add it to the data</span>
 <span class='no'>SPrail</span> <span class='kw'>&lt;-</span> <span class='no'>SPrail</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
-    <span class='kw'>within_route</span> <span class='kw'>=</span> <span class='fu'>within_i</span>(<span class='no'>price</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"origin"</span>, <span class='st'>"destination"</span>)),
-    <span class='kw'>between_route</span> <span class='kw'>=</span> <span class='fu'>between_i</span>(<span class='no'>price</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"origin"</span>, <span class='st'>"destination"</span>))
+    <span class='kw'>within_route</span> <span class='kw'>=</span> <span class='fu'>within_i</span>(<span class='no'>price</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>origin</span>, <span class='no'>destination</span>)),
+    <span class='kw'>between_route</span> <span class='kw'>=</span> <span class='fu'>between_i</span>(<span class='no'>price</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>origin</span>, <span class='no'>destination</span>))
   )</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -4,15 +4,15 @@
 \alias{fixed_force}
 \title{Function to enforce consistency in variables}
 \usage{
-fixed_force(.df, .var = NA, .within, .resolve = function(x)
+fixed_force(.df, .var = NULL, .within = NULL, .resolve = function(x)
   unique(x)[which.max(tabulate(match(x, unique(x))))], .flag = NA)
 }
 \arguments{
 \item{.df}{Data frame or tibble.}
 
-\item{.var}{Character vector of variable names in \code{.df} that should be consistent. If not specified, uses all variables in \code{.df} that are not in \code{.within}.}
+\item{.var}{Quoted or unquoted variable(s) in \code{.df} that should be consistent. If not specified, uses all variables in \code{.df} that are not in \code{.within}.}
 
-\item{.within}{Character vector of variable names that the \code{.var} variables should be consistent within.}
+\item{.within}{Quotes or unquoted variable(s) that the \code{.var} variables should be consistent within.}
 
 \item{.resolve}{Function capable of being passed to \code{dplyr::summarize()} that will be used to resolve inconsistencies. Or, set to \code{'drop'} or any string to drop all inconsistent observations. By default, this will return the mode (ties use the first observed value).}
 
@@ -33,8 +33,8 @@ data(Scorecard)
 # I want to treat any changers as whatever they are most often (the mode).
 # So let's enforce that with fixed_force
 Scorecard <- fixed_force(Scorecard,
-  .var = c("pred_degree_awarded_ipeds", "state_abbr"),
-  .within = "unitid", .flag = "changed"
+  .var = c(pred_degree_awarded_ipeds, state_abbr),
+  .within = unitid, .flag = "changed"
 )
 # Did we catch any changers?
 table(Scorecard$changed)

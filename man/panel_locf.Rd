@@ -5,8 +5,8 @@
 \title{Function to fill in missing (or other) values using known data}
 \usage{
 panel_locf(.var, .df = get(".", envir = parent.frame()), .fill = NA,
-  .backwards = FALSE, .resolve = "error", .group_i = TRUE, .i = NA,
-  .t = NA, .d = 1, .uniqcheck = FALSE)
+  .backwards = FALSE, .resolve = "error", .group_i = TRUE,
+  .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE)
 }
 \arguments{
 \item{.var}{Vector to be modified.}
@@ -21,9 +21,9 @@ panel_locf(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
 \item{.group_i}{By default, if \code{.i} is specified or found in the data, \code{panel_locf()} will group the data by \code{.i}, ignoring any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
+\item{.i}{Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
 
-\item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
+\item{.t}{Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
 \item{.d}{Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.}
 
@@ -54,7 +54,7 @@ if (interactive()) {
   sum(is.na(SPrail$price))
   SPrail <- SPrail \%>\%
     dplyr::mutate(price = panel_locf(price,
-      .i = c("origin", "destination"), .t = "insert_date", .d = 0,
+      .i = c(origin, destination), .t = insert_date, .d = 0,
       .resolve = function(x) mean(x, na.rm = TRUE)
     ))
 
@@ -71,7 +71,7 @@ if (interactive()) {
     # Now let's fill in NAs and also -3s
     dplyr::mutate(earnings_med = panel_locf(earnings_med,
       .fill = c(NA, -3),
-      .i = "unitid", .t = "year"
+      .i = unitid, .t = year
     ))
   # Note that there are still some missings - these are missings that come before the first
   # non-missing value in that unitid, so there's nothing to pull from.

@@ -6,23 +6,21 @@
 \arguments{
 \item{.df}{Data frame or tibble to declare as a panel.}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.}
+\item{.i}{Quoted or unquoted variable(s) that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.}
 
-\item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
+\item{.t}{Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
 \item{.d}{Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.}
 
 \item{.uniqcheck}{Logical parameter. Set to TRUE to perform a check of whether \code{.i} and \code{.t} uniquely identify observations, and present a message if not. By default this is set to FALSE and the warning message occurs only once per session.}
 }
 \description{
-WARNING: FOR NOW, BE AWARE THAT AFTER USING PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES.
+This function declares a pdeclare tibble with the attributes \code{.i}, \code{.t}, and \code{.d}.
 }
 \details{
-This function declares pdeclare tibble with three attributes:
-
 \itemize{
-  \item \code{.i}, a character or character vector indicating the variables that constitute the individual-level panel identifier
-  \item \code{.t}, a character vector indicating the time variable
+  \item \code{.i}, Quoted or unquoted variable(s) indicating the individual-level panel identifier
+  \item \code{.t}, Quoted or unquoted variable indicating the time variable
   \item \code{.d}, a number indicating the gap
 }
 
@@ -36,8 +34,8 @@ pd <- pdeclare(
   i = c(1, 1, 1, 2, 2, 2),
   t = c(1, 2, 3, 1, 2, 2),
   x = rnorm(6),
-  .i = "i",
-  .t = "t"
+  .i = i,
+  .t = t
 )
 is_pdeclare(pd)
 # I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
@@ -46,8 +44,8 @@ is_pdeclare(pd)
 pd2 <- pdeclare(
   i = c(1, 1, 1, 2, 2, 2),
   seconds = c(123, 456, 789, 103, 234, 238),
-  .i = "i",
-  .t = "seconds",
+  .i = i,
+  .t = seconds,
   .d = 0
 )
 is_pdeclare(pd2)

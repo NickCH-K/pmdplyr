@@ -12,32 +12,32 @@
 \title{Function to join two data frames inexactly}
 \usage{
 inexact_inner_join(x, y, by = NULL, copy = FALSE, suffix = c(".x",
-  ".y"), ..., var, jvar, method, exact = TRUE)
+  ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE)
 
 inexact_left_join(x, y, by = NULL, copy = FALSE, suffix = c(".x",
-  ".y"), ..., var, jvar, method, exact = TRUE)
+  ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE)
 
 inexact_right_join(x, y, by = NULL, copy = FALSE, suffix = c(".x",
-  ".y"), ..., var, jvar, method, exact = TRUE)
+  ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE)
 
 inexact_full_join(x, y, by = NULL, copy = FALSE, suffix = c(".x",
-  ".y"), ..., var, jvar, method, exact = TRUE)
+  ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE)
 
-inexact_semi_join(x, y, by = NULL, copy = FALSE, ..., var, jvar,
-  method, exact = TRUE)
+inexact_semi_join(x, y, by = NULL, copy = FALSE, ..., var = NULL,
+  jvar = NULL, method, exact = TRUE)
 
 inexact_nest_join(x, y, by = NULL, copy = FALSE, keep = FALSE,
-  name = NULL, ..., var, jvar, method, exact = TRUE)
+  name = NULL, ..., var = NULL, jvar = NULL, method, exact = TRUE)
 
-inexact_anti_join(x, y, by = NULL, copy = FALSE, ..., var, jvar,
-  method, exact = TRUE)
+inexact_anti_join(x, y, by = NULL, copy = FALSE, ..., var = NULL,
+  jvar = NULL, method, exact = TRUE)
 }
 \arguments{
 \item{x, y, by, copy, suffix, keep, name, ...}{Arguments to be passed to the relevant \code{join} function.}
 
-\item{var}{A character variable with the variable name from the \code{x} data frame which is to be indirectly matched.}
+\item{var}{Quoted or unquoted variable from the \code{x} data frame which is to be indirectly matched.}
 
-\item{jvar}{A character vector with the variable name(s) from the \code{y} data frame which are to be indirectly matched. These cannot be variable names also in \code{x} or \code{var}.}
+\item{jvar}{Quoted or unquoted variable(s) from the \code{y} data frame which are to be indirectly matched. These cannot be variable names also in \code{x} or \code{var}.}
 
 \item{method}{The approach to be taken in performing the indirect matching.}
 
@@ -73,16 +73,16 @@ unemp_data <- data.frame(
 Scorecard <- Scorecard \%>\%
   inexact_left_join(unemp_data,
                    method = "last",
-                   var = "year",
-                   jvar = "unemp_year")
+                   var = year,
+                   jvar = unemp_year)
 
 # Or perhaps I want to find the most recent lagged value (i.e. no exact matches, only recent ones)
 data(Scorecard)
 Scorecard <- Scorecard \%>\%
   inexact_left_join(unemp_data,
                     method = "last",
-                    var = "year",
-                    jvar = "unemp_year",
+                    var = year,
+                    jvar = unemp_year,
                     exact = FALSE)
 
 # Another way to do the same thing would be to specify the range of unemp_years I want exactly
@@ -91,6 +91,6 @@ unemp_data$unemp_year2 <- unemp_data$unemp_year + 2
 Scorecard <- Scorecard \%>\%
   inexact_left_join(unemp_data,
                    method = "between",
-                   var = "year",
-                   jvar = c("unemp_year", "unemp_year2"))
+                   var = year,
+                   jvar = c(unemp_year, unemp_year2))
 }

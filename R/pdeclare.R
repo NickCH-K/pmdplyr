@@ -1,12 +1,10 @@
 #' pdeclare
 #'
-#' WARNING: FOR NOW, BE AWARE THAT AFTER USING PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES.
-#'
-#' This function declares pdeclare tibble with three attributes:
+#' This function declares a pdeclare tibble with the attributes \code{.i}, \code{.t}, and \code{.d}.
 #'
 #' \itemize{
-#'   \item \code{.i}, a character or character vector indicating the variables that constitute the individual-level panel identifier
-#'   \item \code{.t}, a character vector indicating the time variable
+#'   \item \code{.i}, Quoted or unquoted variable(s) indicating the individual-level panel identifier
+#'   \item \code{.t}, Quoted or unquoted variable indicating the time variable
 #'   \item \code{.d}, a number indicating the gap
 #' }
 #'
@@ -15,8 +13,8 @@
 #' Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
 #'
 #' @param .df Data frame or tibble to declare as a panel.
-#' @param .i Character or character vector with the variable names that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.
-#' @param .t Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
+#' @param .i Quoted or unquoted variable(s) that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.
+#' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to perform a check of whether \code{.i} and \code{.t} uniquely identify observations, and present a message if not. By default this is set to FALSE and the warning message occurs only once per session.
 #' @name pdeclare
@@ -27,8 +25,8 @@
 #'   i = c(1, 1, 1, 2, 2, 2),
 #'   t = c(1, 2, 3, 1, 2, 2),
 #'   x = rnorm(6),
-#'   .i = "i",
-#'   .t = "t"
+#'   .i = i,
+#'   .t = t
 #' )
 #' is_pdeclare(pd)
 #' # I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
@@ -37,19 +35,42 @@
 #' pd2 <- pdeclare(
 #'   i = c(1, 1, 1, 2, 2, 2),
 #'   seconds = c(123, 456, 789, 103, 234, 238),
-#'   .i = "i",
-#'   .t = "seconds",
+#'   .i = i,
+#'   .t = seconds,
 #'   .d = 0
 #' )
 #' is_pdeclare(pd2)
 NULL
 #' @export
 
+#varname <- function(data,var) {
+#mean(data %>% pull({{ var }}),na.rm=TRUE)
+#}
+#varname(SPrail,!!parse_expr('price'))
 
-pdeclare <- function(..., .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
+# varname <- function(data,var) {
+#   enexprs(var)[[1]]
+# }
+# varname(SPrail,price)
+#
+
+#quo_is_missing(enquo(var))
+
+
+pdeclare <- function(..., .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
 
   # Create tibble
   tbl <- tibble::tibble(...)
+
+  # Pull out variable names; build_pdeclare takes strings
+  .i <- tidyselect::vars_select(names(tbl),{{.i}})
+  if (length(.i) == 0) {
+    .i <- NA_character_
+  }
+  .t <- tidyselect::vars_select(names(tbl),{{.t}})
+  if (length(.t) == 0) {
+    .t <- NA_character_
+  }
 
   # check inputs
   check_panel_inputs(tbl,
@@ -65,6 +86,7 @@ pdeclare <- function(..., .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
   return(tbl)
 }
 
+###### .i and .t are strings for new_pdeclare
 new_pdeclare <- function(x, ..., class = NULL) {
   if (!is.data.frame(x)) {
     x <- as.data.frame(x)
@@ -88,13 +110,11 @@ vec_restore.tbl_pd <- function(x, to) {
 
 #' Coerce to a pdeclare tibble
 #'
-#' WARNING: FOR NOW, BE AWARE THAT AFTER USING AS_PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES.
-#'
-#' This function coerces a tibble, data.frame, or list to a pdeclare tibble by adding three attributes to it:
+#' This function coerces a tibble, data.frame, or list to a pdeclare tibble by adding the \code{.i}, \code{.t}, and \code{.d} attributes to it.
 #'
 #' \itemize{
-#'   \item \code{.i}, a character or character vector indicating the variables that constitute the individual-level panel identifier
-#'   \item \code{.t}, a character vector indicating the time variable
+#'   \item \code{.i}, Quoted or unquoted variable(s) indicating the individual-level panel identifier
+#'   \item \code{.t}, Quoted or unquoted variable indicating the time variable
 #'   \item \code{.d}, a number indicating the gap
 #' }
 #'
@@ -110,8 +130,8 @@ vec_restore.tbl_pd <- function(x, to) {
 #' # If I want to use 'insert_date' for .t with a fixed gap between periods,
 #' # I need to transform it into an integer first; see time_variable()
 #' SP <- as_pdeclare(SPrail,
-#'   .i = c("origin", "destination"),
-#'   .t = "insert_date",
+#'   .i = c(origin, destination),
+#'   .t = insert_date,
 #'   .d = 0
 #' )
 #' is_pdeclare(SP)
@@ -123,13 +143,13 @@ vec_restore.tbl_pd <- function(x, to) {
 #' # Here, year is an integer, so I can use it with .d = 1 to
 #' # indicate that one period is a change of one unit in year
 #' # Conveniently, .d = 1 is the default
-#' Scorecard <- as_pdeclare(Scorecard, .i = "unitid", .t = "year")
+#' Scorecard <- as_pdeclare(Scorecard, .i = unitid, .t = year)
 #' is_pdeclare(Scorecard)
 #' @rdname as_pdeclare
 #' @export
 as_pdeclare <- function(x,
-                        .i = NA,
-                        .t = NA,
+                        .i = NULL,
+                        .t = NULL,
                         .d = 1,
                         .uniqcheck = FALSE,
                         ...) {
@@ -139,11 +159,21 @@ as_pdeclare <- function(x,
 #' @rdname as_pdeclare
 #' @export
 as_pdeclare.tbl_df <- function(x,
-                               .i = NA,
-                               .t = NA,
+                               .i = NULL,
+                               .t = NULL,
                                .d = 1,
                                .uniqcheck = FALSE,
                                ...) {
+
+  # Pull out variable names; build_pdeclare takes strings
+  .i <- tidyselect::vars_select(names(x),{{.i}})
+  if (length(.i) == 0) {
+    .i <- NA_character_
+  }
+  .t <- tidyselect::vars_select(names(x),{{.t}})
+  if (length(.t) == 0) {
+    .t <- NA_character_
+  }
 
   # check inputs
   check_panel_inputs(x,
@@ -153,8 +183,9 @@ as_pdeclare.tbl_df <- function(x,
     .uniqcheck = .uniqcheck
   )
 
-  return(build_pdeclare(x, .i = .i, .d = .d, .t = .t, .uniqcheck = .uniqcheck, ...))
+  return(build_pdeclare(x, .i, .t, .d, .uniqcheck = .uniqcheck, ...))
 }
+
 
 #' @rdname as_pdeclare
 #' @export
@@ -176,13 +207,18 @@ as_pdeclare.NULL <- function(x, ...) {
 
 #' Low-level constructor for a pdeclare object
 #'
-#' `build_pdeclare()` creates a `tbl_pd` object with more controls. It is useful
-#' for creating a `tbl_pd` internally inside a function.
+#' \code{build_pdeclare()} creates a \code{tbl_pd} object with more controls. It is useful for creating a \code{tbl_pd} internally inside a function.
 #'
-#' Note that, for speed, `build_pdeclare()` does not check the adequacy of the inputs.
+#' Be aware that \code{pdeclare} objects store \code{.i} and \code{.t} as strings. As a low-level constructor, \code{build_pdeclare()} takes only character arguments for \code{.i} and \code{.t}, not unquoted variables.
+#'
+#' For speed, \code{build_pdeclare()} does not check the adequacy of the inputs.
 #'
 #' @export
-#' @inheritParams pdeclare
+#' @param .df Data frame or tibble to declare as a panel.
+#' @param .i Quoted variable name(s) that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.
+#' @param .t Quoted variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
+#' @param .d Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
+#' @param .uniqcheck Logical parameter. Set to TRUE to perform a check of whether \code{.i} and \code{.t} uniquely identify observations, and present a message if not. By default this is set to FALSE and the warning message occurs only once per session.
 #' @keywords internal
 #' @importFrom rlang %@%
 build_pdeclare <- function(tbl,
@@ -190,6 +226,8 @@ build_pdeclare <- function(tbl,
                            .t = NA,
                            .d = 1,
                            .uniqcheck = FALSE) {
+  ###### .i and .t are strings by the time we get to build_pdeclare
+
   grp_data <- tbl %@% "groups"
 
   if (dplyr::is_grouped_df(tbl)) {
@@ -216,17 +254,17 @@ build_pdeclare <- function(tbl,
 check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
   #### CHECK INPUTS
   if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df", "list")) == 0) {
-    stop("Requires data to be a data frame, tibble, or list.")
+    stop("Requires data to be a data frame, tibble, pdeclare, or list.")
   }
   if (sum(class(.df) %in% c("data.table", "list")) > 0) {
-    warning("data.tables and lists will be coerced to pdeclare tibbles.")
+    warning("data.tables and lists will be coerced to pdeclare.")
     .df <- as.data.frame(.df)
   }
   if (!(max(is.character(.i))) & min(is.na(.i)) == 0) {
-    stop(".i must be a character variable or a character vector.")
+    stop("Internal issue: .i should have been converted to a character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
   }
   if (!(is.character(.t)) & !is.na(.t)) {
-    stop(".t must be a character variable.")
+    stop("Internal issue: .t should have been converted to character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
   }
   if (length(.t) > 1) {
     stop("Only one time variable allowed.")
@@ -234,6 +272,7 @@ check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
   if (!(is.numeric(.d)) & !(is.na(.d))) {
     stop(".d must be numeric.")
   }
+
   if (min(is.na(.i)) == 0 & min(.i %in% names(.df)) == 0) {
     stop("Elements of .i must be variables present in the data.")
   }
@@ -297,7 +336,7 @@ is_pdeclare <- function(.df, .silent = FALSE) {
   }
 }
 
-
+##### declare_in_fcn_check takes .i and .t and strings
 declare_in_fcn_check <- function(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed = FALSE) {
   # Check inputs
   if (!is.na(.uniqcheck) & !is.logical(.uniqcheck)) {
@@ -312,6 +351,7 @@ declare_in_fcn_check <- function(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed
   orig_i <- ifelse(is.null(.df %@% ".i"), NA, .df %@% ".i")
   orig_t <- ifelse(is.null(.df %@% ".t"), NA, .df %@% ".t")
   orig_d <- ifelse(is.null(.df %@% ".d"), NA, .df %@% ".d")
+  is_tbl_pd <- is_pdeclare(.df, .silent=TRUE)
 
   # If uniqcheck is TRUE but panel is not being reset, run through check_panel_inputs
   # just to check, using already-set panel info
@@ -338,6 +378,7 @@ declare_in_fcn_check <- function(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed
     orig_d = orig_d,
     i = .i,
     t = .t,
-    d = .d
+    d = .d,
+    is_tbl_pd = is_tbl_pd
   ))
 }

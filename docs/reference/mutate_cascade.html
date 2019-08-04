@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Function to perform mutate one time period at a time ('Cascading mutate') — mutate_cascade" />
 
-<meta property="og:description" content="WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS." />
+<meta property="og:description" content="This function is a wrapper for dplyr::mutate() which performs mutate one time period at a time, allowing each period's calculation to complete before moving on to the next. This allows changes in one period to 'cascade down' to later periods. This is (number of time periods) slower than regular mutate() and, generally, is only used for mutations where an existing variable is being defined in terms of its own lag() or tlag(). This is similar in concept to (and also slower than) cumsum but is much more flexible, and works with data that has multiple observations per individual-period using tlag(). For example, this could be used to calculate the current value of a savings account given a variable with each period's deposits, withdrawals, and interest, or could calculate the cumulative number of credits a student has taken across all classes." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -101,13 +101,13 @@
 
     <div class="ref-description">
     
-    <p>WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.</p>
+    <p>This function is a wrapper for <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate()</a></code> which performs <code>mutate</code> one time period at a time, allowing each period's calculation to complete before moving on to the next. This allows changes in one period to 'cascade down' to later periods. This is (number of time periods) slower than regular <code>mutate()</code> and, generally, is only used for mutations where an existing variable is being defined in terms of its own <code><a href='https://www.rdocumentation.org/packages/stats/topics/lag'>lag()</a></code> or <code><a href='tlag.html'>tlag()</a></code>. This is similar in concept to (and also slower than) <code>cumsum</code> but is much more flexible, and works with data that has multiple observations per individual-period using <code><a href='tlag.html'>tlag()</a></code>. For example, this could be used to calculate the current value of a savings account given a variable with each period's deposits, withdrawals, and interest, or could calculate the cumulative number of credits a student has taken across all classes.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>mutate_cascade</span>(<span class='no'>.df</span>, <span class='no'>...</span>, <span class='kw'>.skip</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.backwards</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>.group_i</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>.setpanel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>.group_i</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.setpanel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -122,7 +122,7 @@
     </tr>
     <tr>
       <th>.skip</th>
-      <td><p>Set to <code>TRUE</code> to skip the first period present in the data (or present within each group for grouped data) when applying <code>mutate()</code>. Since most uses of <code>mutate_cascade()</code> will involve a <code><a href='https://www.rdocumentation.org/packages/stats/topics/lag'>lag()</a></code> or <code>tlag()</code>, this avoids creating an <code>NA</code> in the first period that then cascades down. By default this is TRUE. If you set this to FALSE you should probably have some method for avoiding a first-period <code>NA</code> in your <code>...</code> entry, perhaps using the <code>default</code> option in <code><a href='https://dplyr.tidyverse.org/reference/lead-lag.html'>dplyr::lag</a></code> or the <code>.default</code> option in <code>tlag</code>.</p></td>
+      <td><p>Set to <code>TRUE</code> to skip the first period present in the data (or present within each group for grouped data) when applying <code>mutate()</code>. Since most uses of <code>mutate_cascade()</code> will involve a <code><a href='https://www.rdocumentation.org/packages/stats/topics/lag'>lag()</a></code> or <code><a href='tlag.html'>tlag()</a></code>, this avoids creating an <code>NA</code> in the first period that then cascades down. By default this is TRUE. If you set this to FALSE you should probably have some method for avoiding a first-period <code>NA</code> in your <code>...</code> entry, perhaps using the <code>default</code> option in <code><a href='https://dplyr.tidyverse.org/reference/lead-lag.html'>dplyr::lag</a></code> or the <code>.default</code> option in <code>tlag</code>.</p></td>
     </tr>
     <tr>
       <th>.backwards</th>
@@ -134,11 +134,11 @@
     </tr>
     <tr>
       <th>.i</th>
-      <td><p>Character or character vector with the variable names that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code>as_pdeclare()</code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
+      <td><p>Quoted or unquoted variables that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>.t</th>
-      <td><p>Character variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code>time_variable()</code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
+      <td><p>Quoted or unquoted variables indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code><a href='time_variable.html'>time_variable()</a></code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
     </tr>
     <tr>
       <th>.d</th>
@@ -156,12 +156,12 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function is a wrapper for <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate()</a></code> which performs <code>mutate</code> one time period at a time, allowing each period's calculation to complete before moving on to the next. This allows changes in one period to 'cascade down' to later periods. This is (number of time periods) slower than regular <code>mutate()</code> and, generally, is only used for mutations where an existing variable is being defined in terms of its own <code><a href='https://www.rdocumentation.org/packages/stats/topics/lag'>lag()</a></code> or <code>tlag()</code>. This is similar in concept to (and also slower than) <code>cumsum</code> but is much more flexible, and works with data that has multiple observations per individual-period using <code>tlag()</code>. For example, this could be used to calculate the current value of a savings account given a variable with each period's deposits, withdrawals, and interest, or could calculate the cumulative number of credits a student has taken across all classes.</p>
-<p>To apply <code>mutate_cascade()</code> to non-panel data and without any grouping (perhaps to mimic standard Stata <code>replace</code> functionality), add a variable to your data indicating the order you'd like <code>mutate</code> performed in (perhaps using <code><a href='https://dplyr.tidyverse.org/reference/ranking.html'>dplyr::row_number()</a></code>) and <code>.t</code> equal to that new variable.</p>
+    <p>To apply <code>mutate_cascade()</code> to non-panel data and without any grouping (perhaps to mimic standard Stata <code>replace</code> functionality), add a variable to your data indicating the order you'd like <code>mutate</code> performed in (perhaps using <code><a href='https://dplyr.tidyverse.org/reference/ranking.html'>dplyr::row_number()</a></code>) and <code>.t</code> to that new variable.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
+<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>()) {
 <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>Scorecard</span>)
 <span class='co'># I'd like to build a decaying function that remembers previous earnings but at a declining rate</span>
 <span class='co'># Let's only use nonmissing earnings</span>
@@ -172,8 +172,10 @@
   <span class='co'># we don't want to overwrite so let's make another</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>decay_earnings</span> <span class='kw'>=</span> <span class='no'>earnings_med</span>) <span class='kw'>%&gt;%</span>
   <span class='co'># Now we can cascade</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>decay_earnings</span> <span class='kw'>=</span> <span class='no'>decay_earnings</span> +
-    <span class='fl'>.5</span> * <span class='fu'>tlag</span>(<span class='no'>decay_earnings</span>, <span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"unitid"</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>.quick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div></pre>
+  <span class='fu'>mutate_cascade</span>(<span class='kw'>decay_earnings</span> <span class='kw'>=</span> <span class='no'>decay_earnings</span> +
+    <span class='fl'>.5</span> * <span class='fu'><a href='tlag.html'>tlag</a></span>(<span class='no'>decay_earnings</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>, <span class='kw'>.quick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
+    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

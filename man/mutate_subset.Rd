@@ -4,21 +4,21 @@
 \alias{mutate_subset}
 \title{Function to propogate a calculation performed on a subset of data to the rest of the data}
 \usage{
-mutate_subset(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA,
-  .d = NA, .uniqcheck = FALSE, .setpanel = TRUE)
+mutate_subset(.df, ..., .filter, .group_i = TRUE, .i = NULL,
+  .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE)
 }
 \arguments{
 \item{.df}{Data frame or tibble.}
 
 \item{...}{Specification to be passed to \code{dplyr::summarize()}.}
 
-\item{.filter}{A vector of the logical condition for which observations \code{dplyr::summarize()} operations are to be run on.}
+\item{.filter}{Unquoted logical condition for which observations \code{dplyr::summarize()} operations are to be run on.}
 
 \item{.group_i}{By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, overwriting any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
+\item{.i}{Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
 
-\item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
+\item{.t}{Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
 \item{.d}{Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.}
 
@@ -27,11 +27,9 @@ mutate_subset(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA,
 \item{.setpanel}{Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.}
 }
 \description{
-WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE WHEN USING THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.
+This function performs \code{dplyr::summarize} on a \code{.filter}ed subset of data. Then it applies the result to all observations (or all observations in the group, if applied to grouped data), filling in columns of the data with the summarize results, as though \code{dplyr::mutate} had been run.
 }
 \details{
-This function performs \code{dplyr::summarize} on a \code{.filter}ed subset of data. Then it applies the result to all observations (or all observations in the group, if applied to grouped data), filling in columns of the data with the summarize results, as though \code{dplyr::mutate} had been run.
-
 One application of this is to partially widen data. For example, if your analysis uses childhood height as a control variable in all years, \code{mutate_subset()} could be used to easily generate a \code{height_age10} variable from a \code{height} variable.
 }
 \examples{
@@ -43,7 +41,7 @@ data(SPrail)
 SPrail <- SPrail \%>\%
   mutate_subset(
     promo_price = mean(price, na.rm = TRUE),
-    .filter = SPrail$fare == "Promo",
-    .i = c("origin", "destination")
+    .filter = fare == "Promo",
+    .i = c(origin, destination)
   )
 }

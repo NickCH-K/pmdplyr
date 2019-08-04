@@ -4,7 +4,7 @@
 #'
 #' This data is not just limited to four-year colleges and includes a very wide variety of institutions.
 #'
-#' Note that the labor market (earnings, working) and repayment rate data do not refer to the same cohort of students.
+#' Note that the labor market (earnings, working) and repayment rate data do not refer to the same cohort of students, but rather are matched on the year in which outcomes are recorded. Labor market data refers to cohorts beginning college as undergraduates ten years prior, repayment rate data refers to cohorts entering repayment seven years prior.
 #'
 #' Data was downloaded using the Urban Institute's \code{educationdata} package.
 #'
@@ -16,9 +16,9 @@
 #'   \item{pred_degree_awarded_ipeds}{Predominant degree awarded. 1 = less-than-two-year, 2 = two-year, 3 = four-year+}
 #'   \item{year}{Year in which outcomes are measured.}
 #'   \item{earnings_med}{Median earnings among students (a) who received federal financial aid, (b) who began as undergraduates at the institution ten years prior, (c) with positive yearly earnings.}
-#'   \item{count_not_working}{Number of students who are not working (not necessarily unemployed) and (a) who received federal financial aid, (b) who began as undergraduates at the institution ten years prior.}
-#'   \item{count_working}{Number of students who are working (not necessarily unemployed) and (a) who received federal financial aid, (b) who began as undergraduates at the institution ten years prior.}
-#'   \item{repay_rate}{Proportion of students who received federal loans as an undergraduate at this institution and who entered repayment seven years ago who are not in default, has paid off all accrued interest, and is still making progress on payment. Only available 2013-2016.}
+#'   \item{count_not_working}{Number of students who are (a) not working (not necessarily unemployed), (b) received federal financial aid, and (c) who began as undergraduates at the institution ten years prior.}
+#'   \item{count_working}{Number of students who are (a) working, (b) who received federal financial aid, and (c) who began as undergraduates at the institution ten years prior.}
+#'   \item{repay_rate}{Proportion of students who (a) received federal loans as an undergraduate at this institution, (b) entered repayment seven years ago, (c) are not in default, (d) have paid off all accrued interest, and (e) are still making progress on payment. Only available 2013-2016.}
 #' }
 #' @encoding UTF-8
 #' @source Education Data Portal (Version 0.4.0 - Beta), Urban Institute, Center on Education Data and Policy, accessed June 28, 2019. https://educationdata.urban.org/documentation/, Scorecard.
@@ -31,7 +31,7 @@
 #'
 #' All dates and times are European Central Time.
 #'
-#' The larger data set from this \code{SPrail} was sampled was compiled and released under GPL-2 public license by Pedro Muñoz and David Cañones.
+#' The larger data set from which \code{SPrail} was sampled was compiled and released under GPL-2 public license by Pedro Muñoz and David Cañones.
 #'
 #' @format A data frame with 2,000 rows and 9 variables:
 #' \describe{

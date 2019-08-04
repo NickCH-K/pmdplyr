@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Function to propogate a calculation performed on a subset of data to the rest of the data — mutate_subset" />
 
-<meta property="og:description" content="WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE WHEN USING THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS." />
+<meta property="og:description" content="This function performs dplyr::summarize on a .filtered subset of data. Then it applies the result to all observations (or all observations in the group, if applied to grouped data), filling in columns of the data with the summarize results, as though dplyr::mutate had been run." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -101,12 +101,12 @@
 
     <div class="ref-description">
     
-    <p>WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE WHEN USING THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.</p>
+    <p>This function performs <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>dplyr::summarize</a></code> on a <code>.filter</code>ed subset of data. Then it applies the result to all observations (or all observations in the group, if applied to grouped data), filling in columns of the data with the summarize results, as though <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate</a></code> had been run.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mutate_subset</span>(<span class='no'>.df</span>, <span class='no'>...</span>, <span class='no'>.filter</span>, <span class='kw'>.group_i</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.setpanel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>mutate_subset</span>(<span class='no'>.df</span>, <span class='no'>...</span>, <span class='no'>.filter</span>, <span class='kw'>.group_i</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.setpanel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -121,7 +121,7 @@
     </tr>
     <tr>
       <th>.filter</th>
-      <td><p>A vector of the logical condition for which observations <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>dplyr::summarize()</a></code> operations are to be run on.</p></td>
+      <td><p>Unquoted logical condition for which observations <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>dplyr::summarize()</a></code> operations are to be run on.</p></td>
     </tr>
     <tr>
       <th>.group_i</th>
@@ -129,11 +129,11 @@
     </tr>
     <tr>
       <th>.i</th>
-      <td><p>Character or character vector with the variable names that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code>as_pdeclare()</code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
+      <td><p>Quoted or unquoted variables that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>.t</th>
-      <td><p>Character variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code>time_variable()</code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
+      <td><p>Quoted or unquoted variable indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code><a href='time_variable.html'>time_variable()</a></code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
     </tr>
     <tr>
       <th>.d</th>
@@ -151,8 +151,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function performs <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>dplyr::summarize</a></code> on a <code>.filter</code>ed subset of data. Then it applies the result to all observations (or all observations in the group, if applied to grouped data), filling in columns of the data with the summarize results, as though <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate</a></code> had been run.</p>
-<p>One application of this is to partially widen data. For example, if your analysis uses childhood height as a control variable in all years, <code>mutate_subset()</code> could be used to easily generate a <code>height_age10</code> variable from a <code>height</code> variable.</p>
+    <p>One application of this is to partially widen data. For example, if your analysis uses childhood height as a control variable in all years, <code>mutate_subset()</code> could be used to easily generate a <code>height_age10</code> variable from a <code>height</code> variable.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -164,9 +163,9 @@
 <span class='no'>SPrail</span> <span class='kw'>&lt;-</span> <span class='no'>SPrail</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>mutate_subset</span>(
     <span class='kw'>promo_price</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>price</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
-    <span class='kw'>.filter</span> <span class='kw'>=</span> <span class='no'>SPrail</span>$<span class='no'>fare</span> <span class='kw'>==</span> <span class='st'>"Promo"</span>,
-    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"origin"</span>, <span class='st'>"destination"</span>)
-  )</div><div class='output co'>#&gt; <span class='warning'>Warning: Factor `origin` contains implicit NA, consider using `forcats::fct_explicit_na`</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Factor `destination` contains implicit NA, consider using `forcats::fct_explicit_na`</span></div></pre>
+    <span class='kw'>.filter</span> <span class='kw'>=</span> <span class='no'>fare</span> <span class='kw'>==</span> <span class='st'>"Promo"</span>,
+    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>origin</span>, <span class='no'>destination</span>)
+  )</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

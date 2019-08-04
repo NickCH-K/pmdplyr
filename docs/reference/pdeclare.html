@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="pdeclare — pdeclare" />
 
-<meta property="og:description" content="WARNING: FOR NOW, BE AWARE THAT AFTER USING PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES." />
+<meta property="og:description" content="This function declares a pdeclare tibble with the attributes .i, .t, and .d." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -101,7 +101,7 @@
 
     <div class="ref-description">
     
-    <p>WARNING: FOR NOW, BE AWARE THAT AFTER USING PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES.</p>
+    <p>This function declares a pdeclare tibble with the attributes <code>.i</code>, <code>.t</code>, and <code>.d</code>.</p>
     
     </div>
 
@@ -115,11 +115,11 @@
     </tr>
     <tr>
       <th>.i</th>
-      <td><p>Character or character vector with the variable names that identify the individual cases. If this is omitted, <code>pdeclare</code> will assume the data set is a single time series.</p></td>
+      <td><p>Quoted or unquoted variable(s) that identify the individual cases. If this is omitted, <code>pdeclare</code> will assume the data set is a single time series.</p></td>
     </tr>
     <tr>
       <th>.t</th>
-      <td><p>Character variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code>time_variable()</code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
+      <td><p>Quoted or unquoted variable indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code><a href='time_variable.html'>time_variable()</a></code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
     </tr>
     <tr>
       <th>.d</th>
@@ -133,10 +133,9 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function declares pdeclare tibble with three attributes:</p>
-<ul>
-<li><p><code>.i</code>, a character or character vector indicating the variables that constitute the individual-level panel identifier</p></li>
-<li><p><code>.t</code>, a character vector indicating the time variable</p></li>
+    <ul>
+<li><p><code>.i</code>, Quoted or unquoted variable(s) indicating the individual-level panel identifier</p></li>
+<li><p><code>.t</code>, Quoted or unquoted variable indicating the time variable</p></li>
 <li><p><code>.d</code>, a number indicating the gap</p></li>
 </ul>
     <p>The <code>pdeclare()</code> function is for the purpose of creating <code>pdeclare</code> objects from scratch. You probably want <code>as_pdeclare</code>.</p>
@@ -149,19 +148,20 @@
   <span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>),
   <span class='kw'>t</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>2</span>),
   <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>6</span>),
-  <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"i"</span>,
-  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"t"</span>
+  <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>i</span>,
+  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>t</span>
 )
-<span class='fu'>is_pdeclare</span>(<span class='no'>pd</span>)</div><div class='output co'>#&gt; <span class='message'>.i = i; .t = t; .d = 1.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='co'># I set .d=0 here to indicate that I don't care how large the gap between one period and the next is</span>
+<span class='fu'><a href='is_pdeclare.html'>is_pdeclare</a></span>(<span class='no'>pd</span>)</div><div class='output co'>#&gt; <span class='message'>.i = i; .t = t; .d = 1.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='co'># I set .d=0 here to indicate that I don't care how large the gap between one period and the next is</span>
 <span class='co'># If I want to use 'seconds' for t.</span>
 <span class='co'># See time_variable() to turn unruly variables into well-behaved integers, as well</span>
 <span class='no'>pd2</span> <span class='kw'>&lt;-</span> <span class='fu'>pdeclare</span>(
   <span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>),
   <span class='kw'>seconds</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>123</span>, <span class='fl'>456</span>, <span class='fl'>789</span>, <span class='fl'>103</span>, <span class='fl'>234</span>, <span class='fl'>238</span>),
-  <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>".i"</span>,
-  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"seconds"</span>,
+  <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>i</span>,
+  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>seconds</span>,
   <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>
-)</div><div class='output co'>#&gt; <span class='error'>Error in check_panel_inputs(tbl, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck): Elements of .i must be variables present in the data.</span></div><div class='input'><span class='fu'>is_pdeclare</span>(<span class='no'>pd2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in class(.df) %in% c("data.frame", "tbl", "tbl_df"): object 'pd2' not found</span></div></pre>
+)
+<span class='fu'><a href='is_pdeclare.html'>is_pdeclare</a></span>(<span class='no'>pd2</span>)</div><div class='output co'>#&gt; <span class='message'>.i = i; .t = seconds; .d = 0.</span></div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

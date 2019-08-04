@@ -29,6 +29,6 @@ This data set is a random subsample of a much larger database of trips taken on 
 \details{
 All dates and times are European Central Time.
 
-The larger data set from this \code{SPrail} was sampled was compiled and released under GPL-2 public license by Pedro Muñoz and David Cañones.
+The larger data set from which \code{SPrail} was sampled was compiled and released under GPL-2 public license by Pedro Muñoz and David Cañones.
 }
 \keyword{datasets}

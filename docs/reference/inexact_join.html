@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -106,25 +106,25 @@
     </div>
 
     <pre class="usage"><span class='fu'>inexact_inner_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".x"</span>,
-  <span class='st'>".y"</span>), <span class='no'>...</span>, <span class='no'>var</span>, <span class='no'>jvar</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='st'>".y"</span>), <span class='no'>...</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>inexact_left_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".x"</span>,
-  <span class='st'>".y"</span>), <span class='no'>...</span>, <span class='no'>var</span>, <span class='no'>jvar</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='st'>".y"</span>), <span class='no'>...</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>inexact_right_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".x"</span>,
-  <span class='st'>".y"</span>), <span class='no'>...</span>, <span class='no'>var</span>, <span class='no'>jvar</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='st'>".y"</span>), <span class='no'>...</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>inexact_full_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".x"</span>,
-  <span class='st'>".y"</span>), <span class='no'>...</span>, <span class='no'>var</span>, <span class='no'>jvar</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='st'>".y"</span>), <span class='no'>...</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>inexact_semi_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>, <span class='no'>var</span>, <span class='no'>jvar</span>,
-  <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>inexact_semi_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>inexact_nest_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>, <span class='no'>var</span>, <span class='no'>jvar</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>inexact_anti_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>, <span class='no'>var</span>, <span class='no'>jvar</span>,
-  <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+<span class='fu'>inexact_anti_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>method</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -135,11 +135,11 @@
     </tr>
     <tr>
       <th>var</th>
-      <td><p>A character variable with the variable name from the <code>x</code> data frame which is to be indirectly matched.</p></td>
+      <td><p>Quoted or unquoted variable from the <code>x</code> data frame which is to be indirectly matched.</p></td>
     </tr>
     <tr>
       <th>jvar</th>
-      <td><p>A character vector with the variable name(s) from the <code>y</code> data frame which are to be indirectly matched. These cannot be variable names also in <code>x</code> or <code>var</code>.</p></td>
+      <td><p>Quoted or unquoted variable(s) from the <code>y</code> data frame which are to be indirectly matched. These cannot be variable names also in <code>x</code> or <code>var</code>.</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -175,16 +175,26 @@
 )
 <span class='co'># I want to match the most recent unemployment data I have to each college</span>
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>inexact_left_join</span>(<span class='no'>unemp_data</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"last"</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='st'>"unemp_year"</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "unemp_year"</span></div><div class='input'>
+  <span class='fu'>inexact_left_join</span>(<span class='no'>unemp_data</span>,
+                   <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"last"</span>,
+                   <span class='kw'>var</span> <span class='kw'>=</span> <span class='no'>year</span>,
+                   <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='no'>unemp_year</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "unemp_year"</span></div><div class='input'>
 <span class='co'># Or perhaps I want to find the most recent lagged value (i.e. no exact matches, only recent ones)</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>Scorecard</span>)
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>inexact_left_join</span>(<span class='no'>unemp_data</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"last"</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='st'>"unemp_year"</span>, <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix,     var = var, jvar = jvar, method = method, exact = exact): The variable names in jvar should not be in x</span></div><div class='input'>
+  <span class='fu'>inexact_left_join</span>(<span class='no'>unemp_data</span>,
+                    <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"last"</span>,
+                    <span class='kw'>var</span> <span class='kw'>=</span> <span class='no'>year</span>,
+                    <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='no'>unemp_year</span>,
+                    <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix,     var = varcall, jvar = jvarcall, method = method, exact = exact): The variable names in jvar should not be in x</span></div><div class='input'>
 <span class='co'># Another way to do the same thing would be to specify the range of unemp_years I want exactly</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>Scorecard</span>)
 <span class='no'>unemp_data</span>$<span class='no'>unemp_year2</span> <span class='kw'>&lt;-</span> <span class='no'>unemp_data</span>$<span class='no'>unemp_year</span> + <span class='fl'>2</span>
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>inexact_left_join</span>(<span class='no'>unemp_data</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"between"</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"unemp_year"</span>, <span class='st'>"unemp_year2"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix,     var = var, jvar = jvar, method = method, exact = exact): The variable names in jvar should not be in x</span></div></pre>
+  <span class='fu'>inexact_left_join</span>(<span class='no'>unemp_data</span>,
+                   <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"between"</span>,
+                   <span class='kw'>var</span> <span class='kw'>=</span> <span class='no'>year</span>,
+                   <span class='kw'>jvar</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>unemp_year</span>, <span class='no'>unemp_year2</span>))</div><div class='output co'>#&gt; <span class='error'>Error in inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix,     var = varcall, jvar = jvarcall, method = method, exact = exact): The variable names in jvar should not be in x</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>fixed_force</span>(<span class='no'>.df</span>, <span class='kw'>.var</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='no'>.within</span>, <span class='kw'>.resolve</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='fu'>fixed_force</span>(<span class='no'>.df</span>, <span class='kw'>.var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.within</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.resolve</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>)
   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/unique'>unique</a></span>(<span class='no'>x</span>)[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/which.min'>which.max</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/tabulate'>tabulate</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/match'>match</a></span>(<span class='no'>x</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/unique'>unique</a></span>(<span class='no'>x</span>))))], <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -117,11 +117,11 @@
     </tr>
     <tr>
       <th>.var</th>
-      <td><p>Character vector of variable names in <code>.df</code> that should be consistent. If not specified, uses all variables in <code>.df</code> that are not in <code>.within</code>.</p></td>
+      <td><p>Quoted or unquoted variable(s) in <code>.df</code> that should be consistent. If not specified, uses all variables in <code>.df</code> that are not in <code>.within</code>.</p></td>
     </tr>
     <tr>
       <th>.within</th>
-      <td><p>Character vector of variable names that the <code>.var</code> variables should be consistent within.</p></td>
+      <td><p>Quotes or unquoted variable(s) that the <code>.var</code> variables should be consistent within.</p></td>
     </tr>
     <tr>
       <th>.resolve</th>
@@ -147,8 +147,8 @@
 <span class='co'># I want to treat any changers as whatever they are most often (the mode).</span>
 <span class='co'># So let's enforce that with fixed_force</span>
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='fu'>fixed_force</span>(<span class='no'>Scorecard</span>,
-  <span class='kw'>.var</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"pred_degree_awarded_ipeds"</span>, <span class='st'>"state_abbr"</span>),
-  <span class='kw'>.within</span> <span class='kw'>=</span> <span class='st'>"unitid"</span>, <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"changed"</span>
+  <span class='kw'>.var</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>pred_degree_awarded_ipeds</span>, <span class='no'>state_abbr</span>),
+  <span class='kw'>.within</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"changed"</span>
 )
 <span class='co'># Did we catch any changers?</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a></span>(<span class='no'>Scorecard</span>$<span class='no'>changed</span>)</div><div class='output co'>#&gt; 

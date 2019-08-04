@@ -8,26 +8,27 @@
 \alias{as_pdeclare.list}
 \title{Coerce to a pdeclare tibble}
 \usage{
-as_pdeclare(x, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE, ...)
+as_pdeclare(x, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE,
+  ...)
 
-\method{as_pdeclare}{tbl_df}(x, .i = NA, .t = NA, .d = 1,
+\method{as_pdeclare}{tbl_df}(x, .i = NULL, .t = NULL, .d = 1,
   .uniqcheck = FALSE, ...)
 
-\method{as_pdeclare}{grouped_df}(x, .i = NA, .t = NA, .d = 1,
+\method{as_pdeclare}{grouped_df}(x, .i = NULL, .t = NULL, .d = 1,
   .uniqcheck = FALSE, ...)
 
-\method{as_pdeclare}{data.frame}(x, .i = NA, .t = NA, .d = 1,
+\method{as_pdeclare}{data.frame}(x, .i = NULL, .t = NULL, .d = 1,
   .uniqcheck = FALSE, ...)
 
-\method{as_pdeclare}{list}(x, .i = NA, .t = NA, .d = 1,
+\method{as_pdeclare}{list}(x, .i = NULL, .t = NULL, .d = 1,
   .uniqcheck = FALSE, ...)
 }
 \arguments{
 \item{x}{A data frame, tibble or list}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.}
+\item{.i}{Quoted or unquoted variable(s) that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.}
 
-\item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
+\item{.t}{Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
 \item{.d}{Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.}
 
@@ -36,14 +37,12 @@ as_pdeclare(x, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE, ...)
 \item{...}{Other arguments passed on to individual methods.}
 }
 \description{
-WARNING: FOR NOW, BE AWARE THAT AFTER USING AS_PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES.
+This function coerces a tibble, data.frame, or list to a pdeclare tibble by adding the \code{.i}, \code{.t}, and \code{.d} attributes to it.
 }
 \details{
-This function coerces a tibble, data.frame, or list to a pdeclare tibble by adding three attributes to it:
-
 \itemize{
-  \item \code{.i}, a character or character vector indicating the variables that constitute the individual-level panel identifier
-  \item \code{.t}, a character vector indicating the time variable
+  \item \code{.i}, Quoted or unquoted variable(s) indicating the individual-level panel identifier
+  \item \code{.t}, Quoted or unquoted variable indicating the time variable
   \item \code{.d}, a number indicating the gap
 }
 
@@ -56,8 +55,8 @@ data(SPrail)
 # If I want to use 'insert_date' for .t with a fixed gap between periods,
 # I need to transform it into an integer first; see time_variable()
 SP <- as_pdeclare(SPrail,
-  .i = c("origin", "destination"),
-  .t = "insert_date",
+  .i = c(origin, destination),
+  .t = insert_date,
   .d = 0
 )
 is_pdeclare(SP)
@@ -69,6 +68,6 @@ data(Scorecard)
 # Here, year is an integer, so I can use it with .d = 1 to
 # indicate that one period is a change of one unit in year
 # Conveniently, .d = 1 is the default
-Scorecard <- as_pdeclare(Scorecard, .i = "unitid", .t = "year")
+Scorecard <- as_pdeclare(Scorecard, .i = unitid, .t = year)
 is_pdeclare(Scorecard)
 }

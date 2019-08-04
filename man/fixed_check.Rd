@@ -4,14 +4,14 @@
 \alias{fixed_check}
 \title{Function to check for inconsistency in variables that should be fixed}
 \usage{
-fixed_check(.df, .var = NA, .within)
+fixed_check(.df, .var = NULL, .within = NULL)
 }
 \arguments{
 \item{.df}{Data frame or tibble.}
 
-\item{.var}{Character vector of variable names in \code{.df} that are to be checked for consistency. If not specified, uses all variables in \code{.df} that are not in \code{.within}.}
+\item{.var}{Quoted or unquoted variable(s) in \code{.df} that are to be checked for consistency. If not specified, uses all variables in \code{.df} that are not in \code{.within}.}
 
-\item{.within}{Character vector of variable names that the \code{.var} variables should be consistent within.}
+\item{.within}{Quotes or unquoted variable(s) that the \code{.var} variables should be consistent within.}
 }
 \description{
 This function checks whether one set of variables is consistent within values of another set of variables. If they are, returns \code{TRUE}. If they aren't, it will return a list of data frames, one for each element of \code{.var}, consisting only of the observations and variables in which there are inconsistencies.
@@ -22,11 +22,11 @@ This function checks whether one set of variables is consistent within values of
 # state_abbr and inst_name never change within university.
 # Let's see if that's true
 data(Scorecard)
-fixed_check(Scorecard, .var = c("state_abbr", "inst_name"), .within = "unitid")
+fixed_check(Scorecard, .var = c(state_abbr, inst_name), .within = unitid)
 # it returns TRUE! We're good to go
 
 # count_not_working has no reason to be constant within unitid,
 # but let's see what happens if we run it through
-fixed_check(Scorecard, .var = c("count_not_working"), .within = "unitid")
+fixed_check(Scorecard, .var = count_not_working, .within = unitid)
 # It gives back a tibble with inconsistent obs!
 }

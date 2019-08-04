@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Function to fill in gaps in panel data — panel_fill" />
 
-<meta property="og:description" content="WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS." />
+<meta property="og:description" content="This function creates new observations to fill in any gaps in panel data. For example, if individual 1 has an observation in periods t = 1 and t = 3 but no others, this function will create an observation for t = 2. By default, the t = 2 observation will be identical to the t = 1 observation except for the time variable, but this can be adjusted. This function returns data sorted by .i and .t." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -101,20 +101,20 @@
 
     <div class="ref-description">
     
-    <p>WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.</p>
+    <p>This function creates new observations to fill in any gaps in panel data. For example, if individual 1 has an observation in periods t = 1 and t = 3 but no others, this function will create an observation for t = 2. By default, the t = 2 observation will be identical to the t = 1 observation except for the time variable, but this can be adjusted. This function returns data sorted by <code>.i</code> and <code>.t</code>.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>panel_fill</span>(<span class='no'>.df</span>, <span class='kw'>.set_NA</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.min</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.max</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>.backwards</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.group_i</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.setpanel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>.backwards</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.group_i</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.setpanel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.df</th>
-      <td><p>Tibble or data frame which either has the <code>.t</code> and <code>.d</code> (and perhaps <code>.i</code>) attributes included by <code>as_pdeclare()</code>, or the appropriate panel structure is declared in the function.</p></td>
+      <td><p>Tibble or data frame which either has the <code>.t</code> and <code>.d</code> (and perhaps <code>.i</code>) attributes included by <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>, or the appropriate panel structure is declared in the function.</p></td>
     </tr>
     <tr>
       <th>.set_NA</th>
@@ -142,11 +142,11 @@
     </tr>
     <tr>
       <th>.i</th>
-      <td><p>Character or character vector with the variable names that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code>as_pdeclare()</code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
+      <td><p>Quoted or unquoted variables that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>.t</th>
-      <td><p>Character variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code>time_variable()</code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
+      <td><p>Quoted or unquoted variable indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code><a href='time_variable.html'>time_variable()</a></code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
     </tr>
     <tr>
       <th>.d</th>
@@ -164,10 +164,9 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function creates new observations to fill in any gaps in panel data. For example, if individual 1 has an observation in periods t = 1 and t = 3 but no others, this function will create an observation for t = 2. By default, the t = 2 observation will be identical to the t = 1 observation except for the time variable, but this can be adjusted. This function returns data sorted by <code>.i</code> and <code>.t</code>.</p>
-<p>Note that, in the case where there is more than one observation for a given individual/time period (or just time period if <code>.group_i = FALSE</code>), <code>panel_fill()</code> will create copies of *every observation* in the appropriate individual/time period for filling-in purposes. So if there are four t = 1 observations and nothing in t = 2, <code>panel_fill()</code> will create four new observations with t = 2, copying the original four in t = 1.</p>
+    <p>Note that, in the case where there is more than one observation for a given individual/time period (or just time period if <code>.group_i = FALSE</code>), <code>panel_fill()</code> will create copies of *every observation* in the appropriate individual/time period for filling-in purposes. So if there are four t = 1 observations and nothing in t = 2, <code>panel_fill()</code> will create four new observations with t = 2, copying the original four in t = 1.</p>
 <p>By default, the <code>panel_fill()</code> operation is grouped by <code>.i</code>, although it will retun the data in the original grouping structure. Leave <code>.i</code> blank, or, if <code>.i</code> is already in the data from <code>as_pdeclare</code>, set <code>.group_i=FALSE</code> to run the function ungrouped, or with the existing group structure.</p>
-<p>This function requires <code>.t</code> and <code>.d</code> to be declared in the function or already established in the data by <code>as_pdeclare()</code>. Also, this requires a cardinal <code>.t</code>. It must not be the case that <code>.d=0</code>.</p>
+<p>This function requires <code>.t</code> and <code>.d</code> to be declared in the function or already established in the data by <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>. Also, this requires a cardinal <code>.t</code>. It must not be the case that <code>.d=0</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -189,18 +188,25 @@
 
   <span class='co'># We can deal with the inconsistent-gaps problem by creating new obs to fill in</span>
   <span class='co'># this version will fill in the new obs with the most recently observed data, and flag them</span>
-  <span class='no'>Scorecard_filled</span> <span class='kw'>&lt;-</span> <span class='fu'>panel_fill</span>(<span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"unitid"</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"new"</span>)
+  <span class='no'>Scorecard_filled</span> <span class='kw'>&lt;-</span> <span class='fu'>panel_fill</span>(<span class='no'>Scorecard</span>,
+                                 <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
+                                 <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>,
+                                 <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"new"</span>)
 
   <span class='co'># Or maybe we want those observations in there but don't want to treat them as real data</span>
   <span class='co'># so instead of filling them in, just leave all the data in the new obs blank</span>
   <span class='co'># (note this sets EVERYTHING not in .i or .t to NA - if you only want some variables NA,</span>
   <span class='co'># make .set_NA a character vector of those variable names)</span>
-  <span class='no'>Scorecard_filled</span> <span class='kw'>&lt;-</span> <span class='fu'>panel_fill</span>(<span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"unitid"</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"new"</span>, <span class='kw'>.set_NA</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='no'>Scorecard_filled</span> <span class='kw'>&lt;-</span> <span class='fu'>panel_fill</span>(<span class='no'>Scorecard</span>,
+                                 <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
+                                 <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>,
+                                 <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"new"</span>,
+                                 <span class='kw'>.set_NA</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
   <span class='co'># Perhaps we want a perfectly balanced panel. So let's set .max and .min to the start and end</span>
   <span class='co'># of the data, and it will fill in everything.</span>
   <span class='no'>Scorecard_filled</span> <span class='kw'>&lt;-</span> <span class='fu'>panel_fill</span>(<span class='no'>Scorecard</span>,
-    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"unitid"</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"new"</span>,
+    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>, <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"new"</span>,
     <span class='kw'>.min</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='no'>Scorecard</span>$<span class='no'>year</span>), <span class='kw'>.max</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>Scorecard</span>$<span class='no'>year</span>)
   )
   <span class='co'># how many obs of each college? Should be identical, and equal to the number of years there are</span>

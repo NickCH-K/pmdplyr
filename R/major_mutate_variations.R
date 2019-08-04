@@ -1,23 +1,22 @@
 #' Function to perform mutate one time period at a time ('Cascading mutate')
 #'
-#' WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.
-#'
 #' This function is a wrapper for \code{dplyr::mutate()} which performs \code{mutate} one time period at a time, allowing each period's calculation to complete before moving on to the next. This allows changes in one period to 'cascade down' to later periods. This is (number of time periods) slower than regular \code{mutate()} and, generally, is only used for mutations where an existing variable is being defined in terms of its own \code{lag()} or \code{tlag()}. This is similar in concept to (and also slower than) \code{cumsum} but is much more flexible, and works with data that has multiple observations per individual-period using \code{tlag()}. For example, this could be used to calculate the current value of a savings account given a variable with each period's deposits, withdrawals, and interest, or could calculate the cumulative number of credits a student has taken across all classes.
 #'
-#' To apply \code{mutate_cascade()} to non-panel data and without any grouping (perhaps to mimic standard Stata \code{replace} functionality), add a variable to your data indicating the order you'd like \code{mutate} performed in (perhaps using \code{dplyr::row_number()}) and \code{.t} equal to that new variable.
+#' To apply \code{mutate_cascade()} to non-panel data and without any grouping (perhaps to mimic standard Stata \code{replace} functionality), add a variable to your data indicating the order you'd like \code{mutate} performed in (perhaps using \code{dplyr::row_number()}) and \code{.t} to that new variable.
 #'
 #' @param .df Data frame or tibble.
 #' @param ... Specification to be passed to \code{mutate()}.
 #' @param .skip Set to \code{TRUE} to skip the first period present in the data (or present within each group for grouped data) when applying \code{mutate()}. Since most uses of \code{mutate_cascade()} will involve a \code{lag()} or \code{tlag()}, this avoids creating an \code{NA} in the first period that then cascades down. By default this is TRUE. If you set this to FALSE you should probably have some method for avoiding a first-period \code{NA} in your \code{...} entry, perhaps using the \code{default} option in \code{dplyr::lag} or the \code{.default} option in \code{tlag}.
 #' @param .backwards Set to \code{TRUE} to run \code{mutate_cascade()} from the last period to the first, rather than from the first to the last.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, ignoring any grouping already implemented (although the original grouping structure will be returned at the end). Set \code{.group_i = FALSE} to avoid this.
-#' @param .i Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
-#' @param .t Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
+#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .t Quoted or unquoted variables indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
 #' @examples
 #'
+#' if (interactive()) {
 #' data(Scorecard)
 #' # I'd like to build a decaying function that remembers previous earnings but at a declining rate
 #' # Let's only use nonmissing earnings
@@ -28,10 +27,12 @@
 #'   # we don't want to overwrite so let's make another
 #'   dplyr::mutate(decay_earnings = earnings_med) %>%
 #'   # Now we can cascade
-#'   dplyr::mutate(decay_earnings = decay_earnings +
-#'     .5 * tlag(decay_earnings, Scorecard, .i = "unitid", .t = "year", .quick = TRUE))
+#'   mutate_cascade(decay_earnings = decay_earnings +
+#'     .5 * tlag(decay_earnings, .i = unitid, .t = year, .quick = TRUE),
+#'     .i = unitid, .t = year)
+#' }
 #' @export
-mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i = TRUE, .i = NA, .t = NA, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
+mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
   if (!is.logical(.backwards)) {
     stop(".backwards must be TRUE or FALSE")
   }
@@ -42,15 +43,26 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
     stop(".group_i must be TRUE or FALSE.")
   }
 
+  # Pull out variable names
+  .icall <- tidyselect::vars_select(names(.df),{{.i}})
+  if (length(.icall) == 0) {
+    .icall <- NA_character_
+  }
+  .tcall <- tidyselect::vars_select(names(.df),{{.t}})
+  if (length(.tcall) == 0) {
+    .tcall <- NA_character_
+  }
+
   # Check inputs and pull out panel info
-  inp <- declare_in_fcn_check(.df, .i, .t, .d, .uniqcheck, .setpanel)
+  inp <- declare_in_fcn_check(.df, .i = .icall, .t = .tcall, .d, .uniqcheck, .setpanel)
   if (is.na(inp$t)) {
     stop("mutate_cascade() requires that .t be declared either in the function or by as_pdeclare().")
   }
 
   # Panel-declare data if any changes have been made.
-  if (min(is.na(.i)) == 0 | !is.na(.t) | !is.na(.d)) {
-    .df <- as_pdeclare(.df, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck)
+  if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
+
+    .df <- as_pdeclare(.df, {{.i}}, {{.t}}, .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
     inp$d <- .df %@% ".d"
@@ -78,7 +90,7 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   indexnames <- names(.df)[(ncol(.df) - 1):ncol(.df)]
 
   # Do an explicit loop because each iteration needs to complete before moving on
-  list_of_times <- sort(unique(.df[[.t]]))
+  list_of_times <- sort(unique(.df[[inp$t]]))
   if (.backwards == TRUE) {
     list_of_times <- rev(list_of_times)
   }
@@ -99,16 +111,20 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    attr(.df,".i") <- inp$orig_i
-    attr(.df,".t") <- inp$orig_t
-    attr(.df,".d") <- inp$orig_d
+    if (inp$is_tbl_pd) {
+      .df <- as_pdeclare(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
+    } else{
+      attr(.df,".i") <- NULL
+      attr(.df,".t") <- NULL
+      attr(.df,".d") <- NULL
+      class(.df) <- class(.df)[!(class(.df) %in% "tbl_pd")]
+    }
   }
+
   return(.df)
 }
 
 #' Function to propogate a calculation performed on a subset of data to the rest of the data
-#'
-#' WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE WHEN USING THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.
 #'
 #' This function performs \code{dplyr::summarize} on a \code{.filter}ed subset of data. Then it applies the result to all observations (or all observations in the group, if applied to grouped data), filling in columns of the data with the summarize results, as though \code{dplyr::mutate} had been run.
 #'
@@ -116,10 +132,10 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 #'
 #' @param .df Data frame or tibble.
 #' @param ... Specification to be passed to \code{dplyr::summarize()}.
-#' @param .filter A vector of the logical condition for which observations \code{dplyr::summarize()} operations are to be run on.
+#' @param .filter Unquoted logical condition for which observations \code{dplyr::summarize()} operations are to be run on.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, overwriting any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.
-#' @param .i Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
-#' @param .t Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
+#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
@@ -132,11 +148,11 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 #' SPrail <- SPrail %>%
 #'   mutate_subset(
 #'     promo_price = mean(price, na.rm = TRUE),
-#'     .filter = SPrail$fare == "Promo",
-#'     .i = c("origin", "destination")
+#'     .filter = fare == "Promo",
+#'     .i = c(origin, destination)
 #'   )
 #' @export
-mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
+mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
   #### CHECK INPUTS
   if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
     stop("Requires data to be a data frame or tibble.")
@@ -144,15 +160,22 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA, 
   if (sum(class(.df) == "data.table") > 0) {
     warning("pmdplyr functions have not been tested with data.tables")
   }
-  if (!is.vector(.filter) | !is.logical(.filter)) {
-    stop(".filter must be a logical vector.")
+
+  # Pull out variable names
+  .icall <- tidyselect::vars_select(names(.df),{{.i}})
+  if (length(.icall) == 0) {
+    .icall <- NA_character_
+  }
+  .tcall <- tidyselect::vars_select(names(.df),{{.t}})
+  if (length(.tcall) == 0) {
+    .tcall <- NA_character_
   }
 
-  inp <- declare_in_fcn_check(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed = TRUE)
+  inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel, .noneed = TRUE)
 
   # Panel-declare data if any changes have been made.
-  if (min(is.na(.i)) == 0 | !is.na(.t) | !is.na(.d)) {
-    .df <- as_pdeclare(.df, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck)
+  if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
+    .df <- as_pdeclare(.df, {{.i}}, {{.t}}, .d = .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
     inp$d <- .df %@% ".d"
@@ -165,8 +188,8 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA, 
   }
 
   # Perform the summary on the subset
-  summ <- .df[.filter, ]
-  summ <- summ %>%
+  summ <- .df %>%
+    dplyr::filter({{ .filter }}) %>%
     dplyr::summarize(...)
   # See what variables were created not counting the groupings
   # First, get the grouping variables
@@ -193,11 +216,17 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NA, .t = NA, 
       dplyr::left_join(summ, by = groups))
   }
 
+
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    attr(.df,".i") <- inp$orig_i
-    attr(.df,".t") <- inp$orig_t
-    attr(.df,".d") <- inp$orig_d
+    if (inp$is_tbl_pd) {
+      .df <- as_pdeclare(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
+    } else{
+      attr(.df,".i") <- NULL
+      attr(.df,".t") <- NULL
+      attr(.df,".d") <- NULL
+      class(.df) <- class(.df)[!(class(.df) %in% "tbl_pd")]
+    }
   }
 
   return(.df)

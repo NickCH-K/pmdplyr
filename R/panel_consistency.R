@@ -1,7 +1,5 @@
 #' Function to fill in gaps in panel data
 #'
-#' WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.
-#'
 #' This function creates new observations to fill in any gaps in panel data. For example, if individual 1 has an observation in periods t = 1 and t = 3 but no others, this function will create an observation for t = 2. By default, the t = 2 observation will be identical to the t = 1 observation except for the time variable, but this can be adjusted. This function returns data sorted by \code{.i} and \code{.t}.
 #'
 #' Note that, in the case where there is more than one observation for a given individual/time period (or just time period if \code{.group_i = FALSE}), \code{panel_fill()} will create copies of *every observation* in the appropriate individual/time period for filling-in purposes. So if there are four t = 1 observations and nothing in t = 2, \code{panel_fill()} will create four new observations with t = 2, copying the original four in t = 1.
@@ -17,8 +15,8 @@
 #' @param .backwards By default, values of newly-created observations are copied from the most recently available period. Set \code{.backwards = TRUE} to instead copy values from the closest *following* period.
 #' @param .group_i By default, \code{panel_fill()} will fill in gaps within values of \code{.i}. If \code{.i} is missing, it won't do that. If \code{.i} is in the data and you still don't want \code{panel_fill()} to run within \code{.i}, set \code{.group_i = FALSE}.
 #' @param .flag The name of a new variable indicating which observations are newly created by \code{panel_fill()}.
-#' @param .i Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
-#' @param .t Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
+#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
@@ -42,8 +40,8 @@
 #'   # We can deal with the inconsistent-gaps problem by creating new obs to fill in
 #'   # this version will fill in the new obs with the most recently observed data, and flag them
 #'   Scorecard_filled <- panel_fill(Scorecard,
-#'                                  .i = "unitid",
-#'                                  .t = "year",
+#'                                  .i = unitid,
+#'                                  .t = year,
 #'                                  .flag = "new")
 #'
 #'   # Or maybe we want those observations in there but don't want to treat them as real data
@@ -51,15 +49,15 @@
 #'   # (note this sets EVERYTHING not in .i or .t to NA - if you only want some variables NA,
 #'   # make .set_NA a character vector of those variable names)
 #'   Scorecard_filled <- panel_fill(Scorecard,
-#'                                  .i = "unitid",
-#'                                  .t = "year",
+#'                                  .i = unitid,
+#'                                  .t = year,
 #'                                  .flag = "new",
 #'                                  .set_NA = TRUE)
 #'
 #'   # Perhaps we want a perfectly balanced panel. So let's set .max and .min to the start and end
 #'   # of the data, and it will fill in everything.
 #'   Scorecard_filled <- panel_fill(Scorecard,
-#'     .i = "unitid", .t = "year", .flag = "new",
+#'     .i = unitid, .t = year, .flag = "new",
 #'     .min = min(Scorecard$year), .max = max(Scorecard$year)
 #'   )
 #'   # how many obs of each college? Should be identical, and equal to the number of years there are
@@ -68,7 +66,7 @@
 #' }
 #' @export
 
-panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = FALSE, .group_i = TRUE, .flag = NA, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE, .setpanel = TRUE) {
+panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = FALSE, .group_i = TRUE, .flag = NA, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE, .setpanel = TRUE) {
   if (!is.logical(.backwards)) {
     stop(".backwards must be TRUE or FALSE")
   }
@@ -88,6 +86,16 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     stop(".flag must be a character variable.")
   }
 
+  # Pull out variable names
+  .icall <- tidyselect::vars_select(names(.df),{{.i}})
+  if (length(.icall) == 0) {
+    .icall <- NA_character_
+  }
+  .tcall <- tidyselect::vars_select(names(.df),{{.t}})
+  if (length(.tcall) == 0) {
+    .tcall <- NA_character_
+  }
+
   # original grouping structure
   origgroups <- names(.df %@% "groups")
   origgroups <- origgroups[1:(length(origgroups) - 1)]
@@ -96,14 +104,14 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   }
 
   # Check inputs and pull out panel info
-  inp <- declare_in_fcn_check(.df, .i, .t, .d, .uniqcheck, .setpanel)
+  inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel)
   if (is.na(inp$t)) {
     stop("panel_fill() requires that .t be declared either in the function or by as_pdeclare().")
   }
 
   # Panel-declare data if any changes have been made.
-  if (min(is.na(.i)) == 0 | !is.na(.t)) {
-    .df <- as_pdeclare(.df, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck)
+  if (min(is.na(.icall)) == 0 | !is.na(.tcall)) {
+    .df <- as_pdeclare(.df, {{.i}}, {{.t}}, .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
     inp$d <- .df %@% ".d"
@@ -191,7 +199,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   # get number of gaps FOLLOWING (for regular, or leading, if .fill is different)
   # since this is how many copies of each obs will be in the final data
   #-1 for the original copy. Make it IN the data b/c I'll need group structure in a sec
-  .df[, ncol(.df) + 1] <- .df[[.t]]
+  .df[, ncol(.df) + 1] <- .df[[inp$t]]
   copyname <- names(.df)[ncol(.df)]
   .df <- .df %>% dplyr::mutate_at(copyname, .funs = function(x) abs(x - dplyr::lead(x)) / inp$d - 1)
 
@@ -245,12 +253,12 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   # Increment the time to fill in, using .id
   # Which goes up or down depending on whether it's backwards or forwards
   tocopy <- tocopy %>%
-    dplyr::mutate_at(.t, .funs = function(x)
+    dplyr::mutate_at(inp$t, .funs = function(x)
       if (.backwards == FALSE) {
-        tocopy[[.t]] + tocopy[[newidname]] * inp$d
+        tocopy[[inp$t]] + tocopy[[newidname]] * inp$d
       }
       else {
-        tocopy[[.t]] - tocopy[[newidname]] * inp$d
+        tocopy[[inp$t]] - tocopy[[newidname]] * inp$d
       })
   tocopy[, newidname] <- NULL
 
@@ -270,9 +278,14 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    attr(.df,".i") <- inp$orig_i
-    attr(.df,".t") <- inp$orig_t
-    attr(.df,".d") <- inp$orig_d
+    if (inp$is_tbl_pd) {
+      .df <- as_pdeclare(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
+    } else{
+      attr(.df,".i") <- NULL
+      attr(.df,".t") <- NULL
+      attr(.df,".d") <- NULL
+      class(.df) <- class(.df)[!(class(.df) %in% "tbl_pd")]
+    }
   }
 
   return(.df)
@@ -290,8 +303,8 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 #' @param .backwards By default, values of newly-created observations are copied from the most recently available period. Set \code{.backwards = TRUE} to instead copy values from the closest *following* period.
 #' @param .resolve If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{panel_locf()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = function(x) mean(x)} to get the mean value of all observations present for that individual/period. \code{.resolve} will also be used to fill in values if some values in a given individual/period are to be overwritten and others aren't.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{panel_locf()} will group the data by \code{.i}, ignoring any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.
-#' @param .i Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
-#' @param .t Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
+#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
 #' @examples
@@ -313,7 +326,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 #'   sum(is.na(SPrail$price))
 #'   SPrail <- SPrail %>%
 #'     dplyr::mutate(price = panel_locf(price,
-#'       .i = c("origin", "destination"), .t = "insert_date", .d = 0,
+#'       .i = c(origin, destination), .t = insert_date, .d = 0,
 #'       .resolve = function(x) mean(x, na.rm = TRUE)
 #'     ))
 #'
@@ -330,7 +343,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 #'     # Now let's fill in NAs and also -3s
 #'     dplyr::mutate(earnings_med = panel_locf(earnings_med,
 #'       .fill = c(NA, -3),
-#'       .i = "unitid", .t = "year"
+#'       .i = unitid, .t = year
 #'     ))
 #'   # Note that there are still some missings - these are missings that come before the first
 #'   # non-missing value in that unitid, so there's nothing to pull from.
@@ -338,7 +351,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 #' }
 #' @export
 
-panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA, .backwards = FALSE, .resolve = "error", .group_i = TRUE, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE) {
+panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA, .backwards = FALSE, .resolve = "error", .group_i = TRUE, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
   if (!is.vector(.var)) {
     stop(".var must be a vector.")
   }
@@ -352,6 +365,19 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
     stop(".backwards must be TRUE or FALSE")
   }
 
+  #ugh
+  .df <- .df
+
+  # Pull out variable names
+  .icall <- tidyselect::vars_select(names(.df),{{.i}})
+  if (length(.icall) == 0) {
+    .icall <- NA_character_
+  }
+  .tcall <- tidyselect::vars_select(names(.df),{{.t}})
+  if (length(.tcall) == 0) {
+    .tcall <- NA_character_
+  }
+
   # original grouping structure
   origgroups <- names(.df %@% "groups")
   origgroups <- origgroups[1:(length(origgroups) - 1)]
@@ -360,7 +386,7 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   }
 
   # Check inputs and pull out panel info
-  inp <- declare_in_fcn_check(.df, .i, .t, .d, .uniqcheck, .setpanel = FALSE)
+  inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel = FALSE)
   if (is.na(inp$t)) {
     stop("panel_locf() requires that .t be declared either in the function or by as_pdeclare().")
   }
@@ -446,6 +472,8 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
   # Fill in anything that was missing
   .var <- ifelse(is.na(.var), .df[[worknames[1]]], .var)
+  # Failure to lookup (NaN) is really a NA for us
+  .var <- ifelse(is.nan(.var), NA, .var)
 
   return(.var)
 }
@@ -456,24 +484,24 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 #' This function checks whether one set of variables is consistent within values of another set of variables. If they are, returns \code{TRUE}. If they aren't, it will return a list of data frames, one for each element of \code{.var}, consisting only of the observations and variables in which there are inconsistencies.
 #'
 #' @param .df Data frame or tibble.
-#' @param .var Character vector of variable names in \code{.df} that are to be checked for consistency. If not specified, uses all variables in \code{.df} that are not in \code{.within}.
-#' @param .within Character vector of variable names that the \code{.var} variables should be consistent within.
+#' @param .var Quoted or unquoted variable(s) in \code{.df} that are to be checked for consistency. If not specified, uses all variables in \code{.df} that are not in \code{.within}.
+#' @param .within Quotes or unquoted variable(s) that the \code{.var} variables should be consistent within.
 #' @examples
 #'
 #' # In the Scorecard data, it should be the case that
 #' # state_abbr and inst_name never change within university.
 #' # Let's see if that's true
 #' data(Scorecard)
-#' fixed_check(Scorecard, .var = c("state_abbr", "inst_name"), .within = "unitid")
+#' fixed_check(Scorecard, .var = c(state_abbr, inst_name), .within = unitid)
 #' # it returns TRUE! We're good to go
 #'
 #' # count_not_working has no reason to be constant within unitid,
 #' # but let's see what happens if we run it through
-#' fixed_check(Scorecard, .var = c("count_not_working"), .within = "unitid")
+#' fixed_check(Scorecard, .var = count_not_working, .within = unitid)
 #' # It gives back a tibble with inconsistent obs!
 #' @export
 
-fixed_check <- function(.df, .var = NA, .within) {
+fixed_check <- function(.df, .var = NULL, .within = NULL) {
   if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
     stop("Requires data to be a data frame or tibble.")
   }
@@ -481,27 +509,34 @@ fixed_check <- function(.df, .var = NA, .within) {
     warning("pmdplyr functions have not been tested with data.tables.")
   }
 
-  # if .var is unspecified
-  if (max(is.na(.var) == 1)) {
-    .var <- names(.df)[!(names(.df) %in% .within)]
+  # Pull out variable names
+  .varcall <- tidyselect::vars_select(names(.df),{{.var}})
+  if (length(.varcall) == 0) {
+    .icall <- NA_character_
+  }
+  .withincall <- tidyselect::vars_select(names(.df),{{.within}})
+  if (length(.withincall) == 0) {
+    .withincall <- NA_character_
   }
 
-  if (!is.character(.var)) {
-    stop(".var must be a character vector.")
+  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) {
+    stop(".var and .within must be names of variables in .df")
   }
-  if (!is.character(.within)) {
-    stop(".within must be a character vector.")
+  # if .var is unspecified
+  if (max(is.na(.varcall) == 1)) {
+    .varcall <- names(.df)[!(names(.df) %in% .withincall)]
   }
-  if (min(.var %in% names(.df)) == 0 | min(.within %in% names(.df)) == 0) {
+
+  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) {
     stop(".var and .within must be names of variables in .df")
   }
 
   # apply grouping for within
   .df <- .df %>%
-    dplyr::group_by_at(.within)
+    dplyr::group_by_at(.withincall)
 
   # for each element of .var, drop consistent obs
-  result <- lapply(.var, function(x)
+  result <- lapply(.varcall, function(x)
     .df %>%
       dplyr::arrange_at(x) %>%
       dplyr::filter_at(x, function(y) dplyr::first(y) != dplyr::last(y)))
@@ -523,8 +558,8 @@ fixed_check <- function(.df, .var = NA, .within) {
 #' Inconsistencies will be resolved by the function \code{.resolve}. Or, set \code{.resolve} to \code{'drop'} (or any string, really) to drop all cases with inconsistency.
 #'
 #' @param .df Data frame or tibble.
-#' @param .var Character vector of variable names in \code{.df} that should be consistent. If not specified, uses all variables in \code{.df} that are not in \code{.within}.
-#' @param .within Character vector of variable names that the \code{.var} variables should be consistent within.
+#' @param .var Quoted or unquoted variable(s) in \code{.df} that should be consistent. If not specified, uses all variables in \code{.df} that are not in \code{.within}.
+#' @param .within Quotes or unquoted variable(s) that the \code{.var} variables should be consistent within.
 #' @param .resolve Function capable of being passed to \code{dplyr::summarize()} that will be used to resolve inconsistencies. Or, set to \code{'drop'} or any string to drop all inconsistent observations. By default, this will return the mode (ties use the first observed value).
 #' @param .flag String indicating the name of a new variable that flags any observations altered by \code{fixed_force()}.
 #' @examples
@@ -536,15 +571,15 @@ fixed_check <- function(.df, .var = NA, .within) {
 #' # I want to treat any changers as whatever they are most often (the mode).
 #' # So let's enforce that with fixed_force
 #' Scorecard <- fixed_force(Scorecard,
-#'   .var = c("pred_degree_awarded_ipeds", "state_abbr"),
-#'   .within = "unitid", .flag = "changed"
+#'   .var = c(pred_degree_awarded_ipeds, state_abbr),
+#'   .within = unitid, .flag = "changed"
 #' )
 #' # Did we catch any changers?
 #' table(Scorecard$changed)
 #' # We did!
 #' @export
 
-fixed_force <- function(.df, .var = NA, .within, .resolve = function(x) unique(x)[which.max(tabulate(match(x, unique(x))))], .flag = NA) {
+fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = function(x) unique(x)[which.max(tabulate(match(x, unique(x))))], .flag = NA) {
   if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
     stop("Requires data to be a data frame or tibble.")
   }
@@ -552,18 +587,22 @@ fixed_force <- function(.df, .var = NA, .within, .resolve = function(x) unique(x
     warning("pmdplyr functions have not been tested with data.tables.")
   }
 
-  # if .var is unspecified
-  if (max(is.na(.var)) == 1) {
-    .var <- names(.df)[!(names(.df) %in% .within)]
+  # Pull out variable names
+  .varcall <- tidyselect::vars_select(names(.df),{{.var}})
+  if (length(.varcall) == 0) {
+    .icall <- NA_character_
+  }
+  .withincall <- tidyselect::vars_select(names(.df),{{.within}})
+  if (length(.withincall) == 0) {
+    .withincall <- NA_character_
   }
 
-  if (!is.character(.var)) {
-    stop(".var must be a character vector.")
+  # if .var is unspecified
+  if (max(is.na(.varcall)) == 1) {
+    .varcall <- names(.df)[!(names(.df) %in% .withincall)]
   }
-  if (!is.character(.within)) {
-    stop(".within must be a character vector.")
-  }
-  if (min(.var %in% names(.df)) == 0 | min(.within %in% names(.df)) == 0) {
+
+  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) {
     stop(".var and .within must be names of variables in .df")
   }
   if (!is.character(.resolve) & !is.function(.resolve)) {
@@ -581,7 +620,7 @@ fixed_force <- function(.df, .var = NA, .within, .resolve = function(x) unique(x
   }
 
   .df <- .df %>%
-    dplyr::group_by_at(.within)
+    dplyr::group_by_at(.withincall)
 
   # If .resolve is a string, drop all inconsistencies
   if (is.character(.resolve)) {
@@ -606,7 +645,7 @@ fixed_force <- function(.df, .var = NA, .within, .resolve = function(x) unique(x
     }
 
     .df <- .df %>%
-      dplyr::mutate_at(.var, .funs = .resolve)
+      dplyr::mutate_at(.varcall, .funs = .resolve)
 
     if (is.character(.flag)) {
       # check if every column matches. If not, flag 'em

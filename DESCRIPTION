@@ -1,7 +1,7 @@
 Package: pmdplyr
 Type: Package
 Title: dplyr Extension for Common Panel Data Maneuvers
-Version: 0.1.1
+Version: 0.2.0
 Authors@R: c(person(given = "Nick", family = "Huntington-Klein", role = c("aut","cre"), email = "nhuntington-klein@fullerton.edu"))
 Description: Using the dplyr package as a base, adds a family of functions designed to make manipulating panel data easier. Allows the addition of indexing variables to a tibble, and the manipulation of data based on those indexing variables.
 License: MIT + file LICENSE
@@ -13,9 +13,10 @@ Imports:
     magrittr,
     tidyr,
     tibble,
+    tidyselect,
     utils, 
     vctrs, 
-    rlang
+    rlang (>= 0.4.0)
 Suggests: 
     knitr,
     rmarkdown,

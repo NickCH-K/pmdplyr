@@ -229,6 +229,21 @@ intersect.tbl_pd <- function(x, y, ...) {
   return(build_pdeclare(dplyr::intersect(x, y, ...), .i, .t, .d))
 }
 
+# easter egg
+greatest_hits <- function() {
+  lyrics <- c(
+    "If you're Steve", "You're Steve now", "You'll be Steve", "another day", "Promise me,", "that you won't fight", "",
+    "or attrit until you're old and gray...", "", "We've measured you", "so many times", "Both N and T are vast", "", "",
+    "Every second,", "every moment", "we'll melt and then recast!", "", "I mutate once", "I mutate twice", "I'll tidy you",
+    "at any price.", "I'll lag you now", "turn now to then", "You always said", "adjust for trends...", "", "someday."
+  )
+
+  for (l in lyrics) {
+    print(l)
+    Sys.sleep(1.5)
+  }
+}
+
 #' @rdname pdeclare_methods
 #' @importFrom dplyr union
 #' @method union tbl_pd

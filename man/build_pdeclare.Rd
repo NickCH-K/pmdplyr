@@ -7,19 +7,22 @@
 build_pdeclare(tbl, .i = NA, .t = NA, .d = 1, .uniqcheck = FALSE)
 }
 \arguments{
-\item{.i}{Character or character vector with the variable names that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.}
+\item{.i}{Quoted variable name(s) that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.}
 
-\item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
+\item{.t}{Quoted variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
 \item{.d}{Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.}
 
 \item{.uniqcheck}{Logical parameter. Set to TRUE to perform a check of whether \code{.i} and \code{.t} uniquely identify observations, and present a message if not. By default this is set to FALSE and the warning message occurs only once per session.}
+
+\item{.df}{Data frame or tibble to declare as a panel.}
 }
 \description{
-`build_pdeclare()` creates a `tbl_pd` object with more controls. It is useful
-for creating a `tbl_pd` internally inside a function.
+\code{build_pdeclare()} creates a \code{tbl_pd} object with more controls. It is useful for creating a \code{tbl_pd} internally inside a function.
 }
 \details{
-Note that, for speed, `build_pdeclare()` does not check the adequacy of the inputs.
+Be aware that \code{pdeclare} objects store \code{.i} and \code{.t} as strings. As a low-level constructor, \code{build_pdeclare()} takes only character arguments for \code{.i} and \code{.t}, not unquoted variables.
+
+For speed, \code{build_pdeclare()} does not check the adequacy of the inputs.
 }
 \keyword{internal}

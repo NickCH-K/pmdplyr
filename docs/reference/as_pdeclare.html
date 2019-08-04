@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Coerce to a pdeclare tibble — as_pdeclare" />
 
-<meta property="og:description" content="WARNING: FOR NOW, BE AWARE THAT AFTER USING AS_PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES." />
+<meta property="og:description" content="This function coerces a tibble, data.frame, or list to a pdeclare tibble by adding the .i, .t, and .d attributes to it." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -101,26 +101,27 @@
 
     <div class="ref-description">
     
-    <p>WARNING: FOR NOW, BE AWARE THAT AFTER USING AS_PDECLARE, MOST FUNCTIONS WILL NOT PRESERVE THE ATTRIBUTES.</p>
+    <p>This function coerces a tibble, data.frame, or list to a pdeclare tibble by adding the <code>.i</code>, <code>.t</code>, and <code>.d</code> attributes to it.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_df</span>
-<span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+<span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for grouped_df</span>
-<span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+<span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+<span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+<span class='fu'>as_pdeclare</span>(<span class='no'>x</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -132,11 +133,11 @@
     </tr>
     <tr>
       <th>.i</th>
-      <td><p>Character or character vector with the variable names that identify the individual cases. If this is omitted, <code>pdeclare</code> will assume the data set is a single time series.</p></td>
+      <td><p>Quoted or unquoted variable(s) that identify the individual cases. If this is omitted, <code>pdeclare</code> will assume the data set is a single time series.</p></td>
     </tr>
     <tr>
       <th>.t</th>
-      <td><p>Character variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code>time_variable()</code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
+      <td><p>Quoted or unquoted variable indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code><a href='time_variable.html'>time_variable()</a></code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
     </tr>
     <tr>
       <th>.d</th>
@@ -154,10 +155,9 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function coerces a tibble, data.frame, or list to a pdeclare tibble by adding three attributes to it:</p>
-<ul>
-<li><p><code>.i</code>, a character or character vector indicating the variables that constitute the individual-level panel identifier</p></li>
-<li><p><code>.t</code>, a character vector indicating the time variable</p></li>
+    <ul>
+<li><p><code>.i</code>, Quoted or unquoted variable(s) indicating the individual-level panel identifier</p></li>
+<li><p><code>.t</code>, Quoted or unquoted variable indicating the time variable</p></li>
 <li><p><code>.d</code>, a number indicating the gap</p></li>
 </ul>
     <p>Note that pdeclare does not require that <code>.i</code> and <code>.t</code> uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless <code>.uniqcheck=TRUE</code>) if they do not.</p>
@@ -170,17 +170,19 @@
 <span class='co'># If I want to use 'insert_date' for .t with a fixed gap between periods,</span>
 <span class='co'># I need to transform it into an integer first; see time_variable()</span>
 <span class='no'>SP</span> <span class='kw'>&lt;-</span> <span class='fu'>as_pdeclare</span>(<span class='no'>SPrail</span>,
-  <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"origin"</span>, <span class='st'>"destination"</span>),
-  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"insert_date"</span>,
+  <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>origin</span>, <span class='no'>destination</span>),
+  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>insert_date</span>,
   <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>
 )</div><div class='output co'>#&gt; <span class='message'>Note that the selected .i and .t do not uniquely identify observations in the data.</span>
-#&gt; <span class='message'>This message will be displayed only once per session unless the .uniqcheck option is set to TRUE.</span></div><div class='input'><span class='fu'>is_pdeclare</span>(<span class='no'>SP</span>)</div><div class='output co'>#&gt; <span class='message'>.i = origin, destination; .t = insert_date; .d = 0.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>SP</span>, <span class='st'>".i"</span>)</div><div class='output co'>#&gt; [1] "origin"      "destination"</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>SP</span>, <span class='st'>".t"</span>)</div><div class='output co'>#&gt; [1] "insert_date"</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>SP</span>, <span class='st'>".d"</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'>
+#&gt; <span class='message'>This message will be displayed only once per session unless the .uniqcheck option is set to TRUE.</span></div><div class='input'><span class='fu'><a href='is_pdeclare.html'>is_pdeclare</a></span>(<span class='no'>SP</span>)</div><div class='output co'>#&gt; <span class='message'>.i = origin, destination; .t = insert_date; .d = 0.</span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>SP</span>, <span class='st'>".i"</span>)</div><div class='output co'>#&gt;        origin   destination 
+#&gt;      "origin" "destination" </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>SP</span>, <span class='st'>".t"</span>)</div><div class='output co'>#&gt;   insert_date 
+#&gt; "insert_date" </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>SP</span>, <span class='st'>".d"</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>Scorecard</span>)
 <span class='co'># Here, year is an integer, so I can use it with .d = 1 to</span>
 <span class='co'># indicate that one period is a change of one unit in year</span>
 <span class='co'># Conveniently, .d = 1 is the default</span>
-<span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='fu'>as_pdeclare</span>(<span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"unitid"</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"year"</span>)
-<span class='fu'>is_pdeclare</span>(<span class='no'>Scorecard</span>)</div><div class='output co'>#&gt; <span class='message'>.i = unitid; .t = year; .d = 1.</span></div><div class='output co'>#&gt; [1] TRUE</div></pre>
+<span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='fu'>as_pdeclare</span>(<span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>)
+<span class='fu'><a href='is_pdeclare.html'>is_pdeclare</a></span>(<span class='no'>Scorecard</span>)</div><div class='output co'>#&gt; <span class='message'>.i = unitid; .t = year; .d = 1.</span></div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

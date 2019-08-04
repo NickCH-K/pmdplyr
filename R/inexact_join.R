@@ -16,8 +16,8 @@
 #' Note that if, given the method, \code{var} finds no proper match, it will be merged with any \code{is.na(jvar[1])} values.
 #'
 #' @param x,y,by,copy,suffix,keep,name,... Arguments to be passed to the relevant \code{join} function.
-#' @param var A character variable with the variable name from the \code{x} data frame which is to be indirectly matched.
-#' @param jvar A character vector with the variable name(s) from the \code{y} data frame which are to be indirectly matched. These cannot be variable names also in \code{x} or \code{var}.
+#' @param var Quoted or unquoted variable from the \code{x} data frame which is to be indirectly matched.
+#' @param jvar Quoted or unquoted variable(s) from the \code{y} data frame which are to be indirectly matched. These cannot be variable names also in \code{x} or \code{var}.
 #' @param method The approach to be taken in performing the indirect matching.
 #' @param exact A logical, where \code{TRUE} indicates that exact matches are acceptable. For example, if \code{method = 'last'}, \code{x} contains \code{var = 2}, and \code{y} contains \code{jvar = 1} and \code{jvar = 2}, then \code{exact = TRUE} will match with the \code{jvar = 2} observation, and \code{exact = FALSE} will match with the \code{jvar = 1} observation. If \code{jvar} contains two variables and you want them treated differently, set to \code{c(TRUE,FALSE)} or \code{c(FALSE,TRUE)}.
 #' @name inexact_join
@@ -35,16 +35,16 @@
 #' Scorecard <- Scorecard %>%
 #'   inexact_left_join(unemp_data,
 #'                    method = "last",
-#'                    var = "year",
-#'                    jvar = "unemp_year")
+#'                    var = year,
+#'                    jvar = unemp_year)
 #'
 #' # Or perhaps I want to find the most recent lagged value (i.e. no exact matches, only recent ones)
 #' data(Scorecard)
 #' Scorecard <- Scorecard %>%
 #'   inexact_left_join(unemp_data,
 #'                     method = "last",
-#'                     var = "year",
-#'                     jvar = "unemp_year",
+#'                     var = year,
+#'                     jvar = unemp_year,
 #'                     exact = FALSE)
 #'
 #' # Another way to do the same thing would be to specify the range of unemp_years I want exactly
@@ -53,20 +53,30 @@
 #' Scorecard <- Scorecard %>%
 #'   inexact_left_join(unemp_data,
 #'                    method = "between",
-#'                    var = "year",
-#'                    jvar = c("unemp_year", "unemp_year2"))
+#'                    var = year,
+#'                    jvar = c(unemp_year, unemp_year2))
 NULL
 
 #' @rdname inexact_join
 #' @export
-inexact_inner_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var, jvar, method, exact = TRUE) {
+inexact_inner_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
+  # Pull out variable names
+  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  if (length(jvarcall) == 0) {
+    jvarcall <- NA_character_
+  }
+  varcall <- tidyselect::vars_select(names(x), {{var}})
+  if (length(varcall) == 0) {
+    varcall <- NA_character_
+  }
+
   # Get the proper matching variable in x
-  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = var, jvar = jvar, method = method, exact = exact)
+  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = varcall, jvar = jvarcall, method = method, exact = exact)
 
   # If by was specified, extend our list of matching variables. Then join!
   # then run with specifying by. Do it this way to preserve the "joining by..." behavior
   if (!is.null(by)) {
-    matchvars <- c(by, jvar[1])
+    matchvars <- c(by, jvarcall[1])
     return(dplyr::inner_join(x, y, by = matchvars, copy = copy, suffix = suffix, ...))
   }
   else {
@@ -76,14 +86,24 @@ inexact_inner_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", "
 
 #' @rdname inexact_join
 #' @export
-inexact_left_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var, jvar, method, exact = TRUE) {
+inexact_left_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
+  # Pull out variable names
+  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  if (length(jvarcall) == 0) {
+    jvarcall <- NA_character_
+  }
+  varcall <- tidyselect::vars_select(names(x), {{var}})
+  if (length(varcall) == 0) {
+    varcall <- NA_character_
+  }
+
   # Get the proper matching variable in x
-  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = var, jvar = jvar, method = method, exact = exact)
+  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = varcall, jvar = jvarcall, method = method, exact = exact)
 
   # If by was specified, extend our list of matching variables. Then join!
   # then run with specifying by. Do it this way to preserve the "joining by..." behavior
   if (!is.null(by)) {
-    matchvars <- c(by, jvar[1])
+    matchvars <- c(by, jvarcall[1])
     return(dplyr::left_join(x, y, by = matchvars, copy = copy, suffix = suffix, ...))
   }
   else {
@@ -93,14 +113,25 @@ inexact_left_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 
 #' @rdname inexact_join
 #' @export
-inexact_right_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var, jvar, method, exact = TRUE) {
+inexact_right_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
+  # Pull out variable names
+  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  if (length(jvarcall) == 0) {
+    jvarcall <- NA_character_
+  }
+  varcall <- tidyselect::vars_select(names(x), {{var}})
+  if (length(varcall) == 0) {
+    varcall <- NA_character_
+  }
+
+
   # Get the proper matching variable in x
-  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = var, jvar = jvar, method = method, exact = exact)
+  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = varcall, jvar = jvarcall, method = method, exact = exact)
 
   # If by was specified, extend our list of matching variables. Then join!
   # then run with specifying by. Do it this way to preserve the "joining by..." behavior
   if (!is.null(by)) {
-    matchvars <- c(by, jvar[1])
+    matchvars <- c(by, jvarcall[1])
     return(dplyr::right_join(x, y, by = matchvars, copy = copy, suffix = suffix, ...))
   }
   else {
@@ -110,14 +141,24 @@ inexact_right_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", "
 
 #' @rdname inexact_join
 #' @export
-inexact_full_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var, jvar, method, exact = TRUE) {
+inexact_full_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
+  # Pull out variable names
+  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  if (length(jvarcall) == 0) {
+    jvarcall <- NA_character_
+  }
+  varcall <- tidyselect::vars_select(names(x), {{var}})
+  if (length(varcall) == 0) {
+    varcall <- NA_character_
+  }
+
   # Get the proper matching variable in x
-  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = var, jvar = jvar, method = method, exact = exact)
+  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = varcall, jvar = jvarcall, method = method, exact = exact)
 
   # If by was specified, extend our list of matching variables. Then join!
   # then run with specifying by. Do it this way to preserve the "joining by..." behavior
   if (!is.null(by)) {
-    matchvars <- c(by, jvar[1])
+    matchvars <- c(by, jvarcall[1])
     return(dplyr::full_join(x, y, by = matchvars, copy = copy, suffix = suffix, ...))
   }
   else {
@@ -127,14 +168,24 @@ inexact_full_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 
 #' @rdname inexact_join
 #' @export
-inexact_semi_join <- function(x, y, by = NULL, copy = FALSE, ..., var, jvar, method, exact = TRUE) {
+inexact_semi_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
+  # Pull out variable names
+  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  if (length(jvarcall) == 0) {
+    jvarcall <- NA_character_
+  }
+  varcall <- tidyselect::vars_select(names(x), {{var}})
+  if (length(varcall) == 0) {
+    varcall <- NA_character_
+  }
+
   # Get the proper matching variable in x
-  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = var, jvar = jvar, method = method, exact = exact)
+  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = varcall, jvar = jvarcall, method = method, exact = exact)
 
   # If by was specified, extend our list of matching variables. Then join!
   # then run with specifying by. Do it this way to preserve the "joining by..." behavior
   if (!is.null(by)) {
-    matchvars <- c(by, jvar[1])
+    matchvars <- c(by, jvarcall[1])
     return(dplyr::semi_join(x, y, by = matchvars, copy = copy, ...))
   }
   else {
@@ -145,14 +196,24 @@ inexact_semi_join <- function(x, y, by = NULL, copy = FALSE, ..., var, jvar, met
 
 #' @rdname inexact_join
 #' @export
-inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name = NULL, ..., var, jvar, method, exact = TRUE) {
+inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name = NULL, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
+  # Pull out variable names
+  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  if (length(jvarcall) == 0) {
+    jvarcall <- NA_character_
+  }
+  varcall <- tidyselect::vars_select(names(x), {{var}})
+  if (length(varcall) == 0) {
+    varcall <- NA_character_
+  }
+
   # Get the proper matching variable in x
-  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = var, jvar = jvar, method = method, exact = exact)
+  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = varcall, jvar = jvarcall, method = method, exact = exact)
 
   # If by was specified, extend our list of matching variables. Then join!
   # then run with specifying by. Do it this way to preserve the "joining by..." behavior
   if (!is.null(by)) {
-    matchvars <- c(by, jvar[1])
+    matchvars <- c(by, jvarcall[1])
     return(dplyr::nest_join(x, y, by = matchvars, copy = copy, keep = FALSE, name = NULL, ...))
   }
   else {
@@ -160,31 +221,26 @@ inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name 
   }
 }
 
-# easter egg
-greatest_hits <- function() {
-  lyrics <- c(
-    "If you're Steve", "You're Steve now", "You'll be Steve", "another day", "Promise me,", "that you won't fight", "",
-    "or attrit until you're old and gray...", "", "We've measured you", "so many times", "Both N and T are vast", "", "",
-    "Every second,", "every moment", "we'll melt and then recast!", "", "I mutate once", "I mutate twice", "I'll tidy you",
-    "at any price.", "I'll lag you now", "turn now to then", "You always said", "adjust for trends...", "", "someday."
-  )
-
-  for (l in lyrics) {
-    print(l)
-    Sys.sleep(1.5)
-  }
-}
-
 #' @rdname inexact_join
 #' @export
-inexact_anti_join <- function(x, y, by = NULL, copy = FALSE, ..., var, jvar, method, exact = TRUE) {
+inexact_anti_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
+  # Pull out variable names
+  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  if (length(jvarcall) == 0) {
+    jvarcall <- NA_character_
+  }
+  varcall <- tidyselect::vars_select(names(x), {{var}})
+  if (length(varcall) == 0) {
+    varcall <- NA_character_
+  }
+
   # Get the proper matching variable in x
-  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = var, jvar = jvar, method = method, exact = exact)
+  x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = varcall, jvar = jvarcall, method = method, exact = exact)
 
   # If by was specified, extend our list of matching variables. Then join!
   # then run with specifying by. Do it this way to preserve the "joining by..." behavior
   if (!is.null(by)) {
-    matchvars <- c(by, jvar[1])
+    matchvars <- c(by, jvarcall[1])
     return(dplyr::anti_join(x, y, by = matchvars, copy = copy, ...))
   }
   else {
@@ -205,10 +261,10 @@ find_matching_list <- function(z, yidname, i, jvar, range) {
 # This is the shared preprocessing shared by all join functions
 inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), var, jvar, method, exact = TRUE) {
   if (!is.character(var)) {
-    stop("var must be a character variable.")
+    stop("Internal error: var should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
   }
   if (!is.character(jvar)) {
-    stop("jvar must be a character variable or vector.")
+    stop("Internal error: jvar should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
   }
   if (length(jvar) > 2) {
     stop("jvar can contain no more than two variables.")

@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Function to retrieve time-lagged data — tlag" />
 
-<meta property="og:description" content="WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS." />
+<meta property="og:description" content="This function retrieves the time-lagged values of a variable, using the time variable defined in .t in the function or by as_pdeclare(). tlag() is highly unusual among time-lag functions in that it is usable even if observations are not uniquely identified by .t (and .i, if defined)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -101,24 +101,25 @@
 
     <div class="ref-description">
     
-    <p>WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.</p>
+    <p>This function retrieves the time-lagged values of a variable, using the time variable defined in <code>.t</code> in the function or by <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>. <code>tlag()</code> is highly unusual among time-lag functions in that it is usable even if observations are not uniquely identified by <code>.t</code> (and <code>.i</code>, if defined).</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>tlag</span>(<span class='no'>.var</span>, <span class='kw'>.df</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/get'>get</a></span>(<span class='st'>"."</span>, <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sys.parent'>parent.frame</a></span>()), <span class='kw'>.n</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>.default</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.quick</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.resolve</span> <span class='kw'>=</span> <span class='st'>"error"</span>,
-  <span class='kw'>.group_i</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>.group_i</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.var</th>
-      <td><p>Vector to be lagged.</p></td>
+      <td><p>Unquoted variable from <code>.df</code> to be lagged.</p></td>
     </tr>
     <tr>
       <th>.df</th>
-      <td><p>Data frame or tibble (usually the data frame or tibble that contains <code>.var</code>) which contains the panel structure variables either listed in <code>.i</code> and <code>.t</code>, or earlier declared with <code>as_pdeclare()</code>. If <code>tlag</code> is called inside of a <code>dplyr</code> verb, this can be omitted and the data will be picked up automatically.</p></td>
+      <td><p>Ungrouped data frame or tibble (usually the data frame or tibble that contains <code>.var</code>) which contains the panel structure variables either listed in <code>.i</code> and <code>.t</code>, or earlier declared with <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>. If <code>tlag</code> is called inside of a <code>dplyr</code> verb, this can be omitted and the data will be picked up automatically.</p></td>
     </tr>
     <tr>
       <th>.n</th>
@@ -130,11 +131,11 @@
     </tr>
     <tr>
       <th>.quick</th>
-      <td><p>If <code>.i</code> and <code>.t</code> uniquely identify observations in your data, **and** there either <code>.d = 0</code> or there are no time gaps for any individuals (perhaps use <code>panel_fill()</code> first), set <code>.quick = TRUE</code> to improve speed. <code>tlag()</code> will not check if either of these things are true (except unique identification, which will be checked if <code>.uniqcheck = 1</code> or if <code>.i</code> or <code>.t</code> are specified in-function), so make sure they are or you will get strange results.</p></td>
+      <td><p>If <code>.i</code> and <code>.t</code> uniquely identify observations in your data, **and** there either <code>.d = 0</code> or there are no time gaps for any individuals (perhaps use <code><a href='panel_fill.html'>panel_fill()</a></code> first), set <code>.quick = TRUE</code> to improve speed. <code>tlag()</code> will not check if either of these things are true (except unique identification, which will be checked if <code>.uniqcheck = 1</code> or if <code>.i</code> or <code>.t</code> are specified in-function), so make sure they are or you will get strange results.</p></td>
     </tr>
     <tr>
       <th>.resolve</th>
-      <td><p>If there is more than one observation per individal/period, and the value of <code>.var</code> is identical for all of them, that's no problem. But what should <code>tlag()</code> do if they're not identical? Set <code>.resolve = 'error'</code> (or, really, any string) to throw an error in this circumstance. Or, set <code>.resolve</code> to a function that can be used within <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>dplyr::summarize()</a></code> to select a single value per individual/period. For example, <code>.resolve = function(x) mean(x)</code> to get the mean value of all observations present for that individual/period.</p></td>
+      <td><p>If there is more than one observation per individal/period, and the value of <code>.var</code> is identical for all of them, that's no problem. But what should <code>tlag()</code> do if they're not identical? Set <code>.resolve = 'error'</code> (or, really, any string) to throw an error in this circumstance. Or, set <code>.resolve</code> to a function (ideally, a vectorized one) that can be used within <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>dplyr::summarize()</a></code> to select a single value per individual/period. For example, <code>.resolve = mean</code> to get the mean value of all observations present for that individual/period.</p></td>
     </tr>
     <tr>
       <th>.group_i</th>
@@ -142,11 +143,11 @@
     </tr>
     <tr>
       <th>.i</th>
-      <td><p>Character or character vector with the variable names that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code>as_pdeclare()</code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
+      <td><p>Quoted or unquotes variable(s) that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>.t</th>
-      <td><p>Character variable with the single variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code>time_variable()</code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
+      <td><p>Quoted or unquoted vairable indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code><a href='time_variable.html'>time_variable()</a></code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
     </tr>
     <tr>
       <th>.d</th>
@@ -157,10 +158,6 @@
       <td><p>Logical parameter. Set to TRUE to always check whether <code>.i</code> and <code>.t</code> uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of <code>.i</code>, <code>.t</code>, or <code>.d</code> is set.</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>This function retrieves the time-lagged values of a variable, using the time variable defined in <code>.t</code> in the function or by <code>as_pdeclare()</code>. <code>tlag()</code> is highly unusual among time-lag functions in that it is usable even if observations are not uniquely identified by <code>.t</code> (and <code>.i</code>, if defined).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -173,7 +170,9 @@
 <span class='co'># whereas tlag() will respect the gap and give a NA, much like plm::lag()</span>
 <span class='co'># (although tlag is slower than either, sorry)</span>
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>pmdplyr_tlag</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"unitid"</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"year"</span>))
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>pmdplyr_tlag</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>,
+                                    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
+                                    <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>))
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span>(<span class='no'>year</span>) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>unitid</span>) <span class='kw'>%&gt;%</span>
@@ -185,7 +184,11 @@
 <span class='co'># If we want to ignore gaps, or have .d = 0, and .i and .t uniquely identify observations,</span>
 <span class='co'># we can use the .quick option to match dplyr::lag()</span>
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>pmdplyr_quick_tlag</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"unitid"</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>.quick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>pmdplyr_quick_tlag</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>,
+                                         <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
+                                         <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>,
+                                         <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+                                         <span class='kw'>.quick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sum'>sum</a></span>(<span class='no'>Scorecard</span>$<span class='no'>dplyr_lag</span> <span class='kw'>!=</span> <span class='no'>Scorecard</span>$<span class='no'>pmdplyr_quick_tlag</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'>
 <span class='co'># Where tlag shines is when you have multiple observations per .i/.t</span>
 <span class='co'># If the value of .var is constant within .i/.t, it will work just as you expect.</span>
@@ -196,7 +199,7 @@
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
     <span class='kw'>last_year_earnings_by_category</span> <span class='kw'>=</span>
       <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>,
-        <span class='kw'>.i</span> <span class='kw'>=</span> <span class='st'>"pred_degree_awarded_ipeds"</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
+        <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>pred_degree_awarded_ipeds</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>,
         <span class='kw'>.resolve</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
       )
   )
@@ -211,21 +214,17 @@
 <span class='co'># a year, they find nothing!</span>
 <span class='co'># We could get around this by setting .d = 0 to ignore gap length</span>
 <span class='co'># Note this can be a little slow.</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>()) {
-  <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>last_year_earnings_all</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>,
-      <span class='kw'>.t</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-      <span class='kw'>.resolve</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-    ))
-}</div></pre>
+<span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
+   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>last_year_earnings_all</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>,
+    <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+    <span class='kw'>.resolve</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+   ))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#details">Details</a></li>
-      
+            
       <li><a href="#examples">Examples</a></li>
     </ul>
 

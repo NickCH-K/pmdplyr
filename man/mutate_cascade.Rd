@@ -5,8 +5,8 @@
 \title{Function to perform mutate one time period at a time ('Cascading mutate')}
 \usage{
 mutate_cascade(.df, ..., .skip = TRUE, .backwards = FALSE,
-  .group_i = TRUE, .i = NA, .t = NA, .d = NA, .uniqcheck = FALSE,
-  .setpanel = TRUE)
+  .group_i = TRUE, .i = NULL, .t = NULL, .d = NA,
+  .uniqcheck = FALSE, .setpanel = TRUE)
 }
 \arguments{
 \item{.df}{Data frame or tibble.}
@@ -19,9 +19,9 @@ mutate_cascade(.df, ..., .skip = TRUE, .backwards = FALSE,
 
 \item{.group_i}{By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, ignoring any grouping already implemented (although the original grouping structure will be returned at the end). Set \code{.group_i = FALSE} to avoid this.}
 
-\item{.i}{Character or character vector with the variable names that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
+\item{.i}{Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.}
 
-\item{.t}{Character variable with the single variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
+\item{.t}{Quoted or unquoted variables indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.}
 
 \item{.d}{Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.}
 
@@ -30,15 +30,14 @@ mutate_cascade(.df, ..., .skip = TRUE, .backwards = FALSE,
 \item{.setpanel}{Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.}
 }
 \description{
-WARNING: FOR NOW, ALWAYS SPECIFY THE PANEL STRUCTURE EVERY TIME YOU CALL THIS FUNCTION. PDECLARE STATUS IS DROPPED BY MOST FUNCTIONS.
+This function is a wrapper for \code{dplyr::mutate()} which performs \code{mutate} one time period at a time, allowing each period's calculation to complete before moving on to the next. This allows changes in one period to 'cascade down' to later periods. This is (number of time periods) slower than regular \code{mutate()} and, generally, is only used for mutations where an existing variable is being defined in terms of its own \code{lag()} or \code{tlag()}. This is similar in concept to (and also slower than) \code{cumsum} but is much more flexible, and works with data that has multiple observations per individual-period using \code{tlag()}. For example, this could be used to calculate the current value of a savings account given a variable with each period's deposits, withdrawals, and interest, or could calculate the cumulative number of credits a student has taken across all classes.
 }
 \details{
-This function is a wrapper for \code{dplyr::mutate()} which performs \code{mutate} one time period at a time, allowing each period's calculation to complete before moving on to the next. This allows changes in one period to 'cascade down' to later periods. This is (number of time periods) slower than regular \code{mutate()} and, generally, is only used for mutations where an existing variable is being defined in terms of its own \code{lag()} or \code{tlag()}. This is similar in concept to (and also slower than) \code{cumsum} but is much more flexible, and works with data that has multiple observations per individual-period using \code{tlag()}. For example, this could be used to calculate the current value of a savings account given a variable with each period's deposits, withdrawals, and interest, or could calculate the cumulative number of credits a student has taken across all classes.
-
-To apply \code{mutate_cascade()} to non-panel data and without any grouping (perhaps to mimic standard Stata \code{replace} functionality), add a variable to your data indicating the order you'd like \code{mutate} performed in (perhaps using \code{dplyr::row_number()}) and \code{.t} equal to that new variable.
+To apply \code{mutate_cascade()} to non-panel data and without any grouping (perhaps to mimic standard Stata \code{replace} functionality), add a variable to your data indicating the order you'd like \code{mutate} performed in (perhaps using \code{dplyr::row_number()}) and \code{.t} to that new variable.
 }
 \examples{
 
+if (interactive()) {
 data(Scorecard)
 # I'd like to build a decaying function that remembers previous earnings but at a declining rate
 # Let's only use nonmissing earnings
@@ -49,6 +48,8 @@ Scorecard <- Scorecard \%>\%
   # we don't want to overwrite so let's make another
   dplyr::mutate(decay_earnings = earnings_med) \%>\%
   # Now we can cascade
-  dplyr::mutate(decay_earnings = decay_earnings +
-    .5 * tlag(decay_earnings, Scorecard, .i = "unitid", .t = "year", .quick = TRUE))
+  mutate_cascade(decay_earnings = decay_earnings +
+    .5 * tlag(decay_earnings, .i = unitid, .t = year, .quick = TRUE),
+    .i = unitid, .t = year)
+}
 }

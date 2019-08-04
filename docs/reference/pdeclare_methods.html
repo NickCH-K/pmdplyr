@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -109,71 +109,159 @@
 <span class='fu'>mutate</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>distinct</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+<span class='fu'>mutate_all</span>(<span class='no'>.tbl</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>mutate_at</span>(<span class='no'>.tbl</span>, <span class='no'>.vars</span>, <span class='no'>.funs</span>, <span class='no'>...</span>, <span class='kw'>.cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>mutate_if</span>(<span class='no'>.tbl</span>, <span class='no'>.predicate</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>distinct</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
 <span class='fu'>group_by</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>ungroup</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+<span class='fu'>group_by_all</span>(<span class='no'>.tbl</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>, <span class='kw'>.add</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>.drop</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by_drop_default.html'>group_by_drop_default</a></span>(<span class='no'>.tbl</span>))
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>group_by_all</span>(<span class='no'>.tbl</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>, <span class='kw'>.add</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>.drop</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by_drop_default.html'>group_by_drop_default</a></span>(<span class='no'>.tbl</span>))
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>group_by_at</span>(<span class='no'>.tbl</span>, <span class='no'>.vars</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>,
+  <span class='kw'>.add</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.drop</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by_drop_default.html'>group_by_drop_default</a></span>(<span class='no'>.tbl</span>))
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>group_by_if</span>(<span class='no'>.tbl</span>, <span class='no'>.predicate</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>,
+  <span class='kw'>.add</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>.drop</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by_drop_default.html'>group_by_drop_default</a></span>(<span class='no'>.tbl</span>))
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>ungroup</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
 <span class='fu'>bind_cols</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>left_join</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>intersect</a></span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>inner_join</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>union</a></span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>right_join</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+<span class='fu'>union_all</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>full_join</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>setdiff</a></span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>semi_join</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+<span class='fu'>left_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".x"</span>, <span class='st'>".y"</span>), <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>nest_join</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+<span class='fu'>inner_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".x"</span>, <span class='st'>".y"</span>), <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>anti_join</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+<span class='fu'>right_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".x"</span>, <span class='st'>".y"</span>), <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>full_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>".x"</span>, <span class='st'>".y"</span>), <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>semi_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>nest_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>keep</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>anti_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
 <span class='fu'>select</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>select_all</span>(<span class='no'>.tbl</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>select_at</span>(<span class='no'>.tbl</span>, <span class='no'>.vars</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>select_if</span>(<span class='no'>.tbl</span>, <span class='no'>.predicate</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
 <span class='fu'>rename</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>rename_all</span>(<span class='no'>.tbl</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>rename_at</span>(<span class='no'>.tbl</span>, <span class='no'>.vars</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>rename_if</span>(<span class='no'>.tbl</span>, <span class='no'>.predicate</span>, <span class='kw'>.funs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
 <span class='fu'>summarize</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>summarize_all</span>(<span class='no'>.tbl</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>summarize_at</span>(<span class='no'>.tbl</span>, <span class='no'>.vars</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>summarize_if</span>(<span class='no'>.tbl</span>, <span class='no'>.predicate</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
 <span class='fu'>summarise</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for tbl_pd</span>
-<span class='fu'>transmute</span>(<span class='no'>.data</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>summarise_all</span>(<span class='no'>.tbl</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>summarise_at</span>(<span class='no'>.tbl</span>, <span class='no'>.vars</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>summarise_if</span>(<span class='no'>.tbl</span>, <span class='no'>.predicate</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>transmute</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>transmute_all</span>(<span class='no'>.tbl</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>transmute_at</span>(<span class='no'>.tbl</span>, <span class='no'>.vars</span>, <span class='no'>.funs</span>, <span class='no'>...</span>, <span class='kw'>.cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+
+<span class='co'># S3 method for tbl_pd</span>
+<span class='fu'>transmute_if</span>(<span class='no'>.tbl</span>, <span class='no'>.predicate</span>, <span class='no'>.funs</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.data</th>
+      <th>.data, x, .tbl</th>
       <td><p>These functions take a <code>tbl_pd</code> (i.e. <code>pdeclare</code>) object as input</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>and pass other arguments onto the relevant functions.</p></td>
+      <th>.add, by, .cols, copy, .drop, .funs, keep, .keep_all, name, .predicate, suffix, .vars, y, ...</th>
+      <td><p>Other parameters to be passed to the relevant functions</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Some functions that already preserve <code>pdeclare</code> status and so don't need special methods include:</p>
-<p><code>dplyr::filter, dplyr::arrange, dplyr::sample_frac, dplyr::slice, dplyr::sample_n, dplyr::top_n, dplyr::add_row, tibble:add_column</code></p>
-<p>Also note that any function that takes two data frames/tibbles as inputs will retain the panel structure of the <em>first</em> argument.</p>
+<p><code>dplyr::filter, dplyr::filter_all, dplyr::filter_at, dplyr::filter_if, dplyr::arrange, dplyr::arrange_all, dplyr::arrange_at, dplyr::arrange_if, dplyr::sample_frac, dplyr::slice, dplyr::sample_n, dplyr::top_n, dplyr::add_row, tibble:add_column</code></p>
+<p><code><a href='https://dplyr.tidyverse.org/reference/bind.html'>dplyr::bind_rows</a></code> is currently not supported.</p>
+<p>Any function that takes two data frames/tibbles as inputs will retain the panel structure of the <em>first</em> argument.</p>
 <p>If a function is not on the above list or elsewhere in this help file, then you may need to re-<code>as_pdeclare</code> your object after using the function.</p>
     
 

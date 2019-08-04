@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -116,9 +116,9 @@
   <dt>pred_degree_awarded_ipeds</dt><dd><p>Predominant degree awarded. 1 = less-than-two-year, 2 = two-year, 3 = four-year+</p></dd>
   <dt>year</dt><dd><p>Year in which outcomes are measured.</p></dd>
   <dt>earnings_med</dt><dd><p>Median earnings among students (a) who received federal financial aid, (b) who began as undergraduates at the institution ten years prior, (c) with positive yearly earnings.</p></dd>
-  <dt>count_not_working</dt><dd><p>Number of students who are not working (not necessarily unemployed) and (a) who received federal financial aid, (b) who began as undergraduates at the institution ten years prior.</p></dd>
-  <dt>count_working</dt><dd><p>Number of students who are working (not necessarily unemployed) and (a) who received federal financial aid, (b) who began as undergraduates at the institution ten years prior.</p></dd>
-  <dt>repay_rate</dt><dd><p>Proportion of students who received federal loans as an undergraduate at this institution and who entered repayment seven years ago who are not in default, has paid off all accrued interest, and is still making progress on payment. Only available 2013-2016.</p></dd>
+  <dt>count_not_working</dt><dd><p>Number of students who are (a) not working (not necessarily unemployed), (b) received federal financial aid, and (c) who began as undergraduates at the institution ten years prior.</p></dd>
+  <dt>count_working</dt><dd><p>Number of students who are (a) working, (b) who received federal financial aid, and (c) who began as undergraduates at the institution ten years prior.</p></dd>
+  <dt>repay_rate</dt><dd><p>Proportion of students who (a) received federal loans as an undergraduate at this institution, (b) entered repayment seven years ago, (c) are not in default, (d) have paid off all accrued interest, and (e) are still making progress on payment. Only available 2013-2016.</p></dd>
 </dl>
     
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
@@ -128,7 +128,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This data is not just limited to four-year colleges and includes a very wide variety of institutions.</p>
-<p>Note that the labor market (earnings, working) and repayment rate data do not refer to the same cohort of students.</p>
+<p>Note that the labor market (earnings, working) and repayment rate data do not refer to the same cohort of students, but rather are matched on the year in which outcomes are recorded. Labor market data refers to cohorts beginning college as undergraduates ten years prior, repayment rate data refers to cohorts entering repayment seven years prior.</p>
 <p>Data was downloaded using the Urban Institute's <code>educationdata</code> package.</p>
     
 
