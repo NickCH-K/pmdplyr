@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pipe operator — %&gt;% • pmdplyr</title>
+<title>Low-level constructor for a pibble object — build_pibble • pmdplyr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Pipe operator — %&gt;%" />
+<meta property="og:title" content="Low-level constructor for a pibble object — build_pibble" />
 
-<meta property="og:description" content="See magrittr::pipe for details.
-See magrittr::pipe for details." />
+<meta property="og:description" content="build_pibble() creates a tbl_pb object with more controls. It is useful for creating a tbl_pb internally inside a function." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -95,26 +94,58 @@ See magrittr::pipe for details." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Pipe operator</h1>
+    <h1>Low-level constructor for a pibble object</h1>
     
-    <div class="hidden name"><code>pipe.Rd</code></div>
+    <div class="hidden name"><code>build_pibble.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>See <code>magrittr::pipe</code> for details.
-See <code>magrittr::pipe</code> for details.</p>
+    <p><code>build_pibble()</code> creates a <code>tbl_pb</code> object with more controls. It is useful for creating a <code>tbl_pb</code> internally inside a function.</p>
     
     </div>
 
-    <pre class="usage"><span class='no'>lhs</span> <span class='kw'>%&gt;%</span> <span class='no'>rhs</span></pre>
-        
+    <pre class="usage"><span class='fu'>build_pibble</span>(<span class='no'>tbl</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>.uniqcheck</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>.i</th>
+      <td><p>Quoted variable name(s) that identify the individual cases. If this is omitted, <code>pibble</code> will assume the data set is a single time series.</p></td>
+    </tr>
+    <tr>
+      <th>.t</th>
+      <td><p>Quoted variable name indicating the time. <code>pmdplyr</code> accepts two kinds of time variables: numeric variables where a fixed distance <code>.d</code> will take you from one observation to the next, or, if <code>.d=0</code>, any standard variable type with an order. Consider using the <code><a href='time_variable.html'>time_variable()</a></code> function to create the necessary variable if your data uses a <code>Date</code> variable for time.</p></td>
+    </tr>
+    <tr>
+      <th>.d</th>
+      <td><p>Number indicating the gap in <code>t</code> between one period and the next. For example, if <code>.t</code> indicates a single day but data is collected once a week, you might set <code>.d=7</code>. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set <code>.d=0</code>. By default, <code>.d=1</code>.</p></td>
+    </tr>
+    <tr>
+      <th>.uniqcheck</th>
+      <td><p>Logical parameter. Set to TRUE to perform a check of whether <code>.i</code> and <code>.t</code> uniquely identify observations, and present a message if not. By default this is set to FALSE and the warning message occurs only once per session.</p></td>
+    </tr>
+    <tr>
+      <th>.df</th>
+      <td><p>Data frame or tibble to declare as a panel.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Be aware that <code>pibble</code> objects store <code>.i</code> and <code>.t</code> as strings. As a low-level constructor, <code>build_pibble()</code> takes only character arguments for <code>.i</code> and <code>.t</code>, not unquoted variables.</p>
+<p>For speed, <code>build_pibble()</code> does not check the adequacy of the inputs.</p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>

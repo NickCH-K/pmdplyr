@@ -9,7 +9,7 @@
 #' @param .skip Set to \code{TRUE} to skip the first period present in the data (or present within each group for grouped data) when applying \code{mutate()}. Since most uses of \code{mutate_cascade()} will involve a \code{lag()} or \code{tlag()}, this avoids creating an \code{NA} in the first period that then cascades down. By default this is TRUE. If you set this to FALSE you should probably have some method for avoiding a first-period \code{NA} in your \code{...} entry, perhaps using the \code{default} option in \code{dplyr::lag} or the \code{.default} option in \code{tlag}.
 #' @param .backwards Set to \code{TRUE} to run \code{mutate_cascade()} from the last period to the first, rather than from the first to the last.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, ignoring any grouping already implemented (although the original grouping structure will be returned at the end). Set \code{.group_i = FALSE} to avoid this.
-#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pibble()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Quoted or unquoted variables indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
@@ -56,15 +56,15 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .i = .icall, .t = .tcall, .d, .uniqcheck, .setpanel)
   if (is.na(inp$t)) {
-    stop("mutate_cascade() requires that .t be declared either in the function or by as_pdeclare().")
+    stop("mutate_cascade() requires that .t be declared either in the function or by as_pibble().")
   }
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
 
-    .df <- as_pdeclare(.df, {{.i}}, {{.t}}, .d, .uniqcheck = .uniqcheck)
+    .df <- as_pibble(.df, {{.i}}, {{.t}}, .d, .uniqcheck = .uniqcheck)
 
-    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
+    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
   }
 
@@ -111,13 +111,13 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    if (inp$is_tbl_pd) {
-      .df <- as_pdeclare(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
+    if (inp$is_tbl_pb) {
+      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
     } else{
       attr(.df,".i") <- NULL
       attr(.df,".t") <- NULL
       attr(.df,".d") <- NULL
-      class(.df) <- class(.df)[!(class(.df) %in% "tbl_pd")]
+      class(.df) <- class(.df)[!(class(.df) %in% "tbl_pb")]
     }
   }
 
@@ -134,7 +134,7 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 #' @param ... Specification to be passed to \code{dplyr::summarize()}.
 #' @param .filter Unquoted logical condition for which observations \code{dplyr::summarize()} operations are to be run on.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, overwriting any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.
-#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pibble()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
@@ -175,9 +175,9 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
-    .df <- as_pdeclare(.df, {{.i}}, {{.t}}, .d = .d, .uniqcheck = .uniqcheck)
+    .df <- as_pibble(.df, {{.i}}, {{.t}}, .d = .d, .uniqcheck = .uniqcheck)
 
-    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
+    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
   }
 
@@ -219,13 +219,13 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    if (inp$is_tbl_pd) {
-      .df <- as_pdeclare(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
+    if (inp$is_tbl_pb) {
+      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
     } else{
       attr(.df,".i") <- NULL
       attr(.df,".t") <- NULL
       attr(.df,".d") <- NULL
-      class(.df) <- class(.df)[!(class(.df) %in% "tbl_pd")]
+      class(.df) <- class(.df)[!(class(.df) %in% "tbl_pb")]
     }
   }
 

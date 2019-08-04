@@ -13,9 +13,9 @@ tibble(
   c = 5,
   d = 7
 ) %>%
-  as_pdeclare(.i = "b", .t = "a") %>%
+  as_pibble(.i = "b", .t = "a") %>%
   select_dummy_wrapper(a:c) -> select_cols
 
-test_that("vec_restore returns tbl_pd", {
-  expect_s3_class(select_cols, "tbl_pd")
+test_that("vec_restore returns tbl_pb", {
+  expect_s3_class(select_cols, "tbl_pb")
 })

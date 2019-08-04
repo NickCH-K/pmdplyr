@@ -4,18 +4,18 @@
 #'
 #' Note that, in the case where there is more than one observation for a given individual/time period (or just time period if \code{.group_i = FALSE}), \code{panel_fill()} will create copies of *every observation* in the appropriate individual/time period for filling-in purposes. So if there are four t = 1 observations and nothing in t = 2, \code{panel_fill()} will create four new observations with t = 2, copying the original four in t = 1.
 #'
-#' By default, the \code{panel_fill()} operation is grouped by \code{.i}, although it will retun the data in the original grouping structure. Leave \code{.i} blank, or, if \code{.i} is already in the data from \code{as_pdeclare}, set \code{.group_i=FALSE} to run the function ungrouped, or with the existing group structure.
+#' By default, the \code{panel_fill()} operation is grouped by \code{.i}, although it will retun the data in the original grouping structure. Leave \code{.i} blank, or, if \code{.i} is already in the data from \code{as_pibble}, set \code{.group_i=FALSE} to run the function ungrouped, or with the existing group structure.
 #'
-#' This function requires \code{.t} and \code{.d} to be declared in the function or already established in the data by \code{as_pdeclare()}. Also, this requires a cardinal \code{.t}. It must not be the case that \code{.d=0}.
+#' This function requires \code{.t} and \code{.d} to be declared in the function or already established in the data by \code{as_pibble()}. Also, this requires a cardinal \code{.t}. It must not be the case that \code{.d=0}.
 #'
-#' @param .df Tibble or data frame which either has the \code{.t} and \code{.d} (and perhaps \code{.i}) attributes included by \code{as_pdeclare()}, or the appropriate panel structure is declared in the function.
+#' @param .df Tibble or data frame which either has the \code{.t} and \code{.d} (and perhaps \code{.i}) attributes included by \code{as_pibble()}, or the appropriate panel structure is declared in the function.
 #' @param .set_NA Should values in newly-created observations be set to adjacent values or to NA? Set to \code{TRUE} to set all new values to NA except for .i and .t. To make only specific variables NA, list them as a character vector. Defaults to FALSE; all values are filled in using the most recently available data.
 #' @param .min Sets the first time period in the data for each individual to be \code{.min}, and fills in gaps between period \code{.min} and the actual start of the data. Copies data from the first period present in the data for each individual (if grouped). Handy for creating balanced panels.
 #' @param .max Sets the last time period in the data for each individual to be \code{.max}, and fills in gaps between period \code{.max} and the actual start of the data. Copies data from the flast period present in the data for each individual (if grouped). Handy for creating balanced panels.
 #' @param .backwards By default, values of newly-created observations are copied from the most recently available period. Set \code{.backwards = TRUE} to instead copy values from the closest *following* period.
 #' @param .group_i By default, \code{panel_fill()} will fill in gaps within values of \code{.i}. If \code{.i} is missing, it won't do that. If \code{.i} is in the data and you still don't want \code{panel_fill()} to run within \code{.i}, set \code{.group_i = FALSE}.
 #' @param .flag The name of a new variable indicating which observations are newly created by \code{panel_fill()}.
-#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pibble()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
@@ -106,20 +106,20 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel)
   if (is.na(inp$t)) {
-    stop("panel_fill() requires that .t be declared either in the function or by as_pdeclare().")
+    stop("panel_fill() requires that .t be declared either in the function or by as_pibble().")
   }
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall)) {
-    .df <- as_pdeclare(.df, {{.i}}, {{.t}}, .d, .uniqcheck = .uniqcheck)
+    .df <- as_pibble(.df, {{.i}}, {{.t}}, .d, .uniqcheck = .uniqcheck)
 
-    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pdeclare default
+    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
   }
 
   # we need a positive numeric .d, and a .t
   if (is.na(inp$d) | inp$d == 0) {
-    stop("panel_fill() requires that .d be declared either in the function or by as_pdeclare(). Ordinal time variables (.d = 0) are not acceptable for this function.")
+    stop("panel_fill() requires that .d be declared either in the function or by as_pibble(). Ordinal time variables (.d = 0) are not acceptable for this function.")
   }
   # Can't set the .i and .t variables to 0
   if (max(c(inp$i, inp$t) %in% .set_NA) == 1) {
@@ -278,13 +278,13 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
-    if (inp$is_tbl_pd) {
-      .df <- as_pdeclare(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
+    if (inp$is_tbl_pb) {
+      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
     } else{
       attr(.df,".i") <- NULL
       attr(.df,".t") <- NULL
       attr(.df,".d") <- NULL
-      class(.df) <- class(.df)[!(class(.df) %in% "tbl_pd")]
+      class(.df) <- class(.df)[!(class(.df) %in% "tbl_pb")]
     }
   }
 
@@ -298,12 +298,12 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 #' \code{panel_locf()} is unusual among last-observation-carried-forward functions (like \code{zoo}'s \code{na.locf}) in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
 #'
 #' @param .var Vector to be modified.
-#' @param .df Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
+#' @param .df Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
 #' @param .fill Vector of values to be overwritten. Just \code{NA} by default.
 #' @param .backwards By default, values of newly-created observations are copied from the most recently available period. Set \code{.backwards = TRUE} to instead copy values from the closest *following* period.
 #' @param .resolve If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{panel_locf()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = function(x) mean(x)} to get the mean value of all observations present for that individual/period. \code{.resolve} will also be used to fill in values if some values in a given individual/period are to be overwritten and others aren't.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{panel_locf()} will group the data by \code{.i}, ignoring any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.
-#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pibble()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
@@ -388,7 +388,7 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel = FALSE)
   if (is.na(inp$t)) {
-    stop("panel_locf() requires that .t be declared either in the function or by as_pdeclare().")
+    stop("panel_locf() requires that .t be declared either in the function or by as_pibble().")
   }
 
   arrnames <- c(inp$i, inp$t)

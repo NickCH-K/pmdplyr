@@ -7,7 +7,7 @@
 id_variable(..., .method = "number", .minwidth = FALSE)
 }
 \arguments{
-\item{...}{variables (vectors) that, together, make up the ID variables in the data and uniquely identifies the individual. Note that \code{id_variable()} will not check whether you've selected an appropriate set of variables; try running \code{as_pdeclare()} after getting your ID and time variables.}
+\item{...}{variables (vectors) that, together, make up the ID variables in the data and uniquely identifies the individual. Note that \code{id_variable()} will not check whether you've selected an appropriate set of variables; try running \code{as_pibble()} after getting your ID and time variables.}
 
 \item{.method}{Can be \code{'number'}, \code{'random'}, or \code{'character'}, as described below.}
 

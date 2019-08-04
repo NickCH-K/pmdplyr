@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -117,7 +117,7 @@
 <li><p><code><a href='id_variable.html'>id_variable</a></code> Takes a list of variables that make up an individual identifier and turns it into a single variable.</p></li>
 <li><p><code><a href='time_variable.html'>time_variable</a></code> Takes a time variable, or set of time variables, and turns them into a single well-behaved integer time variable of the kind required by most panel functions.</p></li>
 <li><p><code><a href='inexact_join.html'>inexact_join</a></code> Set of wrappers for the <code>dplyr</code> <code><a href='https://dplyr.tidyverse.org/reference/join.html'>join</a></code> functions which allows for a variable to be matched inexactly, for example joining a time variable in <code>x</code> to the most recent previous value in <code>y</code>.</p></li>
-<li><p><code><a href='pdeclare.html'>pdeclare</a></code>, <code><a href='as_pdeclare.html'>as_pdeclare</a></code>, and <code><a href='is_pdeclare.html'>is_pdeclare</a></code> Set the panel structure for a data set, or check if it is already set.</p></li>
+<li><p><code><a href='pibble.html'>pibble</a></code>, <code><a href='as_pibble.html'>as_pibble</a></code>, and <code><a href='is_pibble.html'>is_pibble</a></code> Set the panel structure for a data set, or check if it is already set.</p></li>
 <li><p><code><a href='mutate_cascade.html'>mutate_cascade</a></code> A wrapper for <code>dplyr</code> <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></code> which runs one period at a time, allowing changes in one period to finalize before the next period is calculated.</p></li>
 <li><p><code><a href='mutate_subset.html'>mutate_subset</a></code> A wrapper for <code>dplyr</code> <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></code> that performs a calculation on a subset of data, and then applies the result to all the observations (within group).</p></li>
 <li><p><code><a href='panel_fill.html'>panel_fill</a></code> Fills in gaps in the panel. Can also fill in at the beginning or end of the data to create a perfectly balanced panel.</p></li>

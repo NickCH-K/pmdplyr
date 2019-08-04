@@ -1,15 +1,15 @@
 #' Function to retrieve time-lagged data
 #'
-#' This function retrieves the time-lagged values of a variable, using the time variable defined in \code{.t} in the function or by \code{as_pdeclare()}. \code{tlag()} is highly unusual among time-lag functions in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
+#' This function retrieves the time-lagged values of a variable, using the time variable defined in \code{.t} in the function or by \code{as_pibble()}. \code{tlag()} is highly unusual among time-lag functions in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
 #'
 #' @param .var Unquoted variable from \code{.df} to be lagged.
-#' @param .df Ungrouped data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pdeclare()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
+#' @param .df Ungrouped data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
 #' @param .n Number of periods to lag by. 1 by default. Note that this is automatically scaled by \code{.d}. If \code{.d = 2} and \code{.n = 1}, then the lag of \code{.t = 3} will be \code{.t = 1}. Allows negative values, equivalent to \code{tlead()} with the same value but positive. Note that \code{.n} is ignored if \code{.d=0}.
 #' @param .default Fill-in value used when lagged observation is not present. Defaults to NA.
 #' @param .quick If \code{.i} and \code{.t} uniquely identify observations in your data, **and** there either \code{.d = 0} or there are no time gaps for any individuals (perhaps use \code{panel_fill()} first), set \code{.quick = TRUE} to improve speed. \code{tlag()} will not check if either of these things are true (except unique identification, which will be checked if \code{.uniqcheck = 1} or if \code{.i} or \code{.t} are specified in-function), so make sure they are or you will get strange results.
 #' @param .resolve If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{tlag()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function (ideally, a vectorized one) that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = mean} to get the mean value of all observations present for that individual/period.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{tlag()} will group the data by \code{.i}, ignoring any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.
-#' @param .i Quoted or unquotes variable(s) that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pdeclare()}d with all three, unless \code{.setpanel=FALSE}.
+#' @param .i Quoted or unquotes variable(s) that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pibble()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Quoted or unquoted vairable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
@@ -123,7 +123,7 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel = FALSE)
   if (is.na(inp$t)) {
-    stop("tlag() requires that .t be declared either in the function or by as_pdeclare().")
+    stop("tlag() requires that .t be declared either in the function or by as_pibble().")
   }
 
   # If changes have been made, fill in default .d

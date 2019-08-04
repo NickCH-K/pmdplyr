@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -126,21 +126,111 @@
       <tr>
         
         <td>
-          <p><code><a href="as_pdeclare.html">as_pdeclare()</a></code> </p>
+          <p><code><a href="as_pibble.html">as_pibble()</a></code> </p>
         </td>
-        <td><p>Coerce to a pdeclare tibble</p></td>
+        <td><p>Coerce to a pibble tibble</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="is_pdeclare.html">is_pdeclare()</a></code> </p>
+          <p><code><a href="fixed_check.html">fixed_check()</a></code> </p>
+        </td>
+        <td><p>Function to check for inconsistency in variables that should be fixed</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fixed_force.html">fixed_force()</a></code> </p>
+        </td>
+        <td><p>Function to enforce consistency in variables</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="id_variable.html">id_variable()</a></code> </p>
+        </td>
+        <td><p>Function to create a single panel ID variable out of several</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="inexact_join.html">inexact_inner_join()</a></code> <code><a href="inexact_join.html">inexact_left_join()</a></code> <code><a href="inexact_join.html">inexact_right_join()</a></code> <code><a href="inexact_join.html">inexact_full_join()</a></code> <code><a href="inexact_join.html">inexact_semi_join()</a></code> <code><a href="inexact_join.html">inexact_nest_join()</a></code> <code><a href="inexact_join.html">inexact_anti_join()</a></code> </p>
+        </td>
+        <td><p>Function to join two data frames inexactly</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="is_pibble.html">is_pibble()</a></code> </p>
         </td>
         <td><p>Function to check whether an object has been declared as panel data</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pdeclare.html">pdeclare</a></code> </p>
+          <p><code><a href="mutate_cascade.html">mutate_cascade()</a></code> </p>
         </td>
-        <td><p>pdeclare</p></td>
+        <td><p>Function to perform mutate one time period at a time ('Cascading mutate')</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="mutate_subset.html">mutate_subset()</a></code> </p>
+        </td>
+        <td><p>Function to propogate a calculation performed on a subset of data to the rest of the data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="panel_calculations.html">within_i()</a></code> <code><a href="panel_calculations.html">between_i()</a></code> </p>
+        </td>
+        <td><p>Functions to perform standard panel-data calculations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="panel_fill.html">panel_fill()</a></code> </p>
+        </td>
+        <td><p>Function to fill in gaps in panel data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="panel_locf.html">panel_locf()</a></code> </p>
+        </td>
+        <td><p>Function to fill in missing (or other) values using known data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pibble.html">pibble</a></code> </p>
+        </td>
+        <td><p>pibble</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pibble_methods.html">mutate(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">mutate_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">mutate_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">mutate_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">distinct(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">ungroup(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">bind_cols(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">intersect(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">union(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">union_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">setdiff(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">left_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">inner_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">right_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">full_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">semi_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">nest_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">anti_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">select(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">select_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">select_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">select_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">rename(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">rename_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">rename_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">rename_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarize(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarize_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarize_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarize_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarise(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarise_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarise_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarise_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">transmute(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">transmute_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">transmute_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">transmute_if(<i>&lt;tbl_pb&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>pibble methods</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pmdplyr.html">pmdplyr</a></code> </p>
+        </td>
+        <td><p><code>pmdplyr</code> package</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Scorecard.html">Scorecard</a></code> </p>
+        </td>
+        <td><p>Data on Earnings and Loan Repayment in US Four-Year Colleges</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SPrail.html">SPrail</a></code> </p>
+        </td>
+        <td><p>Data on 2,000 Spanish train trips</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="time_variable.html">time_variable()</a></code> </p>
+        </td>
+        <td><p>Function to create a pmdplyr-consistent time variable</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tlag.html">tlag()</a></code> </p>
+        </td>
+        <td><p>Function to retrieve time-lagged data</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -254,9 +344,111 @@
       <tr>
         
         <td>
-          <p><code><a href="pdeclare_methods.html">mutate(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">mutate_all(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">mutate_at(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">mutate_if(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">distinct(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">group_by(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">group_by_all(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">group_by_all(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">group_by_at(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">group_by_if(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">ungroup(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">bind_cols(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">intersect(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">union(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">union_all(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">setdiff(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">left_join(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">inner_join(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">right_join(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">full_join(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">semi_join(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">nest_join(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">anti_join(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">select(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">select_all(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">select_at(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">select_if(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">rename(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">rename_all(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">rename_at(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">rename_if(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">summarize(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">summarize_all(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">summarize_at(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">summarize_if(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">summarise(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">summarise_all(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">summarise_at(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">summarise_if(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">transmute(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">transmute_all(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">transmute_at(<i>&lt;tbl_pd&gt;</i>)</a></code> <code><a href="pdeclare_methods.html">transmute_if(<i>&lt;tbl_pd&gt;</i>)</a></code> </p>
+          <p><code><a href="as_pibble.html">as_pibble()</a></code> </p>
         </td>
-        <td><p>pdeclare methods</p></td>
+        <td><p>Coerce to a pibble tibble</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fixed_check.html">fixed_check()</a></code> </p>
+        </td>
+        <td><p>Function to check for inconsistency in variables that should be fixed</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fixed_force.html">fixed_force()</a></code> </p>
+        </td>
+        <td><p>Function to enforce consistency in variables</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="id_variable.html">id_variable()</a></code> </p>
+        </td>
+        <td><p>Function to create a single panel ID variable out of several</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="inexact_join.html">inexact_inner_join()</a></code> <code><a href="inexact_join.html">inexact_left_join()</a></code> <code><a href="inexact_join.html">inexact_right_join()</a></code> <code><a href="inexact_join.html">inexact_full_join()</a></code> <code><a href="inexact_join.html">inexact_semi_join()</a></code> <code><a href="inexact_join.html">inexact_nest_join()</a></code> <code><a href="inexact_join.html">inexact_anti_join()</a></code> </p>
+        </td>
+        <td><p>Function to join two data frames inexactly</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="is_pibble.html">is_pibble()</a></code> </p>
+        </td>
+        <td><p>Function to check whether an object has been declared as panel data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="mutate_cascade.html">mutate_cascade()</a></code> </p>
+        </td>
+        <td><p>Function to perform mutate one time period at a time ('Cascading mutate')</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="mutate_subset.html">mutate_subset()</a></code> </p>
+        </td>
+        <td><p>Function to propogate a calculation performed on a subset of data to the rest of the data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="panel_calculations.html">within_i()</a></code> <code><a href="panel_calculations.html">between_i()</a></code> </p>
+        </td>
+        <td><p>Functions to perform standard panel-data calculations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="panel_fill.html">panel_fill()</a></code> </p>
+        </td>
+        <td><p>Function to fill in gaps in panel data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="panel_locf.html">panel_locf()</a></code> </p>
+        </td>
+        <td><p>Function to fill in missing (or other) values using known data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pibble.html">pibble</a></code> </p>
+        </td>
+        <td><p>pibble</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pibble_methods.html">mutate(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">mutate_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">mutate_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">mutate_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">distinct(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">group_by_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">ungroup(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">bind_cols(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">intersect(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">union(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">union_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">setdiff(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">left_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">inner_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">right_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">full_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">semi_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">nest_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">anti_join(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">select(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">select_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">select_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">select_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">rename(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">rename_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">rename_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">rename_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarize(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarize_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarize_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarize_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarise(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarise_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarise_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">summarise_if(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">transmute(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">transmute_all(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">transmute_at(<i>&lt;tbl_pb&gt;</i>)</a></code> <code><a href="pibble_methods.html">transmute_if(<i>&lt;tbl_pb&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>pibble methods</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pmdplyr.html">pmdplyr</a></code> </p>
+        </td>
+        <td><p><code>pmdplyr</code> package</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Scorecard.html">Scorecard</a></code> </p>
+        </td>
+        <td><p>Data on Earnings and Loan Repayment in US Four-Year Colleges</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SPrail.html">SPrail</a></code> </p>
+        </td>
+        <td><p>Data on 2,000 Spanish train trips</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="time_variable.html">time_variable()</a></code> </p>
+        </td>
+        <td><p>Function to create a pmdplyr-consistent time variable</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tlag.html">tlag()</a></code> </p>
+        </td>
+        <td><p>Function to retrieve time-lagged data</p></td>
       </tr>
     </tbody>
     </table>

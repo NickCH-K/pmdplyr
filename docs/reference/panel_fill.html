@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.df</th>
-      <td><p>Tibble or data frame which either has the <code>.t</code> and <code>.d</code> (and perhaps <code>.i</code>) attributes included by <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>, or the appropriate panel structure is declared in the function.</p></td>
+      <td><p>Tibble or data frame which either has the <code>.t</code> and <code>.d</code> (and perhaps <code>.i</code>) attributes included by <code><a href='as_pibble.html'>as_pibble()</a></code>, or the appropriate panel structure is declared in the function.</p></td>
     </tr>
     <tr>
       <th>.set_NA</th>
@@ -142,7 +142,7 @@
     </tr>
     <tr>
       <th>.i</th>
-      <td><p>Quoted or unquoted variables that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
+      <td><p>Quoted or unquoted variables that identify the individual cases. Note that setting any one of <code>.i</code>, <code>.t</code>, or <code>.d</code> will override all three already applied to the data, and will return data that is <code><a href='as_pibble.html'>as_pibble()</a></code>d with all three, unless <code>.setpanel=FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>.t</th>
@@ -165,8 +165,8 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Note that, in the case where there is more than one observation for a given individual/time period (or just time period if <code>.group_i = FALSE</code>), <code>panel_fill()</code> will create copies of *every observation* in the appropriate individual/time period for filling-in purposes. So if there are four t = 1 observations and nothing in t = 2, <code>panel_fill()</code> will create four new observations with t = 2, copying the original four in t = 1.</p>
-<p>By default, the <code>panel_fill()</code> operation is grouped by <code>.i</code>, although it will retun the data in the original grouping structure. Leave <code>.i</code> blank, or, if <code>.i</code> is already in the data from <code>as_pdeclare</code>, set <code>.group_i=FALSE</code> to run the function ungrouped, or with the existing group structure.</p>
-<p>This function requires <code>.t</code> and <code>.d</code> to be declared in the function or already established in the data by <code><a href='as_pdeclare.html'>as_pdeclare()</a></code>. Also, this requires a cardinal <code>.t</code>. It must not be the case that <code>.d=0</code>.</p>
+<p>By default, the <code>panel_fill()</code> operation is grouped by <code>.i</code>, although it will retun the data in the original grouping structure. Leave <code>.i</code> blank, or, if <code>.i</code> is already in the data from <code>as_pibble</code>, set <code>.group_i=FALSE</code> to run the function ungrouped, or with the existing group structure.</p>
+<p>This function requires <code>.t</code> and <code>.d</code> to be declared in the function or already established in the data by <code><a href='as_pibble.html'>as_pibble()</a></code>. Also, this requires a cardinal <code>.t</code>. It must not be the case that <code>.d=0</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

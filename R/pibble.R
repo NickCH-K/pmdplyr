@@ -1,6 +1,6 @@
-#' pdeclare
+#' pibble
 #'
-#' This function declares a pdeclare tibble with the attributes \code{.i}, \code{.t}, and \code{.d}.
+#' This function declares a pibble tibble with the attributes \code{.i}, \code{.t}, and \code{.d}.
 #'
 #' \itemize{
 #'   \item \code{.i}, Quoted or unquoted variable(s) indicating the individual-level panel identifier
@@ -8,38 +8,38 @@
 #'   \item \code{.d}, a number indicating the gap
 #' }
 #'
-#' The \code{pdeclare()} function is for the purpose of creating \code{pdeclare} objects from scratch. You probably want \code{as_pdeclare}.
+#' The \code{pibble()} function is for the purpose of creating \code{pibble} objects from scratch. You probably want \code{as_pibble}.
 #'
-#' Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
+#' Note that \code{pibble} does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
 #'
 #' @param .df Data frame or tibble to declare as a panel.
-#' @param .i Quoted or unquoted variable(s) that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.
+#' @param .i Quoted or unquoted variable(s) that identify the individual cases. If this is omitted, \code{pibble} will assume the data set is a single time series.
 #' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to perform a check of whether \code{.i} and \code{.t} uniquely identify observations, and present a message if not. By default this is set to FALSE and the warning message occurs only once per session.
-#' @name pdeclare
+#' @name pibble
 #'
 #' @examples
-#' # Creating a pdeclare from scratch
-#' pd <- pdeclare(
+#' # Creating a pibble from scratch
+#' pd <- pibble(
 #'   i = c(1, 1, 1, 2, 2, 2),
 #'   t = c(1, 2, 3, 1, 2, 2),
 #'   x = rnorm(6),
 #'   .i = i,
 #'   .t = t
 #' )
-#' is_pdeclare(pd)
+#' is_pibble(pd)
 #' # I set .d=0 here to indicate that I don't care how large the gap between one period and the next is
 #' # If I want to use 'seconds' for t.
 #' # See time_variable() to turn unruly variables into well-behaved integers, as well
-#' pd2 <- pdeclare(
+#' pd2 <- pibble(
 #'   i = c(1, 1, 1, 2, 2, 2),
 #'   seconds = c(123, 456, 789, 103, 234, 238),
 #'   .i = i,
 #'   .t = seconds,
 #'   .d = 0
 #' )
-#' is_pdeclare(pd2)
+#' is_pibble(pd2)
 NULL
 #' @export
 
@@ -57,12 +57,12 @@ NULL
 #quo_is_missing(enquo(var))
 
 
-pdeclare <- function(..., .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
+pibble <- function(..., .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
 
   # Create tibble
   tbl <- tibble::tibble(...)
 
-  # Pull out variable names; build_pdeclare takes strings
+  # Pull out variable names; build_pibble takes strings
   .i <- tidyselect::vars_select(names(tbl),{{.i}})
   if (length(.i) == 0) {
     .i <- NA_character_
@@ -80,37 +80,37 @@ pdeclare <- function(..., .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
     .uniqcheck = .uniqcheck
   )
 
-  # make a pdeclare
-  tbl <- build_pdeclare(tbl, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck)
+  # make a pibble
+  tbl <- build_pibble(tbl, .i = .i, .t = .t, .d = .d, .uniqcheck = .uniqcheck)
 
   return(tbl)
 }
 
-###### .i and .t are strings for new_pdeclare
-new_pdeclare <- function(x, ..., class = NULL) {
+###### .i and .t are strings for new_pibble
+new_pibble <- function(x, ..., class = NULL) {
   if (!is.data.frame(x)) {
     x <- as.data.frame(x)
   }
 
-  x <- tibble::new_tibble(x, ..., nrow = nrow(x), class = c("tbl_pd", class))
+  x <- tibble::new_tibble(x, ..., nrow = nrow(x), class = c("tbl_pb", class))
 
   return(x)
 }
 
 #' @importFrom vctrs vec_restore
-#' @method vec_restore tbl_pd
-vec_restore.tbl_pd <- function(x, to) {
+#' @method vec_restore tbl_pb
+vec_restore.tbl_pb <- function(x, to) {
   .i <- x %@% ".i"
   .t <- x %@% ".t"
   .d <- x %@% ".d"
 
-  return(build_pdeclare(to, .i = .i, .t = .t, .d = .d))
+  return(build_pibble(to, .i = .i, .t = .t, .d = .d))
 }
 
 
-#' Coerce to a pdeclare tibble
+#' Coerce to a pibble tibble
 #'
-#' This function coerces a tibble, data.frame, or list to a pdeclare tibble by adding the \code{.i}, \code{.t}, and \code{.d} attributes to it.
+#' This function coerces a tibble, data.frame, or list to a pibble tibble by adding the \code{.i}, \code{.t}, and \code{.d} attributes to it.
 #'
 #' \itemize{
 #'   \item \code{.i}, Quoted or unquoted variable(s) indicating the individual-level panel identifier
@@ -118,10 +118,10 @@ vec_restore.tbl_pd <- function(x, to) {
 #'   \item \code{.d}, a number indicating the gap
 #' }
 #'
-#' Note that pdeclare does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
+#' Note that pibble does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
 #'
 #' @param x A data frame, tibble or list
-#' @inheritParams pdeclare
+#' @inheritParams pibble
 #' @param ... Other arguments passed on to individual methods.
 #' @examples
 #' data(SPrail)
@@ -129,12 +129,12 @@ vec_restore.tbl_pd <- function(x, to) {
 #' # between one period and the next is.
 #' # If I want to use 'insert_date' for .t with a fixed gap between periods,
 #' # I need to transform it into an integer first; see time_variable()
-#' SP <- as_pdeclare(SPrail,
+#' SP <- as_pibble(SPrail,
 #'   .i = c(origin, destination),
 #'   .t = insert_date,
 #'   .d = 0
 #' )
-#' is_pdeclare(SP)
+#' is_pibble(SP)
 #' attr(SP, ".i")
 #' attr(SP, ".t")
 #' attr(SP, ".d")
@@ -143,29 +143,29 @@ vec_restore.tbl_pd <- function(x, to) {
 #' # Here, year is an integer, so I can use it with .d = 1 to
 #' # indicate that one period is a change of one unit in year
 #' # Conveniently, .d = 1 is the default
-#' Scorecard <- as_pdeclare(Scorecard, .i = unitid, .t = year)
-#' is_pdeclare(Scorecard)
-#' @rdname as_pdeclare
+#' Scorecard <- as_pibble(Scorecard, .i = unitid, .t = year)
+#' is_pibble(Scorecard)
+#' @rdname as_pibble
 #' @export
-as_pdeclare <- function(x,
+as_pibble <- function(x,
                         .i = NULL,
                         .t = NULL,
                         .d = 1,
                         .uniqcheck = FALSE,
                         ...) {
-  UseMethod("as_pdeclare")
+  UseMethod("as_pibble")
 }
 
-#' @rdname as_pdeclare
+#' @rdname as_pibble
 #' @export
-as_pdeclare.tbl_df <- function(x,
+as_pibble.tbl_df <- function(x,
                                .i = NULL,
                                .t = NULL,
                                .d = 1,
                                .uniqcheck = FALSE,
                                ...) {
 
-  # Pull out variable names; build_pdeclare takes strings
+  # Pull out variable names; build_pibble takes strings
   .i <- tidyselect::vars_select(names(x),{{.i}})
   if (length(.i) == 0) {
     .i <- NA_character_
@@ -183,56 +183,56 @@ as_pdeclare.tbl_df <- function(x,
     .uniqcheck = .uniqcheck
   )
 
-  return(build_pdeclare(x, .i, .t, .d, .uniqcheck = .uniqcheck, ...))
+  return(build_pibble(x, .i, .t, .d, .uniqcheck = .uniqcheck, ...))
 }
 
 
-#' @rdname as_pdeclare
+#' @rdname as_pibble
 #' @export
-as_pdeclare.grouped_df <- as_pdeclare.tbl_df
+as_pibble.grouped_df <- as_pibble.tbl_df
 
-#' @rdname as_pdeclare
+#' @rdname as_pibble
 #' @export
-as_pdeclare.data.frame <- as_pdeclare.tbl_df
+as_pibble.data.frame <- as_pibble.tbl_df
 
-#' @rdname as_pdeclare
+#' @rdname as_pibble
 #' @export
-as_pdeclare.list <- as_pdeclare.tbl_df
+as_pibble.list <- as_pibble.tbl_df
 
 #' @keywords internal
 #' @export
-as_pdeclare.NULL <- function(x, ...) {
-  stop("A pdeclare must not be NULL.")
+as_pibble.NULL <- function(x, ...) {
+  stop("A pibble must not be NULL.")
 }
 
-#' Low-level constructor for a pdeclare object
+#' Low-level constructor for a pibble object
 #'
-#' \code{build_pdeclare()} creates a \code{tbl_pd} object with more controls. It is useful for creating a \code{tbl_pd} internally inside a function.
+#' \code{build_pibble()} creates a \code{tbl_pb} object with more controls. It is useful for creating a \code{tbl_pb} internally inside a function.
 #'
-#' Be aware that \code{pdeclare} objects store \code{.i} and \code{.t} as strings. As a low-level constructor, \code{build_pdeclare()} takes only character arguments for \code{.i} and \code{.t}, not unquoted variables.
+#' Be aware that \code{pibble} objects store \code{.i} and \code{.t} as strings. As a low-level constructor, \code{build_pibble()} takes only character arguments for \code{.i} and \code{.t}, not unquoted variables.
 #'
-#' For speed, \code{build_pdeclare()} does not check the adequacy of the inputs.
+#' For speed, \code{build_pibble()} does not check the adequacy of the inputs.
 #'
 #' @export
 #' @param .df Data frame or tibble to declare as a panel.
-#' @param .i Quoted variable name(s) that identify the individual cases. If this is omitted, \code{pdeclare} will assume the data set is a single time series.
+#' @param .i Quoted variable name(s) that identify the individual cases. If this is omitted, \code{pibble} will assume the data set is a single time series.
 #' @param .t Quoted variable name indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to perform a check of whether \code{.i} and \code{.t} uniquely identify observations, and present a message if not. By default this is set to FALSE and the warning message occurs only once per session.
 #' @keywords internal
 #' @importFrom rlang %@%
-build_pdeclare <- function(tbl,
+build_pibble <- function(tbl,
                            .i = NA,
                            .t = NA,
                            .d = 1,
                            .uniqcheck = FALSE) {
-  ###### .i and .t are strings by the time we get to build_pdeclare
+  ###### .i and .t are strings by the time we get to build_pibble
 
   grp_data <- tbl %@% "groups"
 
   if (dplyr::is_grouped_df(tbl)) {
     cls <- "grouped_df"
-    tbl <- new_pdeclare(tbl,
+    tbl <- new_pibble(tbl,
       groups = grp_data,
       .i = .i,
       .t = .t,
@@ -240,7 +240,7 @@ build_pdeclare <- function(tbl,
       class = cls
     )
   } else {
-    tbl <- new_pdeclare(tbl,
+    tbl <- new_pibble(tbl,
       .i = .i,
       .d = .d,
       .t = .t,
@@ -254,10 +254,10 @@ build_pdeclare <- function(tbl,
 check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
   #### CHECK INPUTS
   if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df", "list")) == 0) {
-    stop("Requires data to be a data frame, tibble, pdeclare, or list.")
+    stop("Requires data to be a data frame, tibble, pibble, or list.")
   }
   if (sum(class(.df) %in% c("data.table", "list")) > 0) {
-    warning("data.tables and lists will be coerced to pdeclare.")
+    warning("data.tables and lists will be coerced to pibble.")
     .df <- as.data.frame(.df)
   }
   if (!(max(is.character(.i))) & min(is.na(.i)) == 0) {
@@ -289,14 +289,14 @@ check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
   }
 
   #### Warn about multiple obs per id/t, but only once per session
-  if (getOption("pdeclare.warning4.0", TRUE) | .uniqcheck == TRUE) {
+  if (getOption("pibble.warning4.0", TRUE) | .uniqcheck == TRUE) {
     # Check for uniqueness
     groupvec <- c(.i, .t)
     groupvec <- groupvec[!is.na(groupvec)]
     if (anyDuplicated(.df[, groupvec]) > 0) {
       message("Note that the selected .i and .t do not uniquely identify observations in the data.
 This message will be displayed only once per session unless the .uniqcheck option is set to TRUE.")
-      options("pdeclare.warning4.0" = FALSE)
+      options("pibble.warning4.0" = FALSE)
     }
   }
 }
@@ -310,11 +310,11 @@ This message will be displayed only once per session unless the .uniqcheck optio
 #' @examples
 #'
 #' data(Scorecard)
-#' Scorecard <- as_pdeclare(Scorecard, .i = "unitid", .t = "year")
-#' is_pdeclare(Scorecard)
+#' Scorecard <- as_pibble(Scorecard, .i = "unitid", .t = "year")
+#' is_pibble(Scorecard)
 #' @export
 
-is_pdeclare <- function(.df, .silent = FALSE) {
+is_pibble <- function(.df, .silent = FALSE) {
   if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
     stop("Requires data to be a data frame or tibble.")
   }
@@ -326,7 +326,7 @@ is_pdeclare <- function(.df, .silent = FALSE) {
   t <- ifelse(is.null(.df %@% ".t"), NA, .df %@% ".t")
   d <- ifelse(is.null(.df %@% ".d"), NA, .df %@% ".d")
 
-  if ((!is.na(i) | !is.na(t)) & "tbl_pd" %in% class(.df)) {
+  if ((!is.na(i) | !is.na(t)) & "tbl_pb" %in% class(.df)) {
     if (.silent == FALSE) {
       message(paste(".i = ", i, "; .t = ", t, "; .d = ", d, ".", sep = ""))
     }
@@ -351,7 +351,7 @@ declare_in_fcn_check <- function(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed
   orig_i <- ifelse(is.null(.df %@% ".i"), NA, .df %@% ".i")
   orig_t <- ifelse(is.null(.df %@% ".t"), NA, .df %@% ".t")
   orig_d <- ifelse(is.null(.df %@% ".d"), NA, .df %@% ".d")
-  is_tbl_pd <- is_pdeclare(.df, .silent=TRUE)
+  is_tbl_pb <- is_pibble(.df, .silent=TRUE)
 
   # If uniqcheck is TRUE but panel is not being reset, run through check_panel_inputs
   # just to check, using already-set panel info
@@ -379,6 +379,6 @@ declare_in_fcn_check <- function(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed
     i = .i,
     t = .t,
     d = .d,
-    is_tbl_pd = is_tbl_pd
+    is_tbl_pb = is_tbl_pb
   ))
 }
