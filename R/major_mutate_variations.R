@@ -33,15 +33,9 @@
 #' }
 #' @export
 mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
-  if (!is.logical(.backwards)) {
-    stop(".backwards must be TRUE or FALSE")
-  }
-  if (!is.logical(.skip)) {
-    stop(".skip must be TRUE or FALSE.")
-  }
-  if (!is.logical(.group_i)) {
-    stop(".group_i must be TRUE or FALSE.")
-  }
+  if (!is.logical(.backwards)) { stop(".backwards must be TRUE or FALSE") }
+  if (!is.logical(.skip)) { stop(".skip must be TRUE or FALSE.") }
+  if (!is.logical(.group_i)) { stop(".group_i must be TRUE or FALSE.") }
 
   # Pull out variable names
   .icall <- tidyselect::vars_select(names(.df),{{.i}})
@@ -55,9 +49,7 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .i = .icall, .t = .tcall, .d, .uniqcheck, .setpanel)
-  if (is.na(inp$t)) {
-    stop("mutate_cascade() requires that .t be declared either in the function or by as_pibble().")
-  }
+  if (is.na(inp$t)) { stop("mutate_cascade() requires that .t be declared either in the function or by as_pibble().") }
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
@@ -154,12 +146,8 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 #' @export
 mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
   #### CHECK INPUTS
-  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
-    stop("Requires data to be a data frame or tibble.")
-  }
-  if (sum(class(.df) == "data.table") > 0) {
-    warning("pmdplyr functions have not been tested with data.tables")
-  }
+  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) { stop("Requires data to be a data frame or tibble.") }
+  if (sum(class(.df) == "data.table") > 0) { warning("pmdplyr functions have not been tested with data.tables") }
 
   # Pull out variable names
   .icall <- tidyselect::vars_select(names(.df),{{.i}})

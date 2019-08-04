@@ -25,12 +25,8 @@ NULL
 #' @rdname panel_calculations
 #' @export
 within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = function(x) mean(x, na.rm = TRUE), .i = NULL, .t = NULL, .uniqcheck = FALSE) {
-  if (!is.vector(.var)) {
-    stop(".var must be a vector.")
-  }
-  if (!is.character(.fcn) & !is.function(.fcn)) {
-    stop(".fcn must be a function.")
-  }
+  if (!is.vector(.var)) { stop(".var must be a vector.") }
+  if (!is.character(.fcn) & !is.function(.fcn)) { stop(".fcn must be a function.") }
 
   # It's so weird this is necessary
   .df <- .df
@@ -48,9 +44,7 @@ within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = functi
 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .i=.icall, .t=.tcall, .d = NA, .uniqcheck, .setpanel = FALSE)
-  if (max(is.na(inp$i)) == 1) {
-    stop("within_i() requires that .i be declared either in the function or by as_pibble().")
-  }
+  if (max(is.na(inp$i)) == 1) { stop("within_i() requires that .i be declared either in the function or by as_pibble().") }
 
   #Figure out if we're working with grouped data and so length(var) < nrow(.df)
   #If we are, switch everything over to .data
@@ -61,9 +55,7 @@ within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = functi
     .df <- data.frame(lapply(inp$i, function(x) datapro[[x]]))
     names(.df) <- inp$i
 
-    if (length(.var) != nrow(.df)) {
-      stop('Length of variable does not match length of full data set or group-subsample.')
-    }
+    if (length(.var) != nrow(.df)) { stop('Length of variable does not match length of full data set or group-subsample.') }
   } else {
     # If we're not working with grouped data, we're good.
     # We only need these
@@ -84,12 +76,8 @@ within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = functi
 #' @rdname panel_calculations
 #' @export
 between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = function(x) mean(x, na.rm = TRUE), .i = NULL, .t = NULL, .uniqcheck = FALSE) {
-  if (!is.vector(.var)) {
-    stop(".var must be a vector.")
-  }
-  if (!is.character(.fcn) & !is.function(.fcn)) {
-    stop(".fcn must be a function.")
-  }
+  if (!is.vector(.var)) { stop(".var must be a vector.") }
+  if (!is.character(.fcn) & !is.function(.fcn)) { stop(".fcn must be a function.") }
 
   # ugh
   .df <- .df
@@ -106,9 +94,7 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .i = .icall, .t = .tcall, .d = NA, .uniqcheck, .setpanel = FALSE)
-  if (max(is.na(inp$i)) == 1) {
-    stop("between_i() requires that .i be declared either in the function or by as_pibble().")
-  }
+  if (max(is.na(inp$i)) == 1) { stop("between_i() requires that .i be declared either in the function or by as_pibble().") }
 
   #Figure out if we're working with grouped data and so length(var) < nrow(.df)
   #If we are, switch everything over to .data
@@ -119,9 +105,7 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
     .df <- data.frame(lapply(inp$i, function(x) datapro[[x]]))
     names(.df) <- inp$i
 
-    if (length(.var) != nrow(.df)) {
-      stop('Length of variable does not match length of full data set or group-subsample.')
-    }
+    if (length(.var) != nrow(.df)) { stop('Length of variable does not match length of full data set or group-subsample.') }
   } else {
     # If we're not working with grouped data, we're good.
     # We only need these

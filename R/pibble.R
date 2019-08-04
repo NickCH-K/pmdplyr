@@ -253,39 +253,20 @@ build_pibble <- function(tbl,
 
 check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
   #### CHECK INPUTS
-  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df", "list")) == 0) {
-    stop("Requires data to be a data frame, tibble, pibble, or list.")
-  }
+  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df", "list")) == 0) { stop("Requires data to be a data frame, tibble, pibble, or list.") }
   if (sum(class(.df) %in% c("data.table", "list")) > 0) {
     warning("data.tables and lists will be coerced to pibble.")
     .df <- as.data.frame(.df)
   }
-  if (!(max(is.character(.i))) & min(is.na(.i)) == 0) {
-    stop("Internal issue: .i should have been converted to a character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
-  }
-  if (!(is.character(.t)) & !is.na(.t)) {
-    stop("Internal issue: .t should have been converted to character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
-  }
-  if (length(.t) > 1) {
-    stop("Only one time variable allowed.")
-  }
-  if (!(is.numeric(.d)) & !(is.na(.d))) {
-    stop(".d must be numeric.")
-  }
-
-  if (min(is.na(.i)) == 0 & min(.i %in% names(.df)) == 0) {
-    stop("Elements of .i must be variables present in the data.")
-  }
-  if (!is.na(.t) & min(.t %in% names(.df)) == 0) {
-    stop(".t must be a variable present in the data.")
-  }
-  if (!is.na(.uniqcheck) & !is.logical(.uniqcheck)) {
-    stop(".uniqcheck must be TRUE or FALSE.")
-  }
+  if (!(max(is.character(.i))) & min(is.na(.i)) == 0) { stop("Internal issue: .i should have been converted to a character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr") }
+  if (!(is.character(.t)) & !is.na(.t)) { stop("Internal issue: .t should have been converted to character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr") }
+  if (length(.t) > 1) { stop("Only one time variable allowed.") }
+  if (!(is.numeric(.d)) & !(is.na(.d))) { stop(".d must be numeric.") }
+  if (min(is.na(.i)) == 0 & min(.i %in% names(.df)) == 0) { stop("Elements of .i must be variables present in the data.") }
+  if (!is.na(.t) & min(.t %in% names(.df)) == 0) { stop(".t must be a variable present in the data.") }
+  if (!is.na(.uniqcheck) & !is.logical(.uniqcheck)) { stop(".uniqcheck must be TRUE or FALSE.") }
   if (!is.na(.d) & !is.na(.t)) {
-    if (.d > 0 & !is.numeric(.df[[.t]])) {
-      stop("Unless .d = 0, indicating an ordinal time variable, .t must be numeric.")
-    }
+    if (.d > 0 & !is.numeric(.df[[.t]])) { stop("Unless .d = 0, indicating an ordinal time variable, .t must be numeric.") }
   }
 
   #### Warn about multiple obs per id/t, but only once per session
@@ -315,12 +296,8 @@ This message will be displayed only once per session unless the .uniqcheck optio
 #' @export
 
 is_pibble <- function(.df, .silent = FALSE) {
-  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
-    stop("Requires data to be a data frame or tibble.")
-  }
-  if (!is.logical(.silent)) {
-    stop("silent must be TRUE or FALSE.")
-  }
+  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) { stop("Requires data to be a data frame or tibble.") }
+  if (!is.logical(.silent)) { stop("silent must be TRUE or FALSE.") }
 
   i <- ifelse(is.null(.df %@% ".i"), NA, paste0(.df %@% ".i", collapse = ", "))
   t <- ifelse(is.null(.df %@% ".t"), NA, .df %@% ".t")
@@ -339,12 +316,8 @@ is_pibble <- function(.df, .silent = FALSE) {
 ##### declare_in_fcn_check takes .i and .t and strings
 declare_in_fcn_check <- function(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed = FALSE) {
   # Check inputs
-  if (!is.na(.uniqcheck) & !is.logical(.uniqcheck)) {
-    stop("uniqcheck must be TRUE or FALSE.")
-  }
-  if (!is.na(.setpanel) & !is.logical(.setpanel)) {
-    stop("setpanel must be TRUE or FALSE.")
-  }
+  if (!is.na(.uniqcheck) & !is.logical(.uniqcheck)) { stop("uniqcheck must be TRUE or FALSE.") }
+  if (!is.na(.setpanel) & !is.logical(.setpanel)) { stop("setpanel must be TRUE or FALSE.") }
 
   # Collect original panel settings, if any.
   # To be consistent with other input checking, make them NA not NULL if appropriate
@@ -367,9 +340,7 @@ declare_in_fcn_check <- function(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed
   }
 
   # If everything is still missing and you need something, error
-  if (min(is.na(.i)) > 0 & is.na(.t) & .noneed == FALSE) {
-    stop("Attempt to use panel indicators i and/or t, but no i or t are declared in command or stored in data.")
-  }
+  if (min(is.na(.i)) > 0 & is.na(.t) & .noneed == FALSE) { stop("Attempt to use panel indicators i and/or t, but no i or t are declared in command or stored in data.") }
 
 
   return(list(

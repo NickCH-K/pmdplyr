@@ -67,24 +67,12 @@
 #' @export
 
 panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = FALSE, .group_i = TRUE, .flag = NA, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE, .setpanel = TRUE) {
-  if (!is.logical(.backwards)) {
-    stop(".backwards must be TRUE or FALSE")
-  }
-  if (!(is.logical(.set_NA)) & !(is.character(.set_NA))) {
-    stop(".set_NA must be a character vector, TRUE, or FALSE.")
-  }
-  if (!is.logical(.group_i)) {
-    stop(".group_i must be TRUE or FALSE")
-  }
-  if (!is.na(.min) & !is.numeric(.min)) {
-    stop(".min must either be NA or an integer.")
-  }
-  if (!is.na(.max) & !is.numeric(.max)) {
-    stop(".max must either be NA or an integer.")
-  }
-  if (!is.na(.flag) & !is.character(.flag)) {
-    stop(".flag must be a character variable.")
-  }
+  if (!is.logical(.backwards)) { stop(".backwards must be TRUE or FALSE") }
+  if (!(is.logical(.set_NA)) & !(is.character(.set_NA))) { stop(".set_NA must be a character vector, TRUE, or FALSE.") }
+  if (!is.logical(.group_i)) { stop(".group_i must be TRUE or FALSE") }
+  if (!is.na(.min) & !is.numeric(.min)) { stop(".min must either be NA or an integer.") }
+  if (!is.na(.max) & !is.numeric(.max)) { stop(".max must either be NA or an integer.") }
+  if (!is.na(.flag) & !is.character(.flag)) { stop(".flag must be a character variable.") }
 
   # Pull out variable names
   .icall <- tidyselect::vars_select(names(.df),{{.i}})
@@ -105,9 +93,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel)
-  if (is.na(inp$t)) {
-    stop("panel_fill() requires that .t be declared either in the function or by as_pibble().")
-  }
+  if (is.na(inp$t)) { stop("panel_fill() requires that .t be declared either in the function or by as_pibble().") }
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall)) {
@@ -118,13 +104,9 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   }
 
   # we need a positive numeric .d, and a .t
-  if (is.na(inp$d) | inp$d == 0) {
-    stop("panel_fill() requires that .d be declared either in the function or by as_pibble(). Ordinal time variables (.d = 0) are not acceptable for this function.")
-  }
+  if (is.na(inp$d) | inp$d == 0) { stop("panel_fill() requires that .d be declared either in the function or by as_pibble(). Ordinal time variables (.d = 0) are not acceptable for this function.") }
   # Can't set the .i and .t variables to 0
-  if (max(c(inp$i, inp$t) %in% .set_NA) == 1) {
-    stop("Variables in .i or .t cannot be in .set_NA.")
-  }
+  if (max(c(inp$i, inp$t) %in% .set_NA) == 1) { stop("Variables in .i or .t cannot be in .set_NA.") }
 
   # FOr use later
   arrnames <- c(inp$i, inp$t)
@@ -217,9 +199,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       max(dplyr::case_when(!is.na(x) & !is.infinite(x) ~ x, TRUE ~ 0), na.rm = TRUE))
 
   # If there are any fractional gaps, something is wrong, probably with .d
-  if (min(.df[[copyname]] == as.integer(.df[[copyname]])) == 0) {
-    stop("There are fractional gaps between some periods. Are you sure .d is defined correctly?")
-  }
+  if (min(.df[[copyname]] == as.integer(.df[[copyname]])) == 0) { stop("There are fractional gaps between some periods. Are you sure .d is defined correctly?") }
 
   # Which vars will actually be copied
   if (min(.set_NA == TRUE) == 1) {
@@ -352,18 +332,10 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 #' @export
 
 panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA, .backwards = FALSE, .resolve = "error", .group_i = TRUE, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
-  if (!is.vector(.var)) {
-    stop(".var must be a vector.")
-  }
-  if (!is.character(.resolve) & !is.function(.resolve)) {
-    stop(".resolve must be a function or 'error'.")
-  }
-  if (!is.logical(.group_i)) {
-    stop(".group_i must be TRUE or FALSE")
-  }
-  if (!is.logical(.backwards)) {
-    stop(".backwards must be TRUE or FALSE")
-  }
+  if (!is.vector(.var)) { stop(".var must be a vector.") }
+  if (!is.character(.resolve) & !is.function(.resolve)) { stop(".resolve must be a function or 'error'.") }
+  if (!is.logical(.group_i)) { stop(".group_i must be TRUE or FALSE") }
+  if (!is.logical(.backwards)) { stop(".backwards must be TRUE or FALSE") }
 
   #ugh
   .df <- .df
@@ -387,9 +359,7 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel = FALSE)
-  if (is.na(inp$t)) {
-    stop("panel_locf() requires that .t be declared either in the function or by as_pibble().")
-  }
+  if (is.na(inp$t)) { stop("panel_locf() requires that .t be declared either in the function or by as_pibble().") }
 
   arrnames <- c(inp$i, inp$t)
   if (.group_i == FALSE) {
@@ -502,12 +472,8 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 #' @export
 
 fixed_check <- function(.df, .var = NULL, .within = NULL) {
-  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
-    stop("Requires data to be a data frame or tibble.")
-  }
-  if (sum(class(.df) == "data.table") > 0) {
-    warning("pmdplyr functions have not been tested with data.tables.")
-  }
+  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) { stop("Requires data to be a data frame or tibble.") }
+  if (sum(class(.df) == "data.table") > 0) { warning("pmdplyr functions have not been tested with data.tables.") }
 
   # Pull out variable names
   .varcall <- tidyselect::vars_select(names(.df),{{.var}})
@@ -519,17 +485,13 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
     .withincall <- NA_character_
   }
 
-  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) {
-    stop(".var and .within must be names of variables in .df")
-  }
+  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) { stop(".var and .within must be names of variables in .df") }
   # if .var is unspecified
   if (max(is.na(.varcall) == 1)) {
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
   }
 
-  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) {
-    stop(".var and .within must be names of variables in .df")
-  }
+  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) { stop(".var and .within must be names of variables in .df") }
 
   # apply grouping for within
   .df <- .df %>%
@@ -580,12 +542,8 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
 #' @export
 
 fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = function(x) unique(x)[which.max(tabulate(match(x, unique(x))))], .flag = NA) {
-  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
-    stop("Requires data to be a data frame or tibble.")
-  }
-  if (sum(class(.df) == "data.table") > 0) {
-    warning("pmdplyr functions have not been tested with data.tables.")
-  }
+  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) { stop("Requires data to be a data frame or tibble.") }
+  if (sum(class(.df) == "data.table") > 0) { warning("pmdplyr functions have not been tested with data.tables.") }
 
   # Pull out variable names
   .varcall <- tidyselect::vars_select(names(.df),{{.var}})
@@ -602,15 +560,9 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = function(x)
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
   }
 
-  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) {
-    stop(".var and .within must be names of variables in .df")
-  }
-  if (!is.character(.resolve) & !is.function(.resolve)) {
-    stop(".resolve must be a function or 'drop'.")
-  }
-  if (!is.na(.flag) & !is.character(.flag)) {
-    stop(".flag must be a character variable.")
-  }
+  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) { stop(".var and .within must be names of variables in .df") }
+  if (!is.character(.resolve) & !is.function(.resolve)) { stop(".resolve must be a function or 'drop'.") }
+  if (!is.na(.flag) & !is.character(.flag)) { stop(".flag must be a character variable.") }
 
   # original grouping structure
   origgroups <- names(.df %@% "groups")

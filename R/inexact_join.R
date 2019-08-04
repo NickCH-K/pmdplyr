@@ -260,44 +260,22 @@ find_matching_list <- function(z, yidname, i, jvar, range) {
 
 # This is the shared preprocessing shared by all join functions
 inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), var, jvar, method, exact = TRUE) {
-  if (!is.character(var)) {
-    stop("Internal error: var should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
-  }
-  if (!is.character(jvar)) {
-    stop("Internal error: jvar should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
-  }
-  if (length(jvar) > 2) {
-    stop("jvar can contain no more than two variables.")
-  }
-  if (!is.character(method)) {
-    stop("method must be a character variable.")
-  }
-  if (!is.logical(exact)) {
-    stop("exact must be logical.")
-  }
-  if (max(var %in% jvar) == 1) {
-    stop("The variable names in var and jvar should not match.")
-  }
-  if (max(jvar %in% names(x)) == 1) {
-    stop("The variable names in jvar should not be in x")
-  }
-  if (method == "closest" & is.character(x[[var]])) {
-    stop("The 'closest' method requires var/jvar to be a variable type that supports subtraction, like numeric or Date.")
-  }
-  if (method == "closest" & !exact) {
-    warning("exact=FALSE is ignored for the 'closest' method.")
-  }
-  if (!method %in% c("last", "next", "closest", "between")) {
-    stop("Acceptable values of 'method' are 'last', 'next', 'closest', and 'between'.")
-  }
+  if (!is.character(var)) { stop("Internal error: var should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr") }
+  if (!is.character(jvar)) { stop("Internal error: jvar should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr") }
+  if (length(jvar) > 2) { stop("jvar can contain no more than two variables.") }
+  if (!is.character(method)) { stop("method must be a character variable.") }
+  if (!is.logical(exact)) { stop("exact must be logical.") }
+  if (max(var %in% jvar) == 1) { stop("The variable names in var and jvar should not match.") }
+  if (max(jvar %in% names(x)) == 1) { stop("The variable names in jvar should not be in x") }
+  if (method == "closest" & is.character(x[[var]])) { stop("The 'closest' method requires var/jvar to be a variable type that supports subtraction, like numeric or Date.") }
+  if (method == "closest" & !exact) { warning("exact=FALSE is ignored for the 'closest' method.") }
+  if (!method %in% c("last", "next", "closest", "between")) { stop("Acceptable values of 'method' are 'last', 'next', 'closest', and 'between'.") }
 
   # set .exact length properly
   if (length(exact) == 1 & method == "between") {
     if (exact == TRUE) {
       exact <- c(TRUE, FALSE)
-    } else {
-      stop("For method = 'between', exact must have two elements, or leave as default to get exact = c(TRUE,FALSE)")
-    }
+    } else { stop("For method = 'between', exact must have two elements, or leave as default to get exact = c(TRUE,FALSE)") }
   }
 
   # Get the list of matching variables
@@ -312,9 +290,7 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
     x[, ncol(x) + 1] <- 1
     matchvars <- names(x)[ncol(x)]
 
-    if (max(matchvars %in% jvar) == 1) {
-      stop("Please give your jvars non-generic names.")
-    }
+    if (max(matchvars %in% jvar) == 1) { stop("Please give your jvars non-generic names.") }
     y[[matchvars]] <- 1
 
     # flag the matchvar variable to remove it

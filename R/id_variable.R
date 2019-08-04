@@ -18,15 +18,9 @@
 
 id_variable <- function(..., .method = "number", .minwidth = FALSE) {
   ########################################## CHECK INPUTS
-  if (!(.method %in% c("number", "random", "character"))) {
-    stop("Unrecognized time_variable .method.")
-  }
-  if (!is.character(.method) | length(.method) > 1) {
-    stop(".method must be a character variable.")
-  }
-  if (!is.logical(.minwidth)) {
-    stop(".minwidth must be TRUE or FALSE.")
-  }
+  if (!(.method %in% c("number", "random", "character"))) { stop("Unrecognized time_variable .method.") }
+  if (!is.character(.method) | length(.method) > 1) { stop(".method must be a character variable.") }
+  if (!is.logical(.minwidth)) { stop(".minwidth must be TRUE or FALSE.") }
 
   # What we're working with
   idf <- data.frame(...)

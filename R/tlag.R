@@ -81,24 +81,12 @@
 #INCLUDES IT
 
 tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default = NA, .quick = FALSE, .resolve = "error", .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE) {
-  if (!is.numeric(.n) | length(.n) > 1) {
-    stop(".n must be a single integer.")
-  }
-  if (!(as.integer(.n) == .n)) {
-    stop(".n must be an integer.")
-  }
-  if (!is.character(.resolve) & !is.function(.resolve)) {
-    stop(".resolve must be a function.")
-  }
-  if (!is.logical(.group_i)) {
-    stop(".group_i must be TRUE or FALSE")
-  }
-  if (!is.logical(.quick)) {
-    stop(".quick must be TRUE or FALSE")
-  }
-  if (length(.default) > 1) {
-    stop(".default must be a single value.")
-  }
+  if (!is.numeric(.n) | length(.n) > 1) { stop(".n must be a single integer.") }
+  if (!(as.integer(.n) == .n)) { stop(".n must be an integer.") }
+  if (!is.character(.resolve) & !is.function(.resolve)) { stop(".resolve must be a function.") }
+  if (!is.logical(.group_i)) { stop(".group_i must be TRUE or FALSE") }
+  if (!is.logical(.quick)) { stop(".quick must be TRUE or FALSE") }
+  if (length(.default) > 1) { stop(".default must be a single value.") }
 
   # ugh
   .df <- .df
@@ -122,9 +110,7 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel = FALSE)
-  if (is.na(inp$t)) {
-    stop("tlag() requires that .t be declared either in the function or by as_pibble().")
-  }
+  if (is.na(inp$t)) { stop("tlag() requires that .t be declared either in the function or by as_pibble().") }
 
   # If changes have been made, fill in default .d
   if ((min(is.na(.icall)) == 0 | !is.na(.tcall)) & is.na(.d)) {
@@ -146,9 +132,7 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
     .df <- data.frame(lapply(arrnames, function(x) datapro[[x]]))
     names(.df) <- arrnames
 
-    if (length(.var) != nrow(.df)) {
-      stop('Length of variable does not match length of full data set or group-subsample.')
-    }
+    if (length(.var) != nrow(.df)) { stop('Length of variable does not match length of full data set or group-subsample.') }
   } else {
     # If we're not working with grouped data, we're good.
     # We only need these
