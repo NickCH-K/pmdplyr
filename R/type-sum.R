@@ -18,6 +18,9 @@ unique_brackets <- function(x, col) {
 tbl_sum.tbl_pb <- function(x) {
   res <- c("A pibble" = dim_desc(x))
 
+  # .t and .i are named vectors and this causes problems
+  # when the vector is extended with c(). strip names to ensure
+  # we don't print redundant information
   i <- x %@% ".i" %>% unname()
   t <- x %@% ".t" %>% unname()
   d <- x %@% ".d"
@@ -32,8 +35,6 @@ tbl_sum.tbl_pb <- function(x) {
   }
 
   if (!is_empty(t)) {
-    # for some reason .t is a named vector - strip names to ensure
-    # we don't print redundant information
     res <- c(res, "Time variable (.t)" = paste(t, unique_brackets(x, t)))
   }
 
