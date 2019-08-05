@@ -38,18 +38,20 @@ To apply \code{mutate_cascade()} to non-panel data and without any grouping (per
 \examples{
 
 if (interactive()) {
-data(Scorecard)
-# I'd like to build a decaying function that remembers previous earnings but at a declining rate
-# Let's only use nonmissing earnings
-Scorecard <- Scorecard \%>\%
-  dplyr::filter(!is.na(earnings_med))
-Scorecard <- Scorecard \%>\%
-  # Almost all instances involve a variable being set to a function of a lag of itself
-  # we don't want to overwrite so let's make another
-  dplyr::mutate(decay_earnings = earnings_med) \%>\%
-  # Now we can cascade
-  mutate_cascade(decay_earnings = decay_earnings +
-    .5 * tlag(decay_earnings, .i = unitid, .t = year, .quick = TRUE),
-    .i = unitid, .t = year)
+  data(Scorecard)
+  # I'd like to build a decaying function that remembers previous earnings but at a declining rate
+  # Let's only use nonmissing earnings
+  Scorecard <- Scorecard \%>\%
+    dplyr::filter(!is.na(earnings_med))
+  Scorecard <- Scorecard \%>\%
+    # Almost all instances involve a variable being set to a function of a lag of itself
+    # we don't want to overwrite so let's make another
+    dplyr::mutate(decay_earnings = earnings_med) \%>\%
+    # Now we can cascade
+    mutate_cascade(
+      decay_earnings = decay_earnings +
+        .5 * tlag(decay_earnings, .i = unitid, .t = year, .quick = TRUE),
+      .i = unitid, .t = year
+    )
 }
 }

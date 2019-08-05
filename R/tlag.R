@@ -24,8 +24,9 @@
 #' # (although tlag is slower than either, sorry)
 #' Scorecard <- Scorecard %>%
 #'   dplyr::mutate(pmdplyr_tlag = tlag(earnings_med,
-#'                                     .i = unitid,
-#'                                     .t = year))
+#'     .i = unitid,
+#'     .t = year
+#'   ))
 #' Scorecard <- Scorecard %>%
 #'   dplyr::arrange(year) %>%
 #'   dplyr::group_by(unitid) %>%
@@ -40,10 +41,11 @@
 #' # we can use the .quick option to match dplyr::lag()
 #' Scorecard <- Scorecard %>%
 #'   dplyr::mutate(pmdplyr_quick_tlag = tlag(earnings_med,
-#'                                          .i = unitid,
-#'                                          .t = year,
-#'                                          .d = 0,
-#'                                          .quick = TRUE))
+#'     .i = unitid,
+#'     .t = year,
+#'     .d = 0,
+#'     .quick = TRUE
+#'   ))
 #' sum(Scorecard$dplyr_lag != Scorecard$pmdplyr_quick_tlag, na.rm = TRUE)
 #'
 #' # Where tlag shines is when you have multiple observations per .i/.t
@@ -71,22 +73,34 @@
 #' # We could get around this by setting .d = 0 to ignore gap length
 #' # Note this can be a little slow.
 #' Scorecard <- Scorecard %>%
-#'    dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
+#'   dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
 #'     .t = year, .d = 0,
 #'     .resolve = function(x) mean(x, na.rm = TRUE)
-#'    ))
+#'   ))
 #' @export
 
 # WHEN CHANGING THIS ONE BE SURE TO CHANGE THE MUTATE_CASCADE EXAMPLE WHICH
-#INCLUDES IT
+# INCLUDES IT
 
 tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default = NA, .quick = FALSE, .resolve = "error", .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE) {
-  if (!is.numeric(.n) | length(.n) > 1) { stop(".n must be a single integer.") }
-  if (!(as.integer(.n) == .n)) { stop(".n must be an integer.") }
-  if (!is.character(.resolve) & !is.function(.resolve)) { stop(".resolve must be a function.") }
-  if (!is.logical(.group_i)) { stop(".group_i must be TRUE or FALSE") }
-  if (!is.logical(.quick)) { stop(".quick must be TRUE or FALSE") }
-  if (length(.default) > 1) { stop(".default must be a single value.") }
+  if (!is.numeric(.n) | length(.n) > 1) {
+    stop(".n must be a single integer.")
+  }
+  if (!(as.integer(.n) == .n)) {
+    stop(".n must be an integer.")
+  }
+  if (!is.character(.resolve) & !is.function(.resolve)) {
+    stop(".resolve must be a function.")
+  }
+  if (!is.logical(.group_i)) {
+    stop(".group_i must be TRUE or FALSE")
+  }
+  if (!is.logical(.quick)) {
+    stop(".quick must be TRUE or FALSE")
+  }
+  if (length(.default) > 1) {
+    stop(".default must be a single value.")
+  }
 
   # ugh
   .df <- .df
@@ -99,18 +113,20 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
   }
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df),{{.i}})
+  .icall <- tidyselect::vars_select(names(.df), {{.i}})
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df),{{.t}})
+  .tcall <- tidyselect::vars_select(names(.df), {{.t}})
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }
 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel = FALSE)
-  if (is.na(inp$t)) { stop("tlag() requires that .t be declared either in the function or by as_pibble().") }
+  if (is.na(inp$t)) {
+    stop("tlag() requires that .t be declared either in the function or by as_pibble().")
+  }
 
   # If changes have been made, fill in default .d
   if ((min(is.na(.icall)) == 0 | !is.na(.tcall)) & is.na(.d)) {
@@ -123,16 +139,18 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
   }
   arrnames <- arrnames[!is.na(arrnames)]
 
-  #Figure out if we're working with grouped data and so length(var) < nrow(.df)
-  #If we are, switch everything over to .data
+  # Figure out if we're working with grouped data and so length(var) < nrow(.df)
+  # If we are, switch everything over to .data
   if (length(.var) < nrow(.df)) {
-    #Pull out the .data
-    datapro <- get('.data',envir=parent.frame())
+    # Pull out the .data
+    datapro <- get(".data", envir = parent.frame())
 
     .df <- data.frame(lapply(arrnames, function(x) datapro[[x]]))
     names(.df) <- arrnames
 
-    if (length(.var) != nrow(.df)) { stop('Length of variable does not match length of full data set or group-subsample.') }
+    if (length(.var) != nrow(.df)) {
+      stop("Length of variable does not match length of full data set or group-subsample.")
+    }
   } else {
     # If we're not working with grouped data, we're good.
     # We only need these
@@ -169,15 +187,15 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
   # Check if there's uniformity, if .resolve = 'error'
   if (is.character(.resolve)) {
     if ((lookup %>%
-             #only need to check for uniformity if there's more than one obs
-             dplyr::filter_at(varname, dplyr::any_vars(dplyr::n() > 1)) %>%
-             #check for uniformity
-             #drop duplicates
-             dplyr::distinct() %>%
-             #go to just arrnames
-             dplyr::select(arrnames) %>%
-             #if there are any duplicated arrnames, that means there were multiple vals within 'em
-             anyDuplicated()) > 0) {
+      # only need to check for uniformity if there's more than one obs
+      dplyr::filter_at(varname, dplyr::any_vars(dplyr::n() > 1)) %>%
+      # check for uniformity
+      # drop duplicates
+      dplyr::distinct() %>%
+      # go to just arrnames
+      dplyr::select(arrnames) %>%
+      # if there are any duplicated arrnames, that means there were multiple vals within 'em
+      anyDuplicated()) > 0) {
       stop("Values are not consistent within (.i, if specified, and) .t. See .resolve option.")
     }
     .resolve <- dplyr::first
@@ -190,11 +208,11 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
       dplyr::summarize_at(varname, .resolve) %>%
       dplyr::mutate_at(inp$t, .funs = function(x) x + .n * inp$d)
   } else {
-    #Flatten with resolve
+    # Flatten with resolve
     lookup <- lookup %>%
       dplyr::summarize_at(varname, .resolve)
 
-    #Put grouping to i level for lag
+    # Put grouping to i level for lag
     if (.group_i & !is.na(inp$i)) {
       lookup <- lookup %>% dplyr::group_by_at(inp$i)
     } else {
@@ -220,10 +238,10 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
       ifelse(is.na(.df[[foundmatch]]), .default, .df[[varname]]))
   }
 
-  #Failure to look up is NA, not NaN
+  # Failure to look up is NA, not NaN
   .df <- .df %>%
     dplyr::mutate_at(varname, .funs = function(x)
-      ifelse(is.nan(x),NA,x))
+      ifelse(is.nan(x), NA, x))
 
   return(.df[[varname]])
 }

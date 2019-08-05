@@ -68,20 +68,23 @@ SPrail <- SPrail \%>\%
 # (although in this case there are only two months, not much variation there)
 SPrail <- SPrail \%>\%
   dplyr::mutate(quarter_time_id = time_variable(insert_date,
-                                                .method = "month",
-                                                .breaks = c(1, 4, 7, 10)))
+    .method = "month",
+    .breaks = c(1, 4, 7, 10)
+  ))
 table(SPrail$month_time_id, SPrail$quarter_time_id)
 
 # Maybe I'd like Monday to come immediately after Friday!
 SPrail <- SPrail \%>\%
   dplyr::mutate(weekday_id = time_variable(insert_date,
-                                           .method = "day",
-                                           .skip = c(6, 7)))
+    .method = "day",
+    .skip = c(6, 7)
+  ))
 
 # Perhaps I'm interested in ANY time period in the data and just want to enumerate them in order
 SPrail <- SPrail \%>\%
   dplyr::mutate(any_present_time_id = time_variable(insert_date,
-                                                    .method = "present"))
+    .method = "present"
+  ))
 
 
 # Maybe instead of being given a nice time variable, I was given it in string form

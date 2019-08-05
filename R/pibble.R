@@ -43,10 +43,10 @@
 NULL
 #' @export
 
-#varname <- function(data,var) {
-#mean(data %>% pull({{ var }}),na.rm=TRUE)
-#}
-#varname(SPrail,!!parse_expr('price'))
+# varname <- function(data,var) {
+# mean(data %>% pull({{ var }}),na.rm=TRUE)
+# }
+# varname(SPrail,!!parse_expr('price'))
 
 # varname <- function(data,var) {
 #   enexprs(var)[[1]]
@@ -54,7 +54,7 @@ NULL
 # varname(SPrail,price)
 #
 
-#quo_is_missing(enquo(var))
+# quo_is_missing(enquo(var))
 
 
 pibble <- function(..., .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
@@ -63,11 +63,11 @@ pibble <- function(..., .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
   tbl <- tibble::tibble(...)
 
   # Pull out variable names; build_pibble takes strings
-  .i <- tidyselect::vars_select(names(tbl),{{.i}})
+  .i <- tidyselect::vars_select(names(tbl), {{.i}})
   if (length(.i) == 0) {
     .i <- NA_character_
   }
-  .t <- tidyselect::vars_select(names(tbl),{{.t}})
+  .t <- tidyselect::vars_select(names(tbl), {{.t}})
   if (length(.t) == 0) {
     .t <- NA_character_
   }
@@ -97,6 +97,7 @@ new_pibble <- function(x, ..., class = NULL) {
   return(x)
 }
 
+#' @importFrom rlang .data
 #' @importFrom vctrs vec_restore
 #' @method vec_restore tbl_pb
 vec_restore.tbl_pb <- function(x, to) {
@@ -148,29 +149,29 @@ vec_restore.tbl_pb <- function(x, to) {
 #' @rdname as_pibble
 #' @export
 as_pibble <- function(x,
-                        .i = NULL,
-                        .t = NULL,
-                        .d = 1,
-                        .uniqcheck = FALSE,
-                        ...) {
+                      .i = NULL,
+                      .t = NULL,
+                      .d = 1,
+                      .uniqcheck = FALSE,
+                      ...) {
   UseMethod("as_pibble")
 }
 
 #' @rdname as_pibble
 #' @export
 as_pibble.tbl_df <- function(x,
-                               .i = NULL,
-                               .t = NULL,
-                               .d = 1,
-                               .uniqcheck = FALSE,
-                               ...) {
+                             .i = NULL,
+                             .t = NULL,
+                             .d = 1,
+                             .uniqcheck = FALSE,
+                             ...) {
 
   # Pull out variable names; build_pibble takes strings
-  .i <- tidyselect::vars_select(names(x),{{.i}})
+  .i <- tidyselect::vars_select(names(x), {{.i}})
   if (length(.i) == 0) {
     .i <- NA_character_
   }
-  .t <- tidyselect::vars_select(names(x),{{.t}})
+  .t <- tidyselect::vars_select(names(x), {{.t}})
   if (length(.t) == 0) {
     .t <- NA_character_
   }
@@ -222,10 +223,10 @@ as_pibble.NULL <- function(x, ...) {
 #' @keywords internal
 #' @importFrom rlang %@%
 build_pibble <- function(tbl,
-                           .i = NA,
-                           .t = NA,
-                           .d = 1,
-                           .uniqcheck = FALSE) {
+                         .i = NA,
+                         .t = NA,
+                         .d = 1,
+                         .uniqcheck = FALSE) {
   ###### .i and .t are strings by the time we get to build_pibble
 
   grp_data <- tbl %@% "groups"
@@ -253,20 +254,38 @@ build_pibble <- function(tbl,
 
 check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
   #### CHECK INPUTS
-  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df", "list")) == 0) { stop("Requires data to be a data frame, tibble, pibble, or list.") }
+  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df", "list")) == 0) {
+    stop("Requires data to be a data frame, tibble, pibble, or list.")
+  }
   if (sum(class(.df) %in% c("data.table", "list")) > 0) {
     warning("data.tables and lists will be coerced to pibble.")
     .df <- as.data.frame(.df)
   }
-  if (!(max(is.character(.i))) & min(is.na(.i)) == 0) { stop("Internal issue: .i should have been converted to a character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr") }
-  if (!(is.character(.t)) & !is.na(.t)) { stop("Internal issue: .t should have been converted to character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr") }
-  if (length(.t) > 1) { stop("Only one time variable allowed.") }
-  if (!(is.numeric(.d)) & !(is.na(.d))) { stop(".d must be numeric.") }
-  if (min(is.na(.i)) == 0 & min(.i %in% names(.df)) == 0) { stop("Elements of .i must be variables present in the data.") }
-  if (!is.na(.t) & min(.t %in% names(.df)) == 0) { stop(".t must be a variable present in the data.") }
-  if (!is.na(.uniqcheck) & !is.logical(.uniqcheck)) { stop(".uniqcheck must be TRUE or FALSE.") }
+  if (!(max(is.character(.i))) & min(is.na(.i)) == 0) {
+    stop("Internal issue: .i should have been converted to a character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
+  }
+  if (!(is.character(.t)) & !is.na(.t)) {
+    stop("Internal issue: .t should have been converted to character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
+  }
+  if (length(.t) > 1) {
+    stop("Only one time variable allowed.")
+  }
+  if (!(is.numeric(.d)) & !(is.na(.d))) {
+    stop(".d must be numeric.")
+  }
+  if (min(is.na(.i)) == 0 & min(.i %in% names(.df)) == 0) {
+    stop("Elements of .i must be variables present in the data.")
+  }
+  if (!is.na(.t) & min(.t %in% names(.df)) == 0) {
+    stop(".t must be a variable present in the data.")
+  }
+  if (!is.na(.uniqcheck) & !is.logical(.uniqcheck)) {
+    stop(".uniqcheck must be TRUE or FALSE.")
+  }
   if (!is.na(.d) & !is.na(.t)) {
-    if (.d > 0 & !is.numeric(.df[[.t]])) { stop("Unless .d = 0, indicating an ordinal time variable, .t must be numeric.") }
+    if (.d > 0 & !is.numeric(.df[[.t]])) {
+      stop("Unless .d = 0, indicating an ordinal time variable, .t must be numeric.")
+    }
   }
 
   #### Warn about multiple obs per id/t, but only once per session
@@ -296,8 +315,12 @@ This message will be displayed only once per session unless the .uniqcheck optio
 #' @export
 
 is_pibble <- function(.df, .silent = FALSE) {
-  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) { stop("Requires data to be a data frame or tibble.") }
-  if (!is.logical(.silent)) { stop("silent must be TRUE or FALSE.") }
+  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
+    stop("Requires data to be a data frame or tibble.")
+  }
+  if (!is.logical(.silent)) {
+    stop("silent must be TRUE or FALSE.")
+  }
 
   i <- ifelse(is.null(.df %@% ".i"), NA, paste0(.df %@% ".i", collapse = ", "))
   t <- ifelse(is.null(.df %@% ".t"), NA, .df %@% ".t")
@@ -316,15 +339,19 @@ is_pibble <- function(.df, .silent = FALSE) {
 ##### declare_in_fcn_check takes .i and .t and strings
 declare_in_fcn_check <- function(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed = FALSE) {
   # Check inputs
-  if (!is.na(.uniqcheck) & !is.logical(.uniqcheck)) { stop("uniqcheck must be TRUE or FALSE.") }
-  if (!is.na(.setpanel) & !is.logical(.setpanel)) { stop("setpanel must be TRUE or FALSE.") }
+  if (!is.na(.uniqcheck) & !is.logical(.uniqcheck)) {
+    stop("uniqcheck must be TRUE or FALSE.")
+  }
+  if (!is.na(.setpanel) & !is.logical(.setpanel)) {
+    stop("setpanel must be TRUE or FALSE.")
+  }
 
   # Collect original panel settings, if any.
   # To be consistent with other input checking, make them NA not NULL if appropriate
   orig_i <- ifelse(is.null(.df %@% ".i"), NA, .df %@% ".i")
   orig_t <- ifelse(is.null(.df %@% ".t"), NA, .df %@% ".t")
   orig_d <- ifelse(is.null(.df %@% ".d"), NA, .df %@% ".d")
-  is_tbl_pb <- is_pibble(.df, .silent=TRUE)
+  is_tbl_pb <- is_pibble(.df, .silent = TRUE)
 
   # If uniqcheck is TRUE but panel is not being reset, run through check_panel_inputs
   # just to check, using already-set panel info
@@ -340,7 +367,9 @@ declare_in_fcn_check <- function(.df, .i, .t, .d, .uniqcheck, .setpanel, .noneed
   }
 
   # If everything is still missing and you need something, error
-  if (min(is.na(.i)) > 0 & is.na(.t) & .noneed == FALSE) { stop("Attempt to use panel indicators i and/or t, but no i or t are declared in command or stored in data.") }
+  if (min(is.na(.i)) > 0 & is.na(.t) & .noneed == FALSE) {
+    stop("Attempt to use panel indicators i and/or t, but no i or t are declared in command or stored in data.")
+  }
 
 
   return(list(
