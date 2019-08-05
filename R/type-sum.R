@@ -2,31 +2,49 @@
 #' @export
 type_sum.tbl_pb <- function(x) "pibble"
 
+brackets <- function(x) {
+  paste0("[", x, "]")
+}
+
+unique_brackets <- function(x, col) {
+  brackets(length(unique(x[[col]])))
+}
+
 #' @export
 #' @importFrom tibble tbl_sum
-#' @importFrom rlang is_empty
+#' @importFrom rlang is_empty ensyms
+#' @importFrom dplyr group_vars
 #' @importFrom pillar dim_desc
 tbl_sum.tbl_pb <- function(x) {
   res <- c("A pibble" = dim_desc(x))
 
-  i <- x %@% ".i"
-  t <- x %@% ".t"
-  d <- x %@% ".d"
+  i      <- x %@% ".i" %>% unname()
+  t      <- x %@% ".t" %>% unname()
+  d      <- x %@% ".d"
+  groups <- x %@% "groups"
 
   if (!is_empty(i)) {
-    # there may be more than one index var
+    n_distinct_i <- x %>%
+      dplyr::distinct(!!! syms(i)) %>%
+      NROW()
     i <- paste(i, collapse = " ")
-    res <- c(res, "Individual-level identifier (.i)" = i)
+    res <- c(res, "Individual-level identifier (.i)" = paste(i, brackets(n_distinct_i)))
   }
 
   if (!is_empty(t)) {
     # for some reason .t is a named vector - strip names to ensure
     # we don't print redundant information
-    res <- c(res, "Time variable (.t)" = unname(t))
+    res <- c(res, "Time variable (.t)" = paste(t, unique_brackets(x, t)))
   }
 
   if (!is_empty(d)) {
     res <- c(res, "Gap (.d)" = d)
+  }
+
+  if (!is_empty(groups)) {
+    n_grps <- NROW(groups)
+    if (n_grps == 0) n_grps <- "?"
+    res <- c(res, "Groups" = paste(group_vars(x), brackets(n_grps)))
   }
 
   res
