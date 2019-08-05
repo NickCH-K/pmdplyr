@@ -12,20 +12,20 @@ unique_brackets <- function(x, col) {
 
 #' @export
 #' @importFrom tibble tbl_sum
-#' @importFrom rlang is_empty ensyms
+#' @importFrom rlang is_empty syms
 #' @importFrom dplyr group_vars
 #' @importFrom pillar dim_desc
 tbl_sum.tbl_pb <- function(x) {
   res <- c("A pibble" = dim_desc(x))
 
-  i      <- x %@% ".i" %>% unname()
-  t      <- x %@% ".t" %>% unname()
-  d      <- x %@% ".d"
+  i <- x %@% ".i" %>% unname()
+  t <- x %@% ".t" %>% unname()
+  d <- x %@% ".d"
   groups <- x %@% "groups"
 
   if (!is_empty(i)) {
     n_distinct_i <- x %>%
-      dplyr::distinct(!!! syms(i)) %>%
+      dplyr::distinct(!!!syms(i)) %>%
       NROW()
     i <- paste(i, collapse = " ")
     res <- c(res, "Individual-level identifier (.i)" = paste(i, brackets(n_distinct_i)))

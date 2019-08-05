@@ -45,26 +45,26 @@ This function requires \code{.t} and \code{.d} to be declared in the function or
 }
 \examples{
 
-  data(Scorecard)
-  # Notice that, in the Scorecard data, the gap between one year and the next is not always constant
-  table((Scorecard \%>\% dplyr::arrange(year) \%>\%
-    dplyr::group_by(unitid) \%>\%
-    dplyr::mutate(diff = year - dplyr::lag(year)))$diff)
-  # And also that not all universities show up for the first or last times in the same year
-  year_range <- Scorecard \%>\%
-    dplyr::group_by(unitid) \%>\%
-    dplyr::summarize(first_year = min(year), last_year = max(year))
-  table(year_range$first_year)
-  table(year_range$last_year)
-  rm(year_range)
+data(Scorecard)
+# Notice that, in the Scorecard data, the gap between one year and the next is not always constant
+table((Scorecard \%>\% dplyr::arrange(year) \%>\%
+  dplyr::group_by(unitid) \%>\%
+  dplyr::mutate(diff = year - dplyr::lag(year)))$diff)
+# And also that not all universities show up for the first or last times in the same year
+year_range <- Scorecard \%>\%
+  dplyr::group_by(unitid) \%>\%
+  dplyr::summarize(first_year = min(year), last_year = max(year))
+table(year_range$first_year)
+table(year_range$last_year)
+rm(year_range)
 
-  # We can deal with the inconsistent-gaps problem by creating new obs to fill in
-  # this version will fill in the new obs with the most recently observed data, and flag them
-  Scorecard_filled <- panel_fill(Scorecard,
-    .i = unitid,
-    .t = year,
-    .flag = "new"
-  )
+# We can deal with the inconsistent-gaps problem by creating new obs to fill in
+# this version will fill in the new obs with the most recently observed data, and flag them
+Scorecard_filled <- panel_fill(Scorecard,
+  .i = unitid,
+  .t = year,
+  .flag = "new"
+)
 
 # Additional examples too slow to run
 if (interactive()) {
