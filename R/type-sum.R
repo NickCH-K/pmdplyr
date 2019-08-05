@@ -5,6 +5,7 @@ type_sum.tbl_pb <- function(x) "pibble"
 #' @export
 #' @importFrom tibble tbl_sum
 #' @importFrom rlang is_empty
+#' @importFrom pillar dim_desc
 tbl_sum.tbl_pb <- function(x) {
   res <- c("A pibble" = dim_desc(x))
 
