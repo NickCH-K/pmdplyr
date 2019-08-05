@@ -46,8 +46,9 @@ data(Scorecard)
 # (although tlag is slower than either, sorry)
 Scorecard <- Scorecard \%>\%
   dplyr::mutate(pmdplyr_tlag = tlag(earnings_med,
-                                    .i = unitid,
-                                    .t = year))
+    .i = unitid,
+    .t = year
+  ))
 Scorecard <- Scorecard \%>\%
   dplyr::arrange(year) \%>\%
   dplyr::group_by(unitid) \%>\%
@@ -62,10 +63,11 @@ sum(is.na(Scorecard$dplyr_lag))
 # we can use the .quick option to match dplyr::lag()
 Scorecard <- Scorecard \%>\%
   dplyr::mutate(pmdplyr_quick_tlag = tlag(earnings_med,
-                                         .i = unitid,
-                                         .t = year,
-                                         .d = 0,
-                                         .quick = TRUE))
+    .i = unitid,
+    .t = year,
+    .d = 0,
+    .quick = TRUE
+  ))
 sum(Scorecard$dplyr_lag != Scorecard$pmdplyr_quick_tlag, na.rm = TRUE)
 
 # Where tlag shines is when you have multiple observations per .i/.t
@@ -93,8 +95,8 @@ Scorecard <- Scorecard \%>\%
 # We could get around this by setting .d = 0 to ignore gap length
 # Note this can be a little slow.
 Scorecard <- Scorecard \%>\%
-   dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
+  dplyr::mutate(last_year_earnings_all = tlag(earnings_med,
     .t = year, .d = 0,
     .resolve = function(x) mean(x, na.rm = TRUE)
-   ))
+  ))
 }

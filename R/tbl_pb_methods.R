@@ -39,7 +39,7 @@ mutate.tbl_pb <- function(.data, ...) {
 #' @method mutate_all tbl_pb
 #' @export
 #' @export mutate_all.tbl_pb
-mutate_all.tbl_pb <- function(.tbl,.funs, ...) {
+mutate_all.tbl_pb <- function(.tbl, .funs, ...) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -47,7 +47,7 @@ mutate_all.tbl_pb <- function(.tbl,.funs, ...) {
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::mutate_all(.tbl,.funs, ...), .i, .t, .d))
+  return(build_pibble(dplyr::mutate_all(.tbl, .funs, ...), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -55,7 +55,7 @@ mutate_all.tbl_pb <- function(.tbl,.funs, ...) {
 #' @method mutate_at tbl_pb
 #' @export
 #' @export mutate_at.tbl_pb
-mutate_at.tbl_pb <- function(.tbl,.vars,.funs, ...,.cols=NULL) {
+mutate_at.tbl_pb <- function(.tbl, .vars, .funs, ..., .cols = NULL) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -63,7 +63,7 @@ mutate_at.tbl_pb <- function(.tbl,.vars,.funs, ...,.cols=NULL) {
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::mutate_at(.tbl,.vars,.funs, ...,.cols), .i, .t, .d))
+  return(build_pibble(dplyr::mutate_at(.tbl, .vars, .funs, ..., .cols), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -71,7 +71,7 @@ mutate_at.tbl_pb <- function(.tbl,.vars,.funs, ...,.cols=NULL) {
 #' @method mutate_if tbl_pb
 #' @export
 #' @export mutate_if.tbl_pb
-mutate_if.tbl_pb <- function(.tbl,.predicate,.funs, ...) {
+mutate_if.tbl_pb <- function(.tbl, .predicate, .funs, ...) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -79,7 +79,7 @@ mutate_if.tbl_pb <- function(.tbl,.predicate,.funs, ...) {
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::mutate_if(.tbl,.predicate,.funs, ...), .i, .t, .d))
+  return(build_pibble(dplyr::mutate_if(.tbl, .predicate, .funs, ...), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -87,7 +87,7 @@ mutate_if.tbl_pb <- function(.tbl,.predicate,.funs, ...) {
 #' @method distinct tbl_pb
 #' @export
 #' @export distinct.tbl_pb
-distinct.tbl_pb <- function(.data, ...,.keep_all=FALSE) {
+distinct.tbl_pb <- function(.data, ..., .keep_all = FALSE) {
   .i <- .data %@% ".i"
   .t <- .data %@% ".t"
   .d <- .data %@% ".d"
@@ -95,7 +95,7 @@ distinct.tbl_pb <- function(.data, ...,.keep_all=FALSE) {
   # remove tbl_pb status so regular version is run
   class(.data) <- class(.data)[!(class(.data) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::distinct(.data, ...,.keep_all), .i, .t, .d))
+  return(build_pibble(dplyr::distinct(.data, ..., .keep_all), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -119,7 +119,7 @@ group_by.tbl_pb <- function(.data, ...) {
 #' @method group_by_all tbl_pb
 #' @export
 #' @export group_by_all.tbl_pb
-group_by_all.tbl_pb <- function(.tbl, .funs=list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
+group_by_all.tbl_pb <- function(.tbl, .funs = list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -127,7 +127,7 @@ group_by_all.tbl_pb <- function(.tbl, .funs=list(), ..., .add = FALSE, .drop = d
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::group_by(.tbl,.funs, ..., .add, .drop), .i, .t, .d))
+  return(build_pibble(dplyr::group_by(.tbl, .funs, ..., .add, .drop), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -135,7 +135,7 @@ group_by_all.tbl_pb <- function(.tbl, .funs=list(), ..., .add = FALSE, .drop = d
 #' @method group_by_all tbl_pb
 #' @export
 #' @export group_by_all.tbl_pb
-group_by_all.tbl_pb <- function(.tbl, .funs=list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
+group_by_all.tbl_pb <- function(.tbl, .funs = list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -143,7 +143,7 @@ group_by_all.tbl_pb <- function(.tbl, .funs=list(), ..., .add = FALSE, .drop = d
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::group_by_all(.tbl,.funs, ..., .add, .drop), .i, .t, .d))
+  return(build_pibble(dplyr::group_by_all(.tbl, .funs, ..., .add, .drop), .i, .t, .d))
 }
 
 
@@ -152,7 +152,7 @@ group_by_all.tbl_pb <- function(.tbl, .funs=list(), ..., .add = FALSE, .drop = d
 #' @method group_by_at tbl_pb
 #' @export
 #' @export group_by_at.tbl_pb
-group_by_at.tbl_pb <- function(.tbl, .vars, .funs=list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
+group_by_at.tbl_pb <- function(.tbl, .vars, .funs = list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -160,7 +160,7 @@ group_by_at.tbl_pb <- function(.tbl, .vars, .funs=list(), ..., .add = FALSE, .dr
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::group_by_at(.tbl,.vars,.funs, ..., .add, .drop), .i, .t, .d))
+  return(build_pibble(dplyr::group_by_at(.tbl, .vars, .funs, ..., .add, .drop), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -168,7 +168,7 @@ group_by_at.tbl_pb <- function(.tbl, .vars, .funs=list(), ..., .add = FALSE, .dr
 #' @method group_by_if tbl_pb
 #' @export
 #' @export group_by_if.tbl_pb
-group_by_if.tbl_pb <- function(.tbl, .predicate, .funs=list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
+group_by_if.tbl_pb <- function(.tbl, .predicate, .funs = list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -176,7 +176,7 @@ group_by_if.tbl_pb <- function(.tbl, .predicate, .funs=list(), ..., .add = FALSE
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::group_by_if(.tbl,.predicate,.funs, ..., .add, .drop), .i, .t, .d))
+  return(build_pibble(dplyr::group_by_if(.tbl, .predicate, .funs, ..., .add, .drop), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -211,7 +211,7 @@ bind_cols.tbl_pb <- function(.data, ...) {
   return(build_pibble(dplyr::bind_cols(.data, ...), .i, .t, .d))
 }
 
-#####BIND_ROWS WHY WON'T YOU CALL BIND_ROWS.tbl_pb???
+##### BIND_ROWS WHY WON'T YOU CALL BIND_ROWS.tbl_pb???
 
 #' @rdname pibble_methods
 #' @importFrom dplyr intersect
@@ -298,7 +298,7 @@ setdiff.tbl_pb <- function(x, y, ...) {
 #' @method left_join tbl_pb
 #' @export
 #' @export left_join.tbl_pb
-left_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
+left_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ...) {
   .i <- x %@% ".i"
   .t <- x %@% ".t"
   .d <- x %@% ".d"
@@ -306,7 +306,7 @@ left_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::left_join(x,y,by,copy,suffix, ...), .i, .t, .d))
+  return(build_pibble(dplyr::left_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -314,7 +314,7 @@ left_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
 #' @method inner_join tbl_pb
 #' @export
 #' @export inner_join.tbl_pb
-inner_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
+inner_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ...) {
   .i <- x %@% ".i"
   .t <- x %@% ".t"
   .d <- x %@% ".d"
@@ -322,7 +322,7 @@ inner_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::inner_join(x,y,by,copy,suffix, ...), .i, .t, .d))
+  return(build_pibble(dplyr::inner_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -330,7 +330,7 @@ inner_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
 #' @method right_join tbl_pb
 #' @export
 #' @export right_join.tbl_pb
-right_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
+right_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ...) {
   .i <- x %@% ".i"
   .t <- x %@% ".t"
   .d <- x %@% ".d"
@@ -338,7 +338,7 @@ right_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::right_join(x,y,by,copy,suffix, ...), .i, .t, .d))
+  return(build_pibble(dplyr::right_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -346,7 +346,7 @@ right_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
 #' @method full_join tbl_pb
 #' @export
 #' @export full_join.tbl_pb
-full_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
+full_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ...) {
   .i <- x %@% ".i"
   .t <- x %@% ".t"
   .d <- x %@% ".d"
@@ -354,7 +354,7 @@ full_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::full_join(x,y,by,copy,suffix, ...), .i, .t, .d))
+  return(build_pibble(dplyr::full_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -362,7 +362,7 @@ full_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,suffix=c(".x",".y"), ...) {
 #' @method semi_join tbl_pb
 #' @export
 #' @export semi_join.tbl_pb
-semi_join.tbl_pb <- function(x, y, by=NULL, copy=FALSE, ...) {
+semi_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, ...) {
   .i <- x %@% ".i"
   .t <- x %@% ".t"
   .d <- x %@% ".d"
@@ -370,7 +370,7 @@ semi_join.tbl_pb <- function(x, y, by=NULL, copy=FALSE, ...) {
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::semi_join(x,y,by,copy, ...), .i, .t, .d))
+  return(build_pibble(dplyr::semi_join(x, y, by, copy, ...), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -378,7 +378,7 @@ semi_join.tbl_pb <- function(x, y, by=NULL, copy=FALSE, ...) {
 #' @method nest_join tbl_pb
 #' @export
 #' @export nest_join.tbl_pb
-nest_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,keep=FALSE,name=NULL, ...) {
+nest_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name = NULL, ...) {
   .i <- x %@% ".i"
   .t <- x %@% ".t"
   .d <- x %@% ".d"
@@ -386,7 +386,7 @@ nest_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,keep=FALSE,name=NULL, ...) {
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::nest_join(x,y,by,copy,keep,name, ...), .i, .t, .d))
+  return(build_pibble(dplyr::nest_join(x, y, by, copy, keep, name, ...), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -394,7 +394,7 @@ nest_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE,keep=FALSE,name=NULL, ...) {
 #' @method anti_join tbl_pb
 #' @export
 #' @export anti_join.tbl_pb
-anti_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE, ...) {
+anti_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, ...) {
   .i <- x %@% ".i"
   .t <- x %@% ".t"
   .d <- x %@% ".d"
@@ -402,7 +402,7 @@ anti_join.tbl_pb <- function(x,y,by=NULL,copy=FALSE, ...) {
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::anti_join(x,y,by,copy, ...), .i, .t, .d))
+  return(build_pibble(dplyr::anti_join(x, y, by, copy, ...), .i, .t, .d))
 }
 
 ########### PUT HERE ALL METHODS THAT SIMPLY NEED TO RESTORE STATUS & CHECK IF VARS DROPPED
@@ -648,7 +648,7 @@ transmute.tbl_pb <- function(.data, ...) {
 #' @method transmute_all tbl_pb
 #' @export
 #' @export transmute_all.tbl_pb
-transmute_all.tbl_pb <- function(.tbl,.funs, ...) {
+transmute_all.tbl_pb <- function(.tbl, .funs, ...) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -656,7 +656,7 @@ transmute_all.tbl_pb <- function(.tbl,.funs, ...) {
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(dropchecker(dplyr::transmute_all(.tbl,.funs, ...), .i, .t, .d,"transmute_all"))
+  return(dropchecker(dplyr::transmute_all(.tbl, .funs, ...), .i, .t, .d, "transmute_all"))
 }
 
 #' @rdname pibble_methods
@@ -664,7 +664,7 @@ transmute_all.tbl_pb <- function(.tbl,.funs, ...) {
 #' @method transmute_at tbl_pb
 #' @export
 #' @export transmute_at.tbl_pb
-transmute_at.tbl_pb <- function(.tbl, .vars, .funs, ..., .cols=NULL) {
+transmute_at.tbl_pb <- function(.tbl, .vars, .funs, ..., .cols = NULL) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -672,7 +672,7 @@ transmute_at.tbl_pb <- function(.tbl, .vars, .funs, ..., .cols=NULL) {
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(dropchecker(dplyr::transmute_at(.tbl,.vars,.funs, ...,.cols), .i, .t, .d, "transmute_at"))
+  return(dropchecker(dplyr::transmute_at(.tbl, .vars, .funs, ..., .cols), .i, .t, .d, "transmute_at"))
 }
 
 #' @rdname pibble_methods
@@ -680,7 +680,7 @@ transmute_at.tbl_pb <- function(.tbl, .vars, .funs, ..., .cols=NULL) {
 #' @method transmute_if tbl_pb
 #' @export
 #' @export transmute_if.tbl_pb
-transmute_if.tbl_pb <- function(.tbl,.predicate,.funs, ...) {
+transmute_if.tbl_pb <- function(.tbl, .predicate, .funs, ...) {
   .i <- .tbl %@% ".i"
   .t <- .tbl %@% ".t"
   .d <- .tbl %@% ".d"
@@ -688,7 +688,7 @@ transmute_if.tbl_pb <- function(.tbl,.predicate,.funs, ...) {
   # remove tbl_pb status so regular version is run
   class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
 
-  return(dropchecker(dplyr::transmute_if(.tbl,.predicate,.funs, ...), .i, .t, .d, "transmute_if"))
+  return(dropchecker(dplyr::transmute_if(.tbl, .predicate, .funs, ...), .i, .t, .d, "transmute_if"))
 }
 
 

@@ -72,25 +72,28 @@ unemp_data <- data.frame(
 # I want to match the most recent unemployment data I have to each college
 Scorecard <- Scorecard \%>\%
   inexact_left_join(unemp_data,
-                   method = "last",
-                   var = year,
-                   jvar = unemp_year)
+    method = "last",
+    var = year,
+    jvar = unemp_year
+  )
 
 # Or perhaps I want to find the most recent lagged value (i.e. no exact matches, only recent ones)
 data(Scorecard)
 Scorecard <- Scorecard \%>\%
   inexact_left_join(unemp_data,
-                    method = "last",
-                    var = year,
-                    jvar = unemp_year,
-                    exact = FALSE)
+    method = "last",
+    var = year,
+    jvar = unemp_year,
+    exact = FALSE
+  )
 
 # Another way to do the same thing would be to specify the range of unemp_years I want exactly
 data(Scorecard)
 unemp_data$unemp_year2 <- unemp_data$unemp_year + 2
 Scorecard <- Scorecard \%>\%
   inexact_left_join(unemp_data,
-                   method = "between",
-                   var = year,
-                   jvar = c(unemp_year, unemp_year2))
+    method = "between",
+    var = year,
+    jvar = c(unemp_year, unemp_year2)
+  )
 }

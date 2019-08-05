@@ -50,20 +50,23 @@
 #' # (although in this case there are only two months, not much variation there)
 #' SPrail <- SPrail %>%
 #'   dplyr::mutate(quarter_time_id = time_variable(insert_date,
-#'                                                 .method = "month",
-#'                                                 .breaks = c(1, 4, 7, 10)))
+#'     .method = "month",
+#'     .breaks = c(1, 4, 7, 10)
+#'   ))
 #' table(SPrail$month_time_id, SPrail$quarter_time_id)
 #'
 #' # Maybe I'd like Monday to come immediately after Friday!
 #' SPrail <- SPrail %>%
 #'   dplyr::mutate(weekday_id = time_variable(insert_date,
-#'                                            .method = "day",
-#'                                            .skip = c(6, 7)))
+#'     .method = "day",
+#'     .skip = c(6, 7)
+#'   ))
 #'
 #' # Perhaps I'm interested in ANY time period in the data and just want to enumerate them in order
 #' SPrail <- SPrail %>%
 #'   dplyr::mutate(any_present_time_id = time_variable(insert_date,
-#'                                                     .method = "present"))
+#'     .method = "present"
+#'   ))
 #'
 #'
 #' # Maybe instead of being given a nice time variable, I was given it in string form
@@ -108,15 +111,19 @@
 
 time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .skip = NA, .breaks = NA, .turnover = NA, .turnover_start = NA) {
 
-  #R seems to think these are global variables because they are created by dplyr
-  #avoid notes
+  # R seems to think these are global variables because they are created by dplyr
+  # avoid notes
   newdate.1.1.1 <- NA
   timevarM <- NA
   wksb4 <- NA
 
   ########################################## CHECK INPUTS
-  if (!(.method %in% c("present", "year", "month", "week", "day", "turnover"))) { stop("Unrecognized time_variable .method.") }
-  if (!is.character(.method) | length(.method) > 1) { stop(".method must be a character variable.") }
+  if (!(.method %in% c("present", "year", "month", "week", "day", "turnover"))) {
+    stop("Unrecognized time_variable .method.")
+  }
+  if (!is.character(.method) | length(.method) > 1) {
+    stop(".method must be a character variable.")
+  }
 
   data <- data.frame(...)
   var <- names(data)
@@ -131,7 +138,9 @@ time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .
       # Identify new dates
       dplyr::mutate_at(var, function(x) x != dplyr::lag(x) | is.na(x) & is.na(dplyr::lag(x)) | dplyr::row_number() == 1)
 
-    if ("newdate.1.1.1" %in% names(data)) { stop("Data cannot contain any variables named 'newdate.1.1.1'") }
+    if ("newdate.1.1.1" %in% names(data)) {
+      stop("Data cannot contain any variables named 'newdate.1.1.1'")
+    }
 
     if (length(var) == 1) {
       timevar <- timevar %>%
@@ -170,7 +179,9 @@ time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .
     if (min(is.na(.breaks)) == 0) {
 
       # Check that .breaks are integers
-      if (min(as.integer(.breaks) == .breaks) == 0) { stop("All elements of .breaks must be integers. These numbers represent years.") }
+      if (min(as.integer(.breaks) == .breaks) == 0) {
+        stop("All elements of .breaks must be integers. These numbers represent years.")
+      }
 
       # first, check if you're starting your .breaks after the beginning of years in the data and issue a warning
       if (min(td$timevar, na.rm = TRUE) < min(.breaks, na.rm = TRUE)) {
@@ -199,13 +210,17 @@ Years earlier than the first break will be given a missing time value.")
     if (min(is.na(.skip)) == 0) {
 
       # Check that .skips are integers
-      if (min(as.integer(.skip) == .skip) == 0) { stop("All elements of .skip must be integers. These numbers represent years.") }
+      if (min(as.integer(.skip) == .skip) == 0) {
+        stop("All elements of .skip must be integers. These numbers represent years.")
+      }
 
       # First, if .breaks has already been run, convert the .skips vector into the current numbering
       if (min(is.na(.breaks)) == 0) {
         .skip <- (data.frame(.breaks = .skip) %>%
           dplyr::left_join(breakstb, by = ".breaks"))$timevar
-        if (max(is.na(.skip)) == 1) { stop("Use of the .breaks option means you're trying to .skip years that are no longer there. Check specification.") }
+        if (max(is.na(.skip)) == 1) {
+          stop("Use of the .breaks option means you're trying to .skip years that are no longer there. Check specification.")
+        }
       }
 
       # then, check if you're .skipping any years that are present in the data and issue a warning
@@ -259,7 +274,9 @@ Observations in these years will be given a missing time value.")
     if (min(is.na(.breaks)) == 0) {
 
       # Check that .breaks are numbers 1 to 12
-      if (min(.breaks %in% 1:12) == 0) { stop("All elements of .breaks must be integers 1 to 12. These numbers represent months.") }
+      if (min(.breaks %in% 1:12) == 0) {
+        stop("All elements of .breaks must be integers 1 to 12. These numbers represent months.")
+      }
       # first, check if you're starting your .breaks after the beginning of months in the data and issue a warning
       if (min(td$timevarM, na.rm = TRUE) < min(.breaks, na.rm = TRUE)) {
         warning("The first break in .breaks is after the first month of the year present in data.
@@ -297,13 +314,17 @@ Note that when .method='month', the first element of .breaks should usually be 1
     if (min(is.na(.skip)) == 0) {
 
       # Check that .skips are numbers 1 to 12
-      if (min(.skip %in% 1:12) == 0) { stop("All elements of .skip must be integers 1 to 12. These numbers represent months.") }
+      if (min(.skip %in% 1:12) == 0) {
+        stop("All elements of .skip must be integers 1 to 12. These numbers represent months.")
+      }
 
       # First, if .breaks has already been run, convert the .skips vector into the current numbering
       if (min(is.na(.breaks)) == 0) {
         .skip <- (data.frame(.breaks = .skip) %>%
           dplyr::left_join(breakstb, by = ".breaks"))$timevarM
-        if (max(is.na(.skip)) == 1) { stop("Use of the .breaks option means you're trying to .skip months that are no longer there. Check specification.") }
+        if (max(is.na(.skip)) == 1) {
+          stop("Use of the .breaks option means you're trying to .skip months that are no longer there. Check specification.")
+        }
       }
 
       # then, check if you're .skipping any years that are present in the data and issue a warning
@@ -427,11 +448,21 @@ time_variable_turnover <- function(..., .turnover = NA, .turnover_start = NA) {
     warning("The turnover .method may produce strange results if the first element of .turnover is not NA, or if any of the later elements are NA. Proceeding, but be cautious...")
   }
   # Check that there's more than one variable in var, and that those vars are present in the data.
-  if (length(var) < 2) { stop("To use the turnover .method, there must be more than one variable in the variable list.") }
-  if (min(sapply(data, is.numeric)) == 0) { stop("To use the turnover .method, all variables in the variable list must be numeric.") }
-  if (min(sapply(data, function(x) as.integer(x) == x), na.rm = TRUE) == 0 | min(data, na.rm = TRUE) < 0) { stop("To use the turnover .method, all variables in the variable list must be nonnegative integers.") }
-  if (length(.turnover) != length(var) | length(.turnover_start) != length(var)) { stop("To use the turnover .method, the number of variables in the variable list, .turnover, and .turnover_start must all be the same.") }
-  if (sum(dplyr::summarize_all(data, max) > .turnover, na.rm = TRUE) > 0 | sum(dplyr::summarize_all(data, min) < .turnover_start, na.rm = TRUE) > 0) { stop("All values must be within the minima and maxima given in .turnover_start and .turnover") }
+  if (length(var) < 2) {
+    stop("To use the turnover .method, there must be more than one variable in the variable list.")
+  }
+  if (min(sapply(data, is.numeric)) == 0) {
+    stop("To use the turnover .method, all variables in the variable list must be numeric.")
+  }
+  if (min(sapply(data, function(x) as.integer(x) == x), na.rm = TRUE) == 0 | min(data, na.rm = TRUE) < 0) {
+    stop("To use the turnover .method, all variables in the variable list must be nonnegative integers.")
+  }
+  if (length(.turnover) != length(var) | length(.turnover_start) != length(var)) {
+    stop("To use the turnover .method, the number of variables in the variable list, .turnover, and .turnover_start must all be the same.")
+  }
+  if (sum(dplyr::summarize_all(data, max) > .turnover, na.rm = TRUE) > 0 | sum(dplyr::summarize_all(data, min) < .turnover_start, na.rm = TRUE) > 0) {
+    stop("All values must be within the minima and maxima given in .turnover_start and .turnover")
+  }
 
   # do a copy
   td <- data
@@ -463,16 +494,34 @@ time_variable_turnover <- function(..., .turnover = NA, .turnover_start = NA) {
 
 #### Basic input checking for all the date-based methods, performs date extraction, and applies .datepos if necessary
 date_methods_prep <- function(data, var, .method, .start, .datepos, .skip, .breaks) {
-  if (length(var) > 1) { stop("Date-based .methods allow only one variable in var.") }
-  if (!lubridate::is.timepoint(data[[var]]) & min(is.na(.datepos)) == 1) { stop("Date-based .methods require a timepoint-class (Date, POSIX, etc.) variable as input, or that the .datepos argument be specified.") }
-  if (!is.na(.start) & !is.numeric(.start)) { stop(".start must be numeric.") }
-  if (min(is.na(.datepos)) == 0 & !is.numeric(.datepos)) { stop(".datepos must be a numeric vector.") }
-  if (min(is.na(.datepos)) == 0 & max(is.na(.datepos)) == 1) { stop(".datepos must not contain any missing values.") }
-  if (min(is.na(.skip)) == 0 & !is.numeric(.skip)) { stop(".skip must be a numeric vector.") }
-  if (min(is.na(.breaks)) == 0 & !is.numeric(.breaks)) { stop(".breaks must be a numeric vector.") }
-  if (.method == "week" & (min(is.na(.datepos)) == 0 | !lubridate::is.timepoint(data[[var]]))) { stop("The week .method requires a timepoint-class (Date, POSIX, etc.) class variable as input, and does not allow .datepos.") }
+  if (length(var) > 1) {
+    stop("Date-based .methods allow only one variable in var.")
+  }
+  if (!lubridate::is.timepoint(data[[var]]) & min(is.na(.datepos)) == 1) {
+    stop("Date-based .methods require a timepoint-class (Date, POSIX, etc.) variable as input, or that the .datepos argument be specified.")
+  }
+  if (!is.na(.start) & !is.numeric(.start)) {
+    stop(".start must be numeric.")
+  }
+  if (min(is.na(.datepos)) == 0 & !is.numeric(.datepos)) {
+    stop(".datepos must be a numeric vector.")
+  }
+  if (min(is.na(.datepos)) == 0 & max(is.na(.datepos)) == 1) {
+    stop(".datepos must not contain any missing values.")
+  }
+  if (min(is.na(.skip)) == 0 & !is.numeric(.skip)) {
+    stop(".skip must be a numeric vector.")
+  }
+  if (min(is.na(.breaks)) == 0 & !is.numeric(.breaks)) {
+    stop(".breaks must be a numeric vector.")
+  }
+  if (.method == "week" & (min(is.na(.datepos)) == 0 | !lubridate::is.timepoint(data[[var]]))) {
+    stop("The week .method requires a timepoint-class (Date, POSIX, etc.) class variable as input, and does not allow .datepos.")
+  }
   if (min(is.na(.skip)) == 0 & .method == "day") {
-    if (sum(.skip %in% 1:7) < length(.skip)) { stop("When .method='day', All elements of .skip must be integers from 1 to 7. These represent days of the week from Monday (1) to Sunday (7).") }
+    if (sum(.skip %in% 1:7) < length(.skip)) {
+      stop("When .method='day', All elements of .skip must be integers from 1 to 7. These represent days of the week from Monday (1) to Sunday (7).")
+    }
   }
   # .skips and .breaks should be unique
   .breaks <- unique(.breaks)
@@ -486,15 +535,21 @@ date_methods_prep <- function(data, var, .method, .start, .datepos, .skip, .brea
 
     # Fill out date for lubridate conversion
     if (.method == "year") {
-      if (!(length(.datepos) %in% c(2, 4))) { stop("With .method='year', .datepos must be in YY or YYMM format.") }
+      if (!(length(.datepos) %in% c(2, 4))) {
+        stop("With .method='year', .datepos must be in YY or YYMM format.")
+      }
       timevar <- paste(timevar, "0101", sep = "")
     }
     if (.method == "month") {
-      if (!(length(.datepos) %in% c(4, 6))) { stop("With .method='month', .datepos must be in YYMM or YYYYMM format.") }
+      if (!(length(.datepos) %in% c(4, 6))) {
+        stop("With .method='month', .datepos must be in YYMM or YYYYMM format.")
+      }
       timevar <- paste(timevar, "01", sep = "")
     }
     if (.method == "day") {
-      if (!(length(.datepos) %in% c(6, 8))) { stop("With .method='day', .datepos must be in YYMMDD or YYYYMMDD format.") }
+      if (!(length(.datepos) %in% c(6, 8))) {
+        stop("With .method='day', .datepos must be in YYMMDD or YYYYMMDD format.")
+      }
     }
 
     # and convert

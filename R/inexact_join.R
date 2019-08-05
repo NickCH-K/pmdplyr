@@ -34,38 +34,49 @@
 #' # I want to match the most recent unemployment data I have to each college
 #' Scorecard <- Scorecard %>%
 #'   inexact_left_join(unemp_data,
-#'                    method = "last",
-#'                    var = year,
-#'                    jvar = unemp_year)
+#'     method = "last",
+#'     var = year,
+#'     jvar = unemp_year
+#'   )
 #'
 #' # Or perhaps I want to find the most recent lagged value (i.e. no exact matches, only recent ones)
 #' data(Scorecard)
 #' Scorecard <- Scorecard %>%
 #'   inexact_left_join(unemp_data,
-#'                     method = "last",
-#'                     var = year,
-#'                     jvar = unemp_year,
-#'                     exact = FALSE)
+#'     method = "last",
+#'     var = year,
+#'     jvar = unemp_year,
+#'     exact = FALSE
+#'   )
 #'
 #' # Another way to do the same thing would be to specify the range of unemp_years I want exactly
 #' data(Scorecard)
 #' unemp_data$unemp_year2 <- unemp_data$unemp_year + 2
 #' Scorecard <- Scorecard %>%
 #'   inexact_left_join(unemp_data,
-#'                    method = "between",
-#'                    var = year,
-#'                    jvar = c(unemp_year, unemp_year2))
+#'     method = "between",
+#'     var = year,
+#'     jvar = c(unemp_year, unemp_year2)
+#'   )
 NULL
 
 #' @rdname inexact_join
 #' @export
 inexact_inner_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  jvarcall <- tidyselect::vars_select(names(y), {
+    {
+      jvar
+    }
+  })
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {{var}})
+  varcall <- tidyselect::vars_select(names(x), {
+    {
+      var
+    }
+  })
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -88,11 +99,19 @@ inexact_inner_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", "
 #' @export
 inexact_left_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  jvarcall <- tidyselect::vars_select(names(y), {
+    {
+      jvar
+    }
+  })
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {{var}})
+  varcall <- tidyselect::vars_select(names(x), {
+    {
+      var
+    }
+  })
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -115,11 +134,19 @@ inexact_left_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 #' @export
 inexact_right_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  jvarcall <- tidyselect::vars_select(names(y), {
+    {
+      jvar
+    }
+  })
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {{var}})
+  varcall <- tidyselect::vars_select(names(x), {
+    {
+      var
+    }
+  })
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -143,11 +170,19 @@ inexact_right_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", "
 #' @export
 inexact_full_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  jvarcall <- tidyselect::vars_select(names(y), {
+    {
+      jvar
+    }
+  })
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {{var}})
+  varcall <- tidyselect::vars_select(names(x), {
+    {
+      var
+    }
+  })
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -170,11 +205,19 @@ inexact_full_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 #' @export
 inexact_semi_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  jvarcall <- tidyselect::vars_select(names(y), {
+    {
+      jvar
+    }
+  })
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {{var}})
+  varcall <- tidyselect::vars_select(names(x), {
+    {
+      var
+    }
+  })
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -198,11 +241,19 @@ inexact_semi_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jv
 #' @export
 inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name = NULL, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  jvarcall <- tidyselect::vars_select(names(y), {
+    {
+      jvar
+    }
+  })
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {{var}})
+  varcall <- tidyselect::vars_select(names(x), {
+    {
+      var
+    }
+  })
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -225,11 +276,19 @@ inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name 
 #' @export
 inexact_anti_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {{jvar}})
+  jvarcall <- tidyselect::vars_select(names(y), {
+    {
+      jvar
+    }
+  })
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {{var}})
+  varcall <- tidyselect::vars_select(names(x), {
+    {
+      var
+    }
+  })
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -260,22 +319,44 @@ find_matching_list <- function(z, yidname, i, jvar, range) {
 
 # This is the shared preprocessing shared by all join functions
 inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), var, jvar, method, exact = TRUE) {
-  if (!is.character(var)) { stop("Internal error: var should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr") }
-  if (!is.character(jvar)) { stop("Internal error: jvar should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr") }
-  if (length(jvar) > 2) { stop("jvar can contain no more than two variables.") }
-  if (!is.character(method)) { stop("method must be a character variable.") }
-  if (!is.logical(exact)) { stop("exact must be logical.") }
-  if (max(var %in% jvar) == 1) { stop("The variable names in var and jvar should not match.") }
-  if (max(jvar %in% names(x)) == 1) { stop("The variable names in jvar should not be in x") }
-  if (method == "closest" & is.character(x[[var]])) { stop("The 'closest' method requires var/jvar to be a variable type that supports subtraction, like numeric or Date.") }
-  if (method == "closest" & !exact) { warning("exact=FALSE is ignored for the 'closest' method.") }
-  if (!method %in% c("last", "next", "closest", "between")) { stop("Acceptable values of 'method' are 'last', 'next', 'closest', and 'between'.") }
+  if (!is.character(var)) {
+    stop("Internal error: var should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
+  }
+  if (!is.character(jvar)) {
+    stop("Internal error: jvar should be a character variable with the variable name by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
+  }
+  if (length(jvar) > 2) {
+    stop("jvar can contain no more than two variables.")
+  }
+  if (!is.character(method)) {
+    stop("method must be a character variable.")
+  }
+  if (!is.logical(exact)) {
+    stop("exact must be logical.")
+  }
+  if (max(var %in% jvar) == 1) {
+    stop("The variable names in var and jvar should not match.")
+  }
+  if (max(jvar %in% names(x)) == 1) {
+    stop("The variable names in jvar should not be in x")
+  }
+  if (method == "closest" & is.character(x[[var]])) {
+    stop("The 'closest' method requires var/jvar to be a variable type that supports subtraction, like numeric or Date.")
+  }
+  if (method == "closest" & !exact) {
+    warning("exact=FALSE is ignored for the 'closest' method.")
+  }
+  if (!method %in% c("last", "next", "closest", "between")) {
+    stop("Acceptable values of 'method' are 'last', 'next', 'closest', and 'between'.")
+  }
 
   # set .exact length properly
   if (length(exact) == 1 & method == "between") {
     if (exact == TRUE) {
       exact <- c(TRUE, FALSE)
-    } else { stop("For method = 'between', exact must have two elements, or leave as default to get exact = c(TRUE,FALSE)") }
+    } else {
+      stop("For method = 'between', exact must have two elements, or leave as default to get exact = c(TRUE,FALSE)")
+    }
   }
 
   # Get the list of matching variables
@@ -290,7 +371,9 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
     x[, ncol(x) + 1] <- 1
     matchvars <- names(x)[ncol(x)]
 
-    if (max(matchvars %in% jvar) == 1) { stop("Please give your jvars non-generic names.") }
+    if (max(matchvars %in% jvar) == 1) {
+      stop("Please give your jvars non-generic names.")
+    }
     y[[matchvars]] <- 1
 
     # flag the matchvar variable to remove it

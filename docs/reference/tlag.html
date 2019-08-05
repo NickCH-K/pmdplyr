@@ -171,8 +171,9 @@
 <span class='co'># (although tlag is slower than either, sorry)</span>
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>pmdplyr_tlag</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>,
-                                    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
-                                    <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>))
+    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
+    <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>
+  ))
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span>(<span class='no'>year</span>) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>unitid</span>) <span class='kw'>%&gt;%</span>
@@ -185,10 +186,11 @@
 <span class='co'># we can use the .quick option to match dplyr::lag()</span>
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>pmdplyr_quick_tlag</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>,
-                                         <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
-                                         <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>,
-                                         <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-                                         <span class='kw'>.quick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
+    <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>,
+    <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+    <span class='kw'>.quick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  ))
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sum'>sum</a></span>(<span class='no'>Scorecard</span>$<span class='no'>dplyr_lag</span> <span class='kw'>!=</span> <span class='no'>Scorecard</span>$<span class='no'>pmdplyr_quick_tlag</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'>
 <span class='co'># Where tlag shines is when you have multiple observations per .i/.t</span>
 <span class='co'># If the value of .var is constant within .i/.t, it will work just as you expect.</span>
@@ -215,10 +217,10 @@
 <span class='co'># We could get around this by setting .d = 0 to ignore gap length</span>
 <span class='co'># Note this can be a little slow.</span>
 <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>last_year_earnings_all</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>,
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>last_year_earnings_all</span> <span class='kw'>=</span> <span class='fu'>tlag</span>(<span class='no'>earnings_med</span>,
     <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>,
     <span class='kw'>.resolve</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-   ))</div></pre>
+  ))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

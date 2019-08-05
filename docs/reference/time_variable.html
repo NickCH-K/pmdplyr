@@ -182,8 +182,9 @@
 <span class='co'># (although in this case there are only two months, not much variation there)</span>
 <span class='no'>SPrail</span> <span class='kw'>&lt;-</span> <span class='no'>SPrail</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>quarter_time_id</span> <span class='kw'>=</span> <span class='fu'>time_variable</span>(<span class='no'>insert_date</span>,
-                                                <span class='kw'>.method</span> <span class='kw'>=</span> <span class='st'>"month"</span>,
-                                                <span class='kw'>.breaks</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>4</span>, <span class='fl'>7</span>, <span class='fl'>10</span>)))
+    <span class='kw'>.method</span> <span class='kw'>=</span> <span class='st'>"month"</span>,
+    <span class='kw'>.breaks</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>4</span>, <span class='fl'>7</span>, <span class='fl'>10</span>)
+  ))
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a></span>(<span class='no'>SPrail</span>$<span class='no'>month_time_id</span>, <span class='no'>SPrail</span>$<span class='no'>quarter_time_id</span>)</div><div class='output co'>#&gt;    
 #&gt;        1
 #&gt;   1 1633
@@ -191,13 +192,15 @@
 <span class='co'># Maybe I'd like Monday to come immediately after Friday!</span>
 <span class='no'>SPrail</span> <span class='kw'>&lt;-</span> <span class='no'>SPrail</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>weekday_id</span> <span class='kw'>=</span> <span class='fu'>time_variable</span>(<span class='no'>insert_date</span>,
-                                           <span class='kw'>.method</span> <span class='kw'>=</span> <span class='st'>"day"</span>,
-                                           <span class='kw'>.skip</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>6</span>, <span class='fl'>7</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: .skip includes some days of week that are present in the data.</span>
+    <span class='kw'>.method</span> <span class='kw'>=</span> <span class='st'>"day"</span>,
+    <span class='kw'>.skip</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>6</span>, <span class='fl'>7</span>)
+  ))</div><div class='output co'>#&gt; <span class='warning'>Warning: .skip includes some days of week that are present in the data.</span>
 #&gt; <span class='warning'>Observations in these weekdays will be given a missing time value.</span></div><div class='input'>
 <span class='co'># Perhaps I'm interested in ANY time period in the data and just want to enumerate them in order</span>
 <span class='no'>SPrail</span> <span class='kw'>&lt;-</span> <span class='no'>SPrail</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>any_present_time_id</span> <span class='kw'>=</span> <span class='fu'>time_variable</span>(<span class='no'>insert_date</span>,
-                                                    <span class='kw'>.method</span> <span class='kw'>=</span> <span class='st'>"present"</span>))
+    <span class='kw'>.method</span> <span class='kw'>=</span> <span class='st'>"present"</span>
+  ))
 
 
 <span class='co'># Maybe instead of being given a nice time variable, I was given it in string form</span>

@@ -17,44 +17,69 @@
 #' @examples
 #'
 #' if (interactive()) {
-#' data(Scorecard)
-#' # I'd like to build a decaying function that remembers previous earnings but at a declining rate
-#' # Let's only use nonmissing earnings
-#' Scorecard <- Scorecard %>%
-#'   dplyr::filter(!is.na(earnings_med))
-#' Scorecard <- Scorecard %>%
-#'   # Almost all instances involve a variable being set to a function of a lag of itself
-#'   # we don't want to overwrite so let's make another
-#'   dplyr::mutate(decay_earnings = earnings_med) %>%
-#'   # Now we can cascade
-#'   mutate_cascade(decay_earnings = decay_earnings +
-#'     .5 * tlag(decay_earnings, .i = unitid, .t = year, .quick = TRUE),
-#'     .i = unitid, .t = year)
+#'   data(Scorecard)
+#'   # I'd like to build a decaying function that remembers previous earnings but at a declining rate
+#'   # Let's only use nonmissing earnings
+#'   Scorecard <- Scorecard %>%
+#'     dplyr::filter(!is.na(earnings_med))
+#'   Scorecard <- Scorecard %>%
+#'     # Almost all instances involve a variable being set to a function of a lag of itself
+#'     # we don't want to overwrite so let's make another
+#'     dplyr::mutate(decay_earnings = earnings_med) %>%
+#'     # Now we can cascade
+#'     mutate_cascade(
+#'       decay_earnings = decay_earnings +
+#'         .5 * tlag(decay_earnings, .i = unitid, .t = year, .quick = TRUE),
+#'       .i = unitid, .t = year
+#'     )
 #' }
 #' @export
 mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
-  if (!is.logical(.backwards)) { stop(".backwards must be TRUE or FALSE") }
-  if (!is.logical(.skip)) { stop(".skip must be TRUE or FALSE.") }
-  if (!is.logical(.group_i)) { stop(".group_i must be TRUE or FALSE.") }
+  if (!is.logical(.backwards)) {
+    stop(".backwards must be TRUE or FALSE")
+  }
+  if (!is.logical(.skip)) {
+    stop(".skip must be TRUE or FALSE.")
+  }
+  if (!is.logical(.group_i)) {
+    stop(".group_i must be TRUE or FALSE.")
+  }
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df),{{.i}})
+  .icall <- tidyselect::vars_select(names(.df), {
+    {
+      .i
+    }
+  })
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df),{{.t}})
+  .tcall <- tidyselect::vars_select(names(.df), {
+    {
+      .t
+    }
+  })
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }
 
   # Check inputs and pull out panel info
   inp <- declare_in_fcn_check(.df, .i = .icall, .t = .tcall, .d, .uniqcheck, .setpanel)
-  if (is.na(inp$t)) { stop("mutate_cascade() requires that .t be declared either in the function or by as_pibble().") }
+  if (is.na(inp$t)) {
+    stop("mutate_cascade() requires that .t be declared either in the function or by as_pibble().")
+  }
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
-
-    .df <- as_pibble(.df, {{.i}}, {{.t}}, .d, .uniqcheck = .uniqcheck)
+    .df <- as_pibble(.df, {
+      {
+        .i
+      }
+    }, {
+      {
+        .t
+      }
+    }, .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
@@ -104,11 +129,11 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
     if (inp$is_tbl_pb) {
-      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
-    } else{
-      attr(.df,".i") <- NULL
-      attr(.df,".t") <- NULL
-      attr(.df,".d") <- NULL
+      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck = FALSE)
+    } else {
+      attr(.df, ".i") <- NULL
+      attr(.df, ".t") <- NULL
+      attr(.df, ".d") <- NULL
       class(.df) <- class(.df)[!(class(.df) %in% "tbl_pb")]
     }
   }
@@ -146,15 +171,27 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 #' @export
 mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
   #### CHECK INPUTS
-  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) { stop("Requires data to be a data frame or tibble.") }
-  if (sum(class(.df) == "data.table") > 0) { warning("pmdplyr functions have not been tested with data.tables") }
+  if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
+    stop("Requires data to be a data frame or tibble.")
+  }
+  if (sum(class(.df) == "data.table") > 0) {
+    warning("pmdplyr functions have not been tested with data.tables")
+  }
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df),{{.i}})
+  .icall <- tidyselect::vars_select(names(.df), {
+    {
+      .i
+    }
+  })
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df),{{.t}})
+  .tcall <- tidyselect::vars_select(names(.df), {
+    {
+      .t
+    }
+  })
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }
@@ -163,7 +200,15 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
-    .df <- as_pibble(.df, {{.i}}, {{.t}}, .d = .d, .uniqcheck = .uniqcheck)
+    .df <- as_pibble(.df, {
+      {
+        .i
+      }
+    }, {
+      {
+        .t
+      }
+    }, .d = .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
@@ -177,7 +222,11 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
 
   # Perform the summary on the subset
   summ <- .df %>%
-    dplyr::filter({{ .filter }}) %>%
+    dplyr::filter({
+      {
+        .filter
+      }
+    }) %>%
     dplyr::summarize(...)
   # See what variables were created not counting the groupings
   # First, get the grouping variables
@@ -208,11 +257,11 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
     if (inp$is_tbl_pb) {
-      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck=FALSE)
-    } else{
-      attr(.df,".i") <- NULL
-      attr(.df,".t") <- NULL
-      attr(.df,".d") <- NULL
+      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck = FALSE)
+    } else {
+      attr(.df, ".i") <- NULL
+      attr(.df, ".t") <- NULL
+      attr(.df, ".d") <- NULL
       class(.df) <- class(.df)[!(class(.df) %in% "tbl_pb")]
     }
   }
