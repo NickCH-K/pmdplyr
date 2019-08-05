@@ -64,19 +64,11 @@ NULL
 #' @export
 inexact_inner_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {
-    {
-      jvar
-    }
-  })
+  jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {
-    {
-      var
-    }
-  })
+  varcall <- tidyselect::vars_select(names(x), {{ var }})
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -99,19 +91,11 @@ inexact_inner_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", "
 #' @export
 inexact_left_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {
-    {
-      jvar
-    }
-  })
+  jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {
-    {
-      var
-    }
-  })
+  varcall <- tidyselect::vars_select(names(x), {{ var }})
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -134,19 +118,11 @@ inexact_left_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 #' @export
 inexact_right_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {
-    {
-      jvar
-    }
-  })
+  jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {
-    {
-      var
-    }
-  })
+  varcall <- tidyselect::vars_select(names(x), {{ var }})
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -170,19 +146,11 @@ inexact_right_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", "
 #' @export
 inexact_full_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {
-    {
-      jvar
-    }
-  })
+  jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {
-    {
-      var
-    }
-  })
+  varcall <- tidyselect::vars_select(names(x), {{ var }})
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -205,19 +173,11 @@ inexact_full_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 #' @export
 inexact_semi_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {
-    {
-      jvar
-    }
-  })
+  jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {
-    {
-      var
-    }
-  })
+  varcall <- tidyselect::vars_select(names(x), {{ var }})
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -241,19 +201,11 @@ inexact_semi_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jv
 #' @export
 inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name = NULL, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {
-    {
-      jvar
-    }
-  })
+  jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {
-    {
-      var
-    }
-  })
+  varcall <- tidyselect::vars_select(names(x), {{ var }})
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }
@@ -276,19 +228,11 @@ inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name 
 #' @export
 inexact_anti_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
-  jvarcall <- tidyselect::vars_select(names(y), {
-    {
-      jvar
-    }
-  })
+  jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
   if (length(jvarcall) == 0) {
     jvarcall <- NA_character_
   }
-  varcall <- tidyselect::vars_select(names(x), {
-    {
-      var
-    }
-  })
+  varcall <- tidyselect::vars_select(names(x), {{ var }})
   if (length(varcall) == 0) {
     varcall <- NA_character_
   }

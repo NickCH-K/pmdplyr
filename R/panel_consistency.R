@@ -22,26 +22,26 @@
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
 #' @examples
 #'
-#'   data(Scorecard)
-#'   # Notice that, in the Scorecard data, the gap between one year and the next is not always constant
-#'   table((Scorecard %>% dplyr::arrange(year) %>%
-#'     dplyr::group_by(unitid) %>%
-#'     dplyr::mutate(diff = year - dplyr::lag(year)))$diff)
-#'   # And also that not all universities show up for the first or last times in the same year
-#'   year_range <- Scorecard %>%
-#'     dplyr::group_by(unitid) %>%
-#'     dplyr::summarize(first_year = min(year), last_year = max(year))
-#'   table(year_range$first_year)
-#'   table(year_range$last_year)
-#'   rm(year_range)
+#' data(Scorecard)
+#' # Notice that, in the Scorecard data, the gap between one year and the next is not always constant
+#' table((Scorecard %>% dplyr::arrange(year) %>%
+#'   dplyr::group_by(unitid) %>%
+#'   dplyr::mutate(diff = year - dplyr::lag(year)))$diff)
+#' # And also that not all universities show up for the first or last times in the same year
+#' year_range <- Scorecard %>%
+#'   dplyr::group_by(unitid) %>%
+#'   dplyr::summarize(first_year = min(year), last_year = max(year))
+#' table(year_range$first_year)
+#' table(year_range$last_year)
+#' rm(year_range)
 #'
-#'   # We can deal with the inconsistent-gaps problem by creating new obs to fill in
-#'   # this version will fill in the new obs with the most recently observed data, and flag them
-#'   Scorecard_filled <- panel_fill(Scorecard,
-#'     .i = unitid,
-#'     .t = year,
-#'     .flag = "new"
-#'   )
+#' # We can deal with the inconsistent-gaps problem by creating new obs to fill in
+#' # this version will fill in the new obs with the most recently observed data, and flag them
+#' Scorecard_filled <- panel_fill(Scorecard,
+#'   .i = unitid,
+#'   .t = year,
+#'   .flag = "new"
+#' )
 #'
 #' # Additional examples too slow to run
 #' if (interactive()) {
@@ -89,11 +89,11 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   }
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df), {{.i}})
+  .icall <- tidyselect::vars_select(names(.df), {{ .i }})
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df), {{.t}})
+  .tcall <- tidyselect::vars_select(names(.df), {{ .t }})
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }
@@ -113,7 +113,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall)) {
-    .df <- as_pibble(.df, {{.i}}, {{.t}}, .d, .uniqcheck = .uniqcheck)
+    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
@@ -203,8 +203,11 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   #-1 for the original copy. Make it IN the data b/c I'll need group structure in a sec
   .df[, ncol(.df) + 1] <- .df[[inp$t]]
   copyname <- names(.df)[ncol(.df)]
-  .df <- .df %>% dplyr::mutate_at(copyname, .funs =
-                                    function(x) abs(x - dplyr::lead(x)) / inp$d - 1) %>%
+  .df <- .df %>%
+    dplyr::mutate_at(copyname,
+      .funs =
+        function(x) abs(x - dplyr::lead(x)) / inp$d - 1
+    ) %>%
     dplyr::mutate_at(copyname, .funs = list(. = ~ dplyr::case_when(
       is.na(.) | is.infinite(.) ~ 0,
       TRUE ~ .
@@ -374,11 +377,11 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   .df <- .df
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df), {{.i}})
+  .icall <- tidyselect::vars_select(names(.df), {{ .i }})
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df), {{.t}})
+  .tcall <- tidyselect::vars_select(names(.df), {{ .t }})
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }
@@ -515,19 +518,11 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
   }
 
   # Pull out variable names
-  .varcall <- tidyselect::vars_select(names(.df), {
-    {
-      .var
-    }
-  })
+  .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   if (length(.varcall) == 0) {
     .icall <- NA_character_
   }
-  .withincall <- tidyselect::vars_select(names(.df), {
-    {
-      .within
-    }
-  })
+  .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
   if (length(.withincall) == 0) {
     .withincall <- NA_character_
   }
@@ -601,19 +596,11 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = function(x)
   }
 
   # Pull out variable names
-  .varcall <- tidyselect::vars_select(names(.df), {
-    {
-      .var
-    }
-  })
+  .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   if (length(.varcall) == 0) {
     .icall <- NA_character_
   }
-  .withincall <- tidyselect::vars_select(names(.df), {
-    {
-      .within
-    }
-  })
+  .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
   if (length(.withincall) == 0) {
     .withincall <- NA_character_
   }
