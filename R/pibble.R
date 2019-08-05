@@ -63,11 +63,11 @@ pibble <- function(..., .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
   tbl <- tibble::tibble(...)
 
   # Pull out variable names; build_pibble takes strings
-  .i <- tidyselect::vars_select(names(tbl), {{.i}})
+  .i <- tidyselect::vars_select(names(tbl), {{ .i }})
   if (length(.i) == 0) {
     .i <- NA_character_
   }
-  .t <- tidyselect::vars_select(names(tbl), {{.t}})
+  .t <- tidyselect::vars_select(names(tbl), {{ .t }})
   if (length(.t) == 0) {
     .t <- NA_character_
   }
@@ -167,11 +167,11 @@ as_pibble.tbl_df <- function(x,
                              ...) {
 
   # Pull out variable names; build_pibble takes strings
-  .i <- tidyselect::vars_select(names(x), {{.i}})
+  .i <- tidyselect::vars_select(names(x), {{ .i }})
   if (length(.i) == 0) {
     .i <- NA_character_
   }
-  .t <- tidyselect::vars_select(names(x), {{.t}})
+  .t <- tidyselect::vars_select(names(x), {{ .t }})
   if (length(.t) == 0) {
     .t <- NA_character_
   }

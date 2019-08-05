@@ -37,11 +37,11 @@ within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = functi
 
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df), {{.i}})
+  .icall <- tidyselect::vars_select(names(.df), {{ .i }})
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df), {{.t}})
+  .tcall <- tidyselect::vars_select(names(.df), {{ .t }})
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }
@@ -95,11 +95,11 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
   .df <- .df
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df), {{.i}})
+  .icall <- tidyselect::vars_select(names(.df), {{ .i }})
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df), {{.t}})
+  .tcall <- tidyselect::vars_select(names(.df), {{ .t }})
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }

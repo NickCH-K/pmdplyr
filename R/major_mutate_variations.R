@@ -46,19 +46,11 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   }
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df), {
-    {
-      .i
-    }
-  })
+  .icall <- tidyselect::vars_select(names(.df), {{ .i }})
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df), {
-    {
-      .t
-    }
-  })
+  .tcall <- tidyselect::vars_select(names(.df), {{ .t }})
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }
@@ -71,15 +63,7 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
-    .df <- as_pibble(.df, {
-      {
-        .i
-      }
-    }, {
-      {
-        .t
-      }
-    }, .d, .uniqcheck = .uniqcheck)
+    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
@@ -179,19 +163,11 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
   }
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df), {
-    {
-      .i
-    }
-  })
+  .icall <- tidyselect::vars_select(names(.df), {{ .i }})
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df), {
-    {
-      .t
-    }
-  })
+  .tcall <- tidyselect::vars_select(names(.df), {{ .t }})
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }
@@ -200,15 +176,7 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
-    .df <- as_pibble(.df, {
-      {
-        .i
-      }
-    }, {
-      {
-        .t
-      }
-    }, .d = .d, .uniqcheck = .uniqcheck)
+    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d = .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
@@ -222,11 +190,7 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
 
   # Perform the summary on the subset
   summ <- .df %>%
-    dplyr::filter({
-      {
-        .filter
-      }
-    }) %>%
+    dplyr::filter({{ .filter }}) %>%
     dplyr::summarize(...)
   # See what variables were created not counting the groupings
   # First, get the grouping variables

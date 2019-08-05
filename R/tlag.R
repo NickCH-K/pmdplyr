@@ -113,11 +113,11 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
   }
 
   # Pull out variable names
-  .icall <- tidyselect::vars_select(names(.df), {{.i}})
+  .icall <- tidyselect::vars_select(names(.df), {{ .i }})
   if (length(.icall) == 0) {
     .icall <- NA_character_
   }
-  .tcall <- tidyselect::vars_select(names(.df), {{.t}})
+  .tcall <- tidyselect::vars_select(names(.df), {{ .t }})
   if (length(.tcall) == 0) {
     .tcall <- NA_character_
   }
