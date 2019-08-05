@@ -30,8 +30,12 @@ tbl_sum.tbl_pb <- function(x) {
     n_distinct_i <- x %>%
       dplyr::distinct(!!!syms(i)) %>%
       NROW()
-    i <- paste(i, collapse = " ")
-    res <- c(res, "Individual-level identifier (.i)" = paste(i, brackets(n_distinct_i)))
+    if (length(i) > 1) {
+      i <- paste(i, collapse = ", ")
+      res <- c(res, "Individual-level identifiers (.i)" = paste(i, brackets(n_distinct_i)))
+    } else {
+      res <- c(res, "Individual-level identifier (.i)" = paste(i, brackets(n_distinct_i)))
+    }
   }
 
   if (!is_empty(t)) {
