@@ -1,6 +1,3 @@
-library(pmdplyr)
-library(testthat)
-
 grades <- pibble(
   student_id = c(0001, 0001, 0002, 0002, 0002),
   module_id = c("ECON100", "ACCY101", "ECON100", "MARK105", "FIN223"),
