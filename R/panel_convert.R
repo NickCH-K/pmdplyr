@@ -37,7 +37,7 @@
 #'
 #'   S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
 #'   S_tsibble <- tsibble::as_tsibble(Scorecard, key = unitid, index = year)
-#'   S_pdata.frame <- plm::pdata.frame(Scorecard, index=c("unitid", "year"))
+#'   S_pdata.frame <- plm::pdata.frame(Scorecard, index = c("unitid", "year"))
 #'   S_panel_data <- panelr::panel_data(Scorecard, id = unitid, wave = year)
 #'
 #'   # Make everything a pibble
@@ -64,20 +64,19 @@
 #'   panel_convert(S_tsibble, to = "panelr")
 #'   panel_convert(S_pdata.frame, to = "panelr")
 #'   S_panel_data
-#'
 #' }
-#'
-#'
 #' @export
 
 panel_convert <- function(data, to, ...) {
   if (!is.character(to)) {
     stop("to must be a character variable.")
   }
-  if (!(to %in% c("pmdplyr", "pibble", "tbl_pb",
-                  "tsibble", "tbl_ts",
-                  "plm", "pdata.frame",
-                  "panelr", "panel_data"))) {
+  if (!(to %in% c(
+    "pmdplyr", "pibble", "tbl_pb",
+    "tsibble", "tbl_ts",
+    "plm", "pdata.frame",
+    "panelr", "panel_data"
+  ))) {
     stop("Invalid value of to.")
   }
 
@@ -104,7 +103,7 @@ panel_convert <- function(data, to, ...) {
     }
 
     if (length(panel_convert_id) != 1 & !(to %in% c("tsibble", "tbl_ts"))) {
-      stop('plm and panelr require exactly one ID variable.')
+      stop("plm and panelr require exactly one ID variable.")
     }
 
     # Converting to tsibble, potentially non-1 gaps
@@ -136,7 +135,7 @@ panel_convert <- function(data, to, ...) {
     }
 
     if (length(panel_convert_id) != 1 & !(to %in% c("pmdplyr", "pibble", "tbl_pb"))) {
-      stop('plm and panelr require exactly one ID variable.')
+      stop("plm and panelr require exactly one ID variable.")
     }
 
     # Potential for irregular data
@@ -156,8 +155,8 @@ panel_convert <- function(data, to, ...) {
       if (max(as.numeric(data %@% "interval")) > 1 & !(to %in% c("pmdplyr", "pibble", "tbl_pb"))) {
         warning("plm and panelr functions may not work as expected with gaps greater than 1.")
       } else if (max(as.numeric(data %@% "interval")) > 1 &
-                 sum(as.numeric(data %@% "interval") > 0) == 1 &
-                 to %in% c("pmdplyr", "pibble", "tbl_pb")) {
+        sum(as.numeric(data %@% "interval") > 0) == 1 &
+        to %in% c("pmdplyr", "pibble", "tbl_pb")) {
         pibble_d <- max(as.numeric(data %@% "interval"))
       }
     }
@@ -174,15 +173,16 @@ panel_convert <- function(data, to, ...) {
     # If we have sjlabelled we can turn it into the original values
     if ("sjlabelled" %in% rownames(utils::installed.packages())) {
       data[[panel_convert_id]] <- sjlabelled::remove_all_labels(
-        sjlabelled::as_labelled(data[[panel_convert_id]]))
+        sjlabelled::as_labelled(data[[panel_convert_id]])
+      )
       data[[panel_convert_time]] <- sjlabelled::remove_all_labels(
-        sjlabelled::as_labelled(data[[panel_convert_time]]))
+        sjlabelled::as_labelled(data[[panel_convert_time]])
+      )
     } else {
       # Otherwise just make 'em valueless numbers
       data[[panel_convert_id]] <- as.numeric(data[[panel_convert_id]])
       data[[panel_convert_time]] <- as.numeric(data[[panel_convert_time]])
     }
-
   } else if ("panel_data" %in% dataclass) {
     # Finally, panel_data
     if (to %in% c("panel_data", "panelr")) {
@@ -212,19 +212,22 @@ panel_convert <- function(data, to, ...) {
 
     # Check if we made a regular possible if coming from pmdplyr)
     if (exists("panel_convert_regular")) {
-      out <- tsibble::as_tsibble(data, key = panel_convert_id,
-                                 index = panel_convert_time,
-                                 regular = panel_convert_regular, ...)
+      out <- tsibble::as_tsibble(data,
+        key = panel_convert_id,
+        index = panel_convert_time,
+        regular = panel_convert_regular, ...
+      )
     } else {
-      out <- tsibble::as_tsibble(data, key = panel_convert_id,
-                                 index = panel_convert_time, ...)
+      out <- tsibble::as_tsibble(data,
+        key = panel_convert_id,
+        index = panel_convert_time, ...
+      )
     }
   } else if (to %in% c("plm", "pdata.frame")) {
     out <- plm::pdata.frame(data, index = c(panel_convert_id, panel_convert_time), ...)
-  } else if (to %in% c("panelr", "panel_data")){
+  } else if (to %in% c("panelr", "panel_data")) {
     out <- panelr::panel_data(data, id = !!panel_convert_id, wave = !!panel_convert_time, ...)
   }
 
   return(out)
 }
-
