@@ -16,13 +16,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -45,6 +47,7 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -71,7 +74,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -89,6 +92,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -129,25 +133,19 @@
     <p>Any grouping will be lost. You must have the relevant package installed to convert to the type for that package. Conversions from <code>pdata.frame</code> will be improved if <code>sjlabelled</code> is also installed.</p>
 <p>When using <code>panel_convert</code>, be aware of the requirements that each type has:</p>
 <table class='table'>
-<tr><td></td><td>Feature/Requirement</td><td>|</td><td><code>pibble</code></td><td></td></tr>
-<tr><td>|</td><td><code>tsibble</code></td><td></td><td>|</td><td><code>pdata.frame</code></td></tr>
-<tr><td></td><td>|</td><td><code>panel_data</code></td><td></td><td></td></tr>
+<tr><td>Feature/Requirement</td><td>| <code>pibble</code></td><td>| <code>tsibble</code></td><td>| <code>pdata.frame</code></td><td>| <code>panel_data</code></td></tr>
 <tr><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td>ID</td><td></td><td><code>.i</code></td><td></td></tr>
-<tr><td></td><td><code>key</code></td><td></td><td></td><td><code>index[1]</code></td></tr>
-<tr><td></td><td></td><td><code>id</code></td><td></td><td></td></tr>
-<tr><td>Time</td><td></td><td><code>.t</code></td><td></td><td></td></tr>
-<tr><td><code>index</code></td><td></td><td></td><td><code>index[2]</code></td><td></td></tr>
-<tr><td></td><td><code>wave</code></td><td></td><td></td><td>Gap control</td></tr>
-<tr><td></td><td><code>.d</code></td><td></td><td></td><td><code>regular</code></td></tr>
-<tr><td></td><td>No</td><td>No</td><td></td><td>ID must exist</td></tr>
-<tr><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td></td></tr>
+<tr><td>ID</td><td><code>.i</code></td><td><code>key</code></td><td><code>index[1]</code></td><td><code>id</code></td></tr>
+<tr><td>Time</td><td><code>.t</code></td><td><code>index</code></td><td><code>index[2]</code></td><td><code>wave</code></td></tr>
+<tr><td>Gap control</td><td><code>.d</code></td><td><code>regular</code></td><td>No</td><td>No</td></tr>
+<tr><td>ID must exist</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
 <tr><td>Time must exist</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes[1]</td></tr>
-<tr><td></td><td>Only one ID variable</td><td>No</td><td>No</td><td>Yes</td></tr>
-<tr><td>Yes</td><td></td><td>Unique identification</td><td>No</td><td>Yes</td></tr>
-<tr><td>No[2]</td><td>No[2]</td><td></td><td></td><td>Feature/Requirement</td></tr>
+<tr><td>Only one ID variable</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Unique identification</td><td>No</td><td>Yes</td><td>No[2]</td><td>No[2]</td></tr>
 </table>
-    <p>[1] <code>pdata.frame</code> does not require that time be provided, but if not provided will create it based on original ordering of the data. The <code>pdata.frame</code> option to set <code>index</code> equal to an integer for a balanced panel and have it figure out the rest by itself is not supported.</p>
+
+
+<p>[1] <code>pdata.frame</code> does not require that time be provided, but if not provided will create it based on original ordering of the data. The <code>pdata.frame</code> option to set <code>index</code> equal to an integer for a balanced panel and have it figure out the rest by itself is not supported.</p>
 <p>[2] <code>pdata.frame</code> and <code>panel_data</code> do not require that ID and time uniquely identify the observations on declaring the data, but functions in these packages may not work correctly without unique identification.</p>
 <p>In addition to the above, be aware that the different packages have different requirements on which variable classes can be Time variables. <code><a href='time_variable.html'>pmdplyr::time_variable()</a></code> can build an integer variable that will work in all packages.</p>
 <p>You may run into some trouble if your data contains variables by the names <code>panel_convert_id</code>, <code>panel_convert_time</code>, <code>pibble_d</code>, or <code>panel_convert_regular</code>.</p>
@@ -155,13 +153,13 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Examples are set to not run in case you don't have the relevant target package installed.</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>()) {
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>Scorecard</span>)
+<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
+  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
 
   <span class='no'>S_pibble</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='as_pibble.html'>as_pibble</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>)
   <span class='no'>S_tsibble</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tsibble</span><span class='kw ns'>::</span><span class='fu'><a href='https://tsibble.tidyverts.org/reference/as-tsibble.html'>as_tsibble</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='no'>year</span>)
-  <span class='no'>S_pdata.frame</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/plm/topics/pdata.frame'>pdata.frame</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>index</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"unitid"</span>, <span class='st'>"year"</span>))
-  <span class='no'>S_panel_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>panelr</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/panelr/topics/panel_data'>panel_data</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>wave</span> <span class='kw'>=</span> <span class='no'>year</span>)
+  <span class='no'>S_pdata.frame</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"unitid"</span>, <span class='st'>"year"</span>))
+  <span class='no'>S_panel_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>panelr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/panelr/man/panel_data.html'>panel_data</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>wave</span> <span class='kw'>=</span> <span class='no'>year</span>)
 
   <span class='co'># Make everything a pibble</span>
   <span class='co'># Note variable order may be different coming from panelr, which changes variable order</span>
@@ -177,17 +175,16 @@
   <span class='fu'>panel_convert</span>(<span class='no'>S_panel_data</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"tsibble"</span>)
 
   <span class='co'># Now for pdata.frame</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_tsibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>S_pdata.frame</span>)
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_panel_data</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_tsibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>S_pdata.frame</span>)
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_panel_data</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
 
   <span class='co'># And finally panel_data</span>
   <span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>)
   <span class='fu'>panel_convert</span>(<span class='no'>S_tsibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>)
   <span class='fu'>panel_convert</span>(<span class='no'>S_pdata.frame</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>)
   <span class='no'>S_panel_data</span>
-
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -203,19 +200,23 @@
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
-  <p>Developed by Nick Huntington-Klein.</p>
+  <p>Developed by Nick Huntington-Klein, Philip Khor.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

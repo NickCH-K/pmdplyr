@@ -48,7 +48,7 @@ if (interactive()) {
 
   S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
   S_tsibble <- tsibble::as_tsibble(Scorecard, key = unitid, index = year)
-  S_pdata.frame <- plm::pdata.frame(Scorecard, index=c("unitid", "year"))
+  S_pdata.frame <- plm::pdata.frame(Scorecard, index = c("unitid", "year"))
   S_panel_data <- panelr::panel_data(Scorecard, id = unitid, wave = year)
 
   # Make everything a pibble
@@ -75,8 +75,5 @@ if (interactive()) {
   panel_convert(S_tsibble, to = "panelr")
   panel_convert(S_pdata.frame, to = "panelr")
   S_panel_data
-
 }
-
-
 }
