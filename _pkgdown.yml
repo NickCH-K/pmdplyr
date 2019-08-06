@@ -8,7 +8,7 @@ reference:
     - ends_with("pibble")
     - panel_convert
 
-- title: dplyr verb variants for pdeclare objects
+- title: dplyr verb variants for pibbles
   contents:
     - inexact_inner_join
     - inexact_left_join
