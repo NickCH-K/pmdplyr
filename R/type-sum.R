@@ -26,7 +26,7 @@ tbl_sum.tbl_pb <- function(x) {
   d <- x %@% ".d"
   groups <- x %@% "groups"
 
-  if (!is_empty(i)) {
+  if (!rlang::is_empty(i) & !is.na(i)) {
     n_distinct_i <- x %>%
       dplyr::distinct(!!!syms(i)) %>%
       NROW()
@@ -38,7 +38,7 @@ tbl_sum.tbl_pb <- function(x) {
     }
   }
 
-  if (!is_empty(t)) {
+  if (!is_empty(t) & !is.na(t)) {
     res <- c(res, "Time variable (.t)" = paste(t, unique_brackets(x, t)))
   }
 

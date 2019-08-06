@@ -19,6 +19,10 @@ Imports:
     vctrs, 
     rlang (>= 0.4.0)
 Suggests: 
+    tsibble,
+    plm,
+    panelr,
+    sjlabelled,
     knitr,
     rmarkdown,
     testthat (>= 2.1.0)

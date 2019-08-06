@@ -45,6 +45,8 @@ This function requires \code{.t} and \code{.d} to be declared in the function or
 }
 \examples{
 
+# Examples are too slow to run - this function is slow!
+if (interactive()) {
 data(Scorecard)
 # Notice that, in the Scorecard data, the gap between one year and the next is not always constant
 table((Scorecard \%>\% dplyr::arrange(year) \%>\%
@@ -66,8 +68,6 @@ Scorecard_filled <- panel_fill(Scorecard,
   .flag = "new"
 )
 
-# Additional examples too slow to run
-if (interactive()) {
   # Or maybe we want those observations in there but don't want to treat them as real data
   # so instead of filling them in, just leave all the data in the new obs blank
   # (note this sets EVERYTHING not in .i or .t to NA - if you only want some variables NA,
