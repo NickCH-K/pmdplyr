@@ -11,7 +11,7 @@ panel_convert(data, to, ...)
 
 \item{to}{Character variable set to \code{"pmdplyr", "pibble", "tbl_pb", "tsibble", "tbl_ts", "plm", "pdata.frame", "panelr"} or \code{"panel_data"} indicating the type/package to be converted to.}
 
-\item{...}{Additional arguments to be sent to, respectively, \code{as_pibble()}, \code{as_tsibble()}, \code{pdata.frame()}, or \code{panel_data()}.}
+\item{...}{Additional arguments to be sent to, respectively, \code{as_pibble()}, \code{tsibble::as_tsibble()}, \code{plm::pdata.frame()}, or \code{panelr::panel_data()}.}
 }
 \description{
 This function takes panel data objects declared using \code{pmdplyr} (\code{pibble}/\code{tbl_pb}), \code{tsibble} (\code{tsibble}/\code{tbl_ts}), \code{plm} (\code{pdata.frame}), and \code{panelr} (\code{panel_data}) and converts to one of the other three formats for use with functions in those packages.

@@ -28,7 +28,7 @@
 #'
 #' @param data Data frame - a \code{pibble}, \code{tsibble}, \code{pdata.frame}, or \code{panel_data} object.
 #' @param to Character variable set to \code{"pmdplyr", "pibble", "tbl_pb", "tsibble", "tbl_ts", "plm", "pdata.frame", "panelr"} or \code{"panel_data"} indicating the type/package to be converted to.
-#' @param ... Additional arguments to be sent to, respectively, \code{as_pibble()}, \code{as_tsibble()}, \code{pdata.frame()}, or \code{panel_data()}.
+#' @param ... Additional arguments to be sent to, respectively, \code{as_pibble()}, \code{tsibble::as_tsibble()}, \code{plm::pdata.frame()}, or \code{panelr::panel_data()}.
 #'
 #' @examples
 #' # Examples are set to not run in case you don't have the relevant target package installed.
