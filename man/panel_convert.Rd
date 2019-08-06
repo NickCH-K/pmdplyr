@@ -11,7 +11,7 @@ panel_convert(data, to, ...)
 
 \item{to}{Character variable set to \code{"pmdplyr", "pibble", "tbl_pb", "tsibble", "tbl_ts", "plm", "pdata.frame", "panelr"} or \code{"panel_data"} indicating the type/package to be converted to.}
 
-\item{...}{Additional arguments to be sent to, respectively, \code{as_pibble()}, \code{as_tsibble()}, \code{pdata.frame()}, or \code{panel_data()}.}
+\item{...}{Additional arguments to be sent to, respectively, \code{as_pibble()}, \code{tsibble::as_tsibble()}, \code{plm::pdata.frame()}, or \code{panelr::panel_data()}.}
 }
 \description{
 This function takes panel data objects declared using \code{pmdplyr} (\code{pibble}/\code{tbl_pb}), \code{tsibble} (\code{tsibble}/\code{tbl_ts}), \code{plm} (\code{pdata.frame}), and \code{panelr} (\code{panel_data}) and converts to one of the other three formats for use with functions in those packages.
@@ -48,7 +48,7 @@ if (interactive()) {
 
   S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
   S_tsibble <- tsibble::as_tsibble(Scorecard, key = unitid, index = year)
-  S_pdata.frame <- plm::pdata.frame(Scorecard, index=c("unitid", "year"))
+  S_pdata.frame <- plm::pdata.frame(Scorecard, index = c("unitid", "year"))
   S_panel_data <- panelr::panel_data(Scorecard, id = unitid, wave = year)
 
   # Make everything a pibble
@@ -75,8 +75,5 @@ if (interactive()) {
   panel_convert(S_tsibble, to = "panelr")
   panel_convert(S_pdata.frame, to = "panelr")
   S_panel_data
-
 }
-
-
 }

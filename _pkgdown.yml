@@ -5,9 +5,10 @@ reference:
 
 - title: Setting panel structure
   contents:
-    ends_with("pdeclare")
+    - ends_with("pibble")
+    - panel_convert
 
-- title: dplyr verb variants for pdeclare objects
+- title: dplyr verb variants for pibbles
   contents:
     - inexact_inner_join
     - inexact_left_join
@@ -36,6 +37,6 @@ reference:
     - Scorecard
     - SPrail
 
-- title: pdeclare methods for dplyr verbs
+- title: pibble methods for dplyr verbs
   contents:
-    - pdeclare_methods
+    - pibble_methods
