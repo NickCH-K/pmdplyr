@@ -6,7 +6,7 @@
 #'
 #' @param ... variables (vectors) that, together, make up the ID variables in the data and uniquely identifies the individual. Note that \code{id_variable()} will not check whether you've selected an appropriate set of variables; try running \code{as_pibble()} after getting your ID and time variables.
 #' @param .method Can be \code{'number'}, \code{'random'}, or \code{'character'}, as described below.
-#' @param .minwidth If \code{.method = 'character'}, omits the additional spacing that makes the ID variable fixed-width and ensures uniqueness. WARNING: This option saves space but may cause two individuals to have the same ID. Defaults to \code{FALSE}.
+#' @param .minwidth If \code{.method = 'character'}, omits the additional spacing that makes the ID variable fixed-width and ensures uniqueness. WARNING: This option saves space but may in rare cases cause two individuals to have the same ID. Defaults to \code{FALSE}.
 #' @examples
 #'
 #' data(SPrail)
@@ -81,7 +81,7 @@ id_variable <- function(..., .method = "number", .minwidth = FALSE) {
         ))
     }
     else {
-      idvar <- lapply(idf, as.character)
+      idvar <- lapply(data.frame(idf[,1:length(var)]), as.character)
     }
 
     # And smush 'em all together

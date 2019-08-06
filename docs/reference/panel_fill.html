@@ -171,32 +171,29 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>Scorecard</span>)
-  <span class='co'># Notice that, in the Scorecard data, the gap between one year and the next is not always constant</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a></span>((<span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span>(<span class='no'>year</span>) <span class='kw'>%&gt;%</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>unitid</span>) <span class='kw'>%&gt;%</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>diff</span> <span class='kw'>=</span> <span class='no'>year</span> - <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/lead-lag.html'>lag</a></span>(<span class='no'>year</span>)))$<span class='no'>diff</span>)</div><div class='output co'>#&gt; 
-#&gt;     1     2     3     4     5     6     7     9 
-#&gt; 29359 11608     6    22    17     4     3     2 </div><div class='input'>  <span class='co'># And also that not all universities show up for the first or last times in the same year</span>
-  <span class='no'>year_range</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>unitid</span>) <span class='kw'>%&gt;%</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span>(<span class='kw'>first_year</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='no'>year</span>), <span class='kw'>last_year</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>year</span>))
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a></span>(<span class='no'>year_range</span>$<span class='no'>first_year</span>)</div><div class='output co'>#&gt; 
-#&gt; 2007 2009 2011 2012 2013 2014 2015 2016 
-#&gt; 5846  316  432  354  170  147   67   92 </div><div class='input'>  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a></span>(<span class='no'>year_range</span>$<span class='no'>last_year</span>)</div><div class='output co'>#&gt; 
-#&gt; 2007 2009 2011 2012 2013 2014 2015 2016 
-#&gt;  142  151  130  159  236  815  485 5306 </div><div class='input'>  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rm'>rm</a></span>(<span class='no'>year_range</span>)
-
-  <span class='co'># We can deal with the inconsistent-gaps problem by creating new obs to fill in</span>
-  <span class='co'># this version will fill in the new obs with the most recently observed data, and flag them</span>
-  <span class='no'>Scorecard_filled</span> <span class='kw'>&lt;-</span> <span class='fu'>panel_fill</span>(<span class='no'>Scorecard</span>,
-    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
-    <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>,
-    <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"new"</span>
-  )
-
-<span class='co'># Additional examples too slow to run</span>
+<span class='co'># Examples are too slow to run - this function is slow!</span>
 <span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>()) {
+<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>Scorecard</span>)
+<span class='co'># Notice that, in the Scorecard data, the gap between one year and the next is not always constant</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a></span>((<span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span>(<span class='no'>year</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>unitid</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>diff</span> <span class='kw'>=</span> <span class='no'>year</span> - <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/lead-lag.html'>lag</a></span>(<span class='no'>year</span>)))$<span class='no'>diff</span>)
+<span class='co'># And also that not all universities show up for the first or last times in the same year</span>
+<span class='no'>year_range</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>unitid</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span>(<span class='kw'>first_year</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='no'>year</span>), <span class='kw'>last_year</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>year</span>))
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a></span>(<span class='no'>year_range</span>$<span class='no'>first_year</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a></span>(<span class='no'>year_range</span>$<span class='no'>last_year</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rm'>rm</a></span>(<span class='no'>year_range</span>)
+
+<span class='co'># We can deal with the inconsistent-gaps problem by creating new obs to fill in</span>
+<span class='co'># this version will fill in the new obs with the most recently observed data, and flag them</span>
+<span class='no'>Scorecard_filled</span> <span class='kw'>&lt;-</span> <span class='fu'>panel_fill</span>(<span class='no'>Scorecard</span>,
+  <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>,
+  <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>,
+  <span class='kw'>.flag</span> <span class='kw'>=</span> <span class='st'>"new"</span>
+)
+
   <span class='co'># Or maybe we want those observations in there but don't want to treat them as real data</span>
   <span class='co'># so instead of filling them in, just leave all the data in the new obs blank</span>
   <span class='co'># (note this sets EVERYTHING not in .i or .t to NA - if you only want some variables NA,</span>

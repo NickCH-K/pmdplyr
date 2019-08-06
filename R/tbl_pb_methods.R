@@ -95,7 +95,7 @@ distinct.tbl_pb <- function(.data, ..., .keep_all = FALSE) {
   # remove tbl_pb status so regular version is run
   class(.data) <- class(.data)[!(class(.data) %in% "tbl_pb")]
 
-  return(build_pibble(dplyr::distinct(.data, ..., .keep_all), .i, .t, .d))
+  return(build_pibble(dplyr::distinct(.data, ..., .keep_all = .keep_all), .i, .t, .d))
 }
 
 #' @rdname pibble_methods

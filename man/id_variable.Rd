@@ -11,7 +11,7 @@ id_variable(..., .method = "number", .minwidth = FALSE)
 
 \item{.method}{Can be \code{'number'}, \code{'random'}, or \code{'character'}, as described below.}
 
-\item{.minwidth}{If \code{.method = 'character'}, omits the additional spacing that makes the ID variable fixed-width and ensures uniqueness. WARNING: This option saves space but may cause two individuals to have the same ID. Defaults to \code{FALSE}.}
+\item{.minwidth}{If \code{.method = 'character'}, omits the additional spacing that makes the ID variable fixed-width and ensures uniqueness. WARNING: This option saves space but may in rare cases cause two individuals to have the same ID. Defaults to \code{FALSE}.}
 }
 \description{
 The pmdplyr library accepts the use of multiple ID variables. However, you may wish to combine these into a single variable, or renumber the single variable you already have for some reason.

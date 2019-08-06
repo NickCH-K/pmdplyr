@@ -81,6 +81,8 @@
 <li>
 <code>pdeclare</code>, <code>as_pdeclare</code>, and <code>is_pdeclare</code>: Set the panel structure for a data set, or check if it is already set.</li>
 <li>
+<code>panel_convert</code>: Converts between the panel data types <code><a href="reference/pibble.html">pmdplyr::pibble</a></code>, <code><a href="https://tsibble.tidyverts.org/reference/tsibble.html">tsibble::tsibble</a></code>, <code><a href="https://www.rdocumentation.org/packages/plm/topics/pdata.frame">plm::pdata.frame</a></code>, and <code><a href="https://www.rdocumentation.org/packages/panelr/topics/panel_data">panelr::panel_data</a></code>.</li>
+<li>
 <code>mutate_cascade</code>: A wrapper for <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code> which runs one period at a time, allowing changes in one period to finalize before the next period is calculated.</li>
 <li>
 <code>mutate_subset</code>: A wrapper for <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code> that performs a calculation on a subset of data, and then applies the result to all the observations (within group).</li>
