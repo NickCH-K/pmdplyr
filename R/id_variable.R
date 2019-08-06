@@ -81,7 +81,7 @@ id_variable <- function(..., .method = "number", .minwidth = FALSE) {
         ))
     }
     else {
-      idvar <- lapply(data.frame(idf[,1:length(var)]), as.character)
+      idvar <- lapply(data.frame(idf[, 1:length(var)]), as.character)
     }
 
     # And smush 'em all together
