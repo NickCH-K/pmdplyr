@@ -2,12 +2,12 @@
 % Please edit documentation in R/panel_consistency.R
 \name{fixed_check}
 \alias{fixed_check}
-\title{Function to check for inconsistency in variables that should be fixed}
+\title{Check for inconsistency in variables that should be fixed}
 \usage{
 fixed_check(.df, .var = NULL, .within = NULL)
 }
 \arguments{
-\item{.df}{Data frame or tibble.}
+\item{.df}{Data frame, pibble, or tibble.}
 
 \item{.var}{Quoted or unquoted variable(s) in \code{.df} that are to be checked for consistency. If not specified, uses all variables in \code{.df} that are not in \code{.within}.}
 

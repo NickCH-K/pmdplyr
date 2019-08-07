@@ -2,7 +2,7 @@
 % Please edit documentation in R/major_mutate_variations.R
 \name{mutate_subset}
 \alias{mutate_subset}
-\title{Function to propogate a calculation performed on a subset of data to the rest of the data}
+\title{Propogate a calculation performed on a subset of data to the rest of the data}
 \usage{
 mutate_subset(.df, ..., .filter, .group_i = TRUE, .i = NULL,
   .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE)

@@ -2,13 +2,13 @@
 % Please edit documentation in R/panel_consistency.R
 \name{fixed_force}
 \alias{fixed_force}
-\title{Function to enforce consistency in variables}
+\title{Enforce consistency in variables}
 \usage{
 fixed_force(.df, .var = NULL, .within = NULL, .resolve = function(x)
   unique(x)[which.max(tabulate(match(x, unique(x))))], .flag = NA)
 }
 \arguments{
-\item{.df}{Data frame or tibble.}
+\item{.df}{Data frame, pibble, or tibble.}
 
 \item{.var}{Quoted or unquoted variable(s) in \code{.df} that should be consistent. If not specified, uses all variables in \code{.df} that are not in \code{.within}.}
 

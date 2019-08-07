@@ -2,7 +2,7 @@
 % Please edit documentation in R/time_variable.R
 \name{time_variable}
 \alias{time_variable}
-\title{Function to create a pmdplyr-consistent time variable}
+\title{Create a single integer time period index variable}
 \usage{
 time_variable(..., .method = "present", .datepos = NA, .start = 1,
   .skip = NA, .breaks = NA, .turnover = NA, .turnover_start = NA)
@@ -25,10 +25,10 @@ time_variable(..., .method = "present", .datepos = NA, .start = 1,
 \item{.turnover_start}{A numeric vector the same length as the number of variables included indicating the minimum value that the corresponding variable in the list of variables takes, where NA indicates no minimum value, for use with \code{method='turnover'}. For example, if the variable list is \code{year,month} then you might have \code{.turnover=c(NA,1)}. Or if the variable list is \code{days-since-jan1-1970,hour,minute,second} you might have \code{.turnover=c(NA,0,0,0)}. By default this is a vector of 1s the same length as the number of variables, except for the first element, which is NA. Note that in almost all cases, the first element of \code{.turnover_start} should be \code{NA}, and all others should be non-NA.}
 }
 \description{
-This function takes either multiple time variables, or a single Date-class variable, and creates a single integer time variable easily usable with pmdplyr and other panel data functions.
+This function takes either multiple time variables, or a single Date-class variable, and creates a single integer time variable easily usable with functions in \code{pmdplyr} and other packages like \code{plm} and \code{panelr}.
 }
 \details{
-The pmdplyr library accepts only two kinds of time variables:
+The \code{pmdplyr} library accepts only two kinds of time variables:
 
 1. Ordinal time variables: Variables of any ordered type (\code{numeric}, \code{Date}, \code{character}) where the size of the gap between one value and the next does not matter. So if someone has two observations - one in period 3 and one in period 1, the period immediately before 3 is period 1, and two periods before 3 is missing. Set \code{.d=0} in your data to use this.
 

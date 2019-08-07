@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function to convert between panel data types — panel_convert • pmdplyr</title>
+<title>Convert between panel data types — panel_convert • pmdplyr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,7 +32,7 @@
 
 
 
-<meta property="og:title" content="Function to convert between panel data types — panel_convert" />
+<meta property="og:title" content="Convert between panel data types — panel_convert" />
 
 <meta property="og:description" content="This function takes panel data objects declared using pmdplyr (pibble/tbl_pb), tsibble (tsibble/tbl_ts), plm (pdata.frame), and panelr (panel_data) and converts to one of the other three formats for use with functions in those packages." />
 <meta name="twitter:card" content="summary" />
@@ -98,7 +98,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Function to convert between panel data types</h1>
+    <h1>Convert between panel data types</h1>
     
     <div class="hidden name"><code>panel_convert.Rd</code></div>
     </div>
@@ -133,27 +133,28 @@
     <p>Any grouping will be lost. You must have the relevant package installed to convert to the type for that package. Conversions from <code>pdata.frame</code> will be improved if <code>sjlabelled</code> is also installed.</p>
 <p>When using <code>panel_convert</code>, be aware of the requirements that each type has:</p>
 <table class='table'>
-<tr><td>Feature/Requirement</td><td>| <code>pibble</code></td><td>| <code>tsibble</code></td><td>| <code>pdata.frame</code></td><td>| <code>panel_data</code></td></tr>
+<tr><td>Feature/Requirement</td><td><code>pibble</code></td><td><code>tsibble</code></td><td><code>pdata.frame</code></td><td><code>panel_data</code></td></tr>
 <tr><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>ID</td><td><code>.i</code></td><td><code>key</code></td><td><code>index[1]</code></td><td><code>id</code></td></tr>
 <tr><td>Time</td><td><code>.t</code></td><td><code>index</code></td><td><code>index[2]</code></td><td><code>wave</code></td></tr>
 <tr><td>Gap control</td><td><code>.d</code></td><td><code>regular</code></td><td>No</td><td>No</td></tr>
 <tr><td>ID must exist</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
 <tr><td>Time must exist</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes[1]</td></tr>
-<tr><td>Only one ID variable</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
-<tr><td>Unique identification</td><td>No</td><td>Yes</td><td>No[2]</td><td>No[2]</td></tr>
+<tr><td>Only one ID variable[2]</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Unique identification</td><td>No</td><td>Yes</td><td>No[3]</td><td>No[3]</td></tr>
 </table>
 
 
 <p>[1] <code>pdata.frame</code> does not require that time be provided, but if not provided will create it based on original ordering of the data. The <code>pdata.frame</code> option to set <code>index</code> equal to an integer for a balanced panel and have it figure out the rest by itself is not supported.</p>
-<p>[2] <code>pdata.frame</code> and <code>panel_data</code> do not require that ID and time uniquely identify the observations on declaring the data, but functions in these packages may not work correctly without unique identification.</p>
+<p>[2] Use <code><a href='id_variable.html'>pmdplyr::id_variable()</a></code> to generate a single ID variable from multiple if one is required.</p>
+<p>[3] <code>pdata.frame</code> and <code>panel_data</code> do not require that ID and time uniquely identify the observations on declaring the data, but functions in these packages may not work correctly without unique identification.</p>
 <p>In addition to the above, be aware that the different packages have different requirements on which variable classes can be Time variables. <code><a href='time_variable.html'>pmdplyr::time_variable()</a></code> can build an integer variable that will work in all packages.</p>
 <p>You may run into some trouble if your data contains variables by the names <code>panel_convert_id</code>, <code>panel_convert_time</code>, <code>pibble_d</code>, or <code>panel_convert_regular</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Examples are set to not run in case you don't have the relevant target package installed.</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
+    <pre class="examples"><div class='input'><span class='co'># Only run examples if all the relevant packages are installed</span>
+<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tsibble"</span>, <span class='st'>"plm"</span>, <span class='st'>"panelr"</span>) <span class='kw'>%in%</span> <span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>()) <span class='kw'>==</span> <span class='fl'>3</span>) {
   <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
 
   <span class='no'>S_pibble</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='as_pibble.html'>as_pibble</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>)
@@ -185,7 +186,23 @@
   <span class='fu'>panel_convert</span>(<span class='no'>S_tsibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>)
   <span class='fu'>panel_convert</span>(<span class='no'>S_pdata.frame</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>)
   <span class='no'>S_panel_data</span>
-}</div></pre>
+}</div><div class='output co'>#&gt; <span style='color: #555555;'># Panel data:    48,445 x 9</span><span>
+#&gt; </span><span style='color: #555555;'># entities:      unitid [7424]</span><span>
+#&gt; </span><span style='color: #555555;'># wave variable: year [2007, 2009, 2011, ... (8 waves)]</span><span>
+#&gt;    unitid  year inst_name state_abbr pred_degree_awa~ earnings_med
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                 </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>
+#&gt; </span><span style='color: #555555;'> 1</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>007 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>36</span><span>600
+#&gt; </span><span style='color: #555555;'> 2</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>009 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>32</span><span>600
+#&gt; </span><span style='color: #555555;'> 3</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>011 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>31</span><span>400
+#&gt; </span><span style='color: #555555;'> 4</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>012 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>30</span><span>300
+#&gt; </span><span style='color: #555555;'> 5</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>013 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>29</span><span>900
+#&gt; </span><span style='color: #555555;'> 6</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>014 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>31</span><span>000
+#&gt; </span><span style='color: #555555;'> 7</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>015 Alabama ~ AL                        3           </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #555555;'> 8</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>016 Alabama ~ AL                        3           </span><span style='color: #BB0000;'>NA</span><span>
+#&gt; </span><span style='color: #555555;'> 9</span><span> 100663  </span><span style='text-decoration: underline;'>2</span><span>007 Universi~ AL                        3        </span><span style='text-decoration: underline;'>40</span><span>800
+#&gt; </span><span style='color: #555555;'>10</span><span> 100663  </span><span style='text-decoration: underline;'>2</span><span>009 Universi~ AL                        3        </span><span style='text-decoration: underline;'>42</span><span>800
+#&gt; </span><span style='color: #555555;'># ... with 48,435 more rows, and 3 more variables: count_not_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>,
+#&gt; #   count_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, repay_rate </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

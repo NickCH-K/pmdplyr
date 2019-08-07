@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function to perform mutate one time period at a time ('Cascading mutate') — mutate_cascade • pmdplyr</title>
+<title>Perform mutate one time period at a time ('Cascading mutate') — mutate_cascade • pmdplyr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,7 +32,7 @@
 
 
 
-<meta property="og:title" content="Function to perform mutate one time period at a time ('Cascading mutate') — mutate_cascade" />
+<meta property="og:title" content="Perform mutate one time period at a time ('Cascading mutate') — mutate_cascade" />
 
 <meta property="og:description" content="This function is a wrapper for dplyr::mutate() which performs mutate one time period at a time, allowing each period's calculation to complete before moving on to the next. This allows changes in one period to 'cascade down' to later periods. This is (number of time periods) slower than regular mutate() and, generally, is only used for mutations where an existing variable is being defined in terms of its own lag() or tlag(). This is similar in concept to (and also slower than) cumsum but is much more flexible, and works with data that has multiple observations per individual-period using tlag(). For example, this could be used to calculate the current value of a savings account given a variable with each period's deposits, withdrawals, and interest, or could calculate the cumulative number of credits a student has taken across all classes." />
 <meta name="twitter:card" content="summary" />
@@ -98,7 +98,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Function to perform mutate one time period at a time ('Cascading mutate')</h1>
+    <h1>Perform mutate one time period at a time ('Cascading mutate')</h1>
     
     <div class="hidden name"><code>mutate_cascade.Rd</code></div>
     </div>

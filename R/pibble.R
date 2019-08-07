@@ -1,4 +1,4 @@
-#' pibble
+#' Create a pibble panel data set object
 #'
 #' This function declares a pibble tibble with the attributes \code{.i}, \code{.t}, and \code{.d}.
 #'
@@ -109,7 +109,7 @@ vec_restore.tbl_pb <- function(x, to) {
 }
 
 
-#' Coerce to a pibble tibble
+#' Coerce to a pibble panel data set object
 #'
 #' This function coerces a tibble, data.frame, or list to a pibble tibble by adding the \code{.i}, \code{.t}, and \code{.d} attributes to it.
 #'
@@ -301,7 +301,7 @@ This message will be displayed only once per session unless the .uniqcheck optio
   }
 }
 
-#' Function to check whether an object has been declared as panel data
+#' Check whether an object has been declared as panel data
 #'
 #' Checks whether a data set (\code{data.frame} or \code{tibble}) has been assigned panel identifiers in the \code{pmdplyr} format. If so, returns those identifiers.
 #'

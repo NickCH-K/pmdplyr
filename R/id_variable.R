@@ -1,4 +1,4 @@
-#' Function to create a single panel ID variable out of several
+#' Create a single panel ID variable out of several
 #'
 #' The pmdplyr library accepts the use of multiple ID variables. However, you may wish to combine these into a single variable, or renumber the single variable you already have for some reason.
 #'

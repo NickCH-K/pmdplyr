@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function to create a pmdplyr-consistent time variable — time_variable • pmdplyr</title>
+<title>Create a single integer time period index variable — time_variable • pmdplyr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
 
 
-<meta property="og:title" content="Function to create a pmdplyr-consistent time variable — time_variable" />
+<meta property="og:title" content="Create a single integer time period index variable — time_variable" />
 
-<meta property="og:description" content="This function takes either multiple time variables, or a single Date-class variable, and creates a single integer time variable easily usable with pmdplyr and other panel data functions." />
+<meta property="og:description" content="This function takes either multiple time variables, or a single Date-class variable, and creates a single integer time variable easily usable with functions in pmdplyr and other packages like plm and panelr." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -98,14 +98,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Function to create a pmdplyr-consistent time variable</h1>
+    <h1>Create a single integer time period index variable</h1>
     
     <div class="hidden name"><code>time_variable.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function takes either multiple time variables, or a single Date-class variable, and creates a single integer time variable easily usable with pmdplyr and other panel data functions.</p>
+    <p>This function takes either multiple time variables, or a single Date-class variable, and creates a single integer time variable easily usable with functions in <code>pmdplyr</code> and other packages like <code>plm</code> and <code>panelr</code>.</p>
     
     </div>
 
@@ -151,7 +151,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The pmdplyr library accepts only two kinds of time variables:</p>
+    <p>The <code>pmdplyr</code> library accepts only two kinds of time variables:</p>
 <p>1. Ordinal time variables: Variables of any ordered type (<code>numeric</code>, <code>Date</code>, <code>character</code>) where the size of the gap between one value and the next does not matter. So if someone has two observations - one in period 3 and one in period 1, the period immediately before 3 is period 1, and two periods before 3 is missing. Set <code>.d=0</code> in your data to use this.</p>
 <p>2. Cardinal time variables: Numeric variables with a fixed gap between one observation and the next, where the size of that gap is given by <code>.d</code>. So if <code>.d=1</code> and someone has two observations - one in period 3 and one in period 1, the period immediately before 3 is missing, and two periods before 3 is period 1.</p>
 <p>If you would like to have a cardinal time variable but your data is not currently in that format, <code>time_variable()</code> will help you create a new variable that works with a setting of <code>.d=1</code>, the default.</p>

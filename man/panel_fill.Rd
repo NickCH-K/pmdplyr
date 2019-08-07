@@ -2,7 +2,7 @@
 % Please edit documentation in R/panel_consistency.R
 \name{panel_fill}
 \alias{panel_fill}
-\title{Function to fill in gaps in panel data}
+\title{Fill in gaps in panel data}
 \usage{
 panel_fill(.df, .set_NA = FALSE, .min = NA, .max = NA,
   .backwards = FALSE, .group_i = TRUE, .flag = NA, .i = NULL,

@@ -1,9 +1,9 @@
-#' Function to retrieve time-lagged data
+#' Time-lag a variable
 #'
 #' This function retrieves the time-lagged values of a variable, using the time variable defined in \code{.t} in the function or by \code{as_pibble()}. \code{tlag()} is highly unusual among time-lag functions in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
 #'
 #' @param .var Unquoted variable from \code{.df} to be lagged.
-#' @param .df Ungrouped data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
+#' @param .df Data frame, pibble, or tibble (usually the object that contains \code{.var}) that contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
 #' @param .n Number of periods to lag by. 1 by default. Note that this is automatically scaled by \code{.d}. If \code{.d = 2} and \code{.n = 1}, then the lag of \code{.t = 3} will be \code{.t = 1}. Allows negative values, equivalent to \code{tlead()} with the same value but positive. Note that \code{.n} is ignored if \code{.d=0}.
 #' @param .default Fill-in value used when lagged observation is not present. Defaults to NA.
 #' @param .quick If \code{.i} and \code{.t} uniquely identify observations in your data, **and** there either \code{.d = 0} or there are no time gaps for any individuals (perhaps use \code{panel_fill()} first), set \code{.quick = TRUE} to improve speed. \code{tlag()} will not check if either of these things are true (except unique identification, which will be checked if \code{.uniqcheck = 1} or if \code{.i} or \code{.t} are specified in-function), so make sure they are or you will get strange results.

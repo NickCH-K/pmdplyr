@@ -2,7 +2,7 @@
 % Please edit documentation in R/id_variable.R
 \name{id_variable}
 \alias{id_variable}
-\title{Function to create a single panel ID variable out of several}
+\title{Create a single panel ID variable out of several}
 \usage{
 id_variable(..., .method = "number", .minwidth = FALSE)
 }

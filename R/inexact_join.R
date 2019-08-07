@@ -1,4 +1,4 @@
-#' Function to join two data frames inexactly
+#' Join two data frames inexactly
 #'
 #' These functions are modifications of the standard \code{dplyr} \code{join} functions, except that it allows a variable of an ordered type (like date or numeric) in \code{x} to be matched in inexact ways to variables in \code{y}.
 #'

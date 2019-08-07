@@ -6,7 +6,7 @@
 \alias{as_pibble.grouped_df}
 \alias{as_pibble.data.frame}
 \alias{as_pibble.list}
-\title{Coerce to a pibble tibble}
+\title{Coerce to a pibble panel data set object}
 \usage{
 as_pibble(x, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE, ...)
 

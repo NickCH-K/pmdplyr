@@ -4,7 +4,7 @@
 \encoding{UTF-8}
 \name{SPrail}
 \alias{SPrail}
-\title{Data on 2,000 Spanish train trips}
+\title{2,000 Spanish train trips}
 \format{A data frame with 2,000 rows and 9 variables:
 \describe{
   \item{insert_date}{Date and time when ticket was paid for.}

@@ -1,4 +1,4 @@
-#' Function to perform mutate one time period at a time ('Cascading mutate')
+#' Perform mutate one time period at a time ('Cascading mutate')
 #'
 #' This function is a wrapper for \code{dplyr::mutate()} which performs \code{mutate} one time period at a time, allowing each period's calculation to complete before moving on to the next. This allows changes in one period to 'cascade down' to later periods. This is (number of time periods) slower than regular \code{mutate()} and, generally, is only used for mutations where an existing variable is being defined in terms of its own \code{lag()} or \code{tlag()}. This is similar in concept to (and also slower than) \code{cumsum} but is much more flexible, and works with data that has multiple observations per individual-period using \code{tlag()}. For example, this could be used to calculate the current value of a savings account given a variable with each period's deposits, withdrawals, and interest, or could calculate the cumulative number of credits a student has taken across all classes.
 #'
@@ -125,7 +125,7 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   return(.df)
 }
 
-#' Function to propogate a calculation performed on a subset of data to the rest of the data
+#' Propogate a calculation performed on a subset of data to the rest of the data
 #'
 #' This function performs \code{dplyr::summarize} on a \code{.filter}ed subset of data. Then it applies the result to all observations (or all observations in the group, if applied to grouped data), filling in columns of the data with the summarize results, as though \code{dplyr::mutate} had been run.
 #'

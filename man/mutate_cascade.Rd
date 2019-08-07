@@ -2,7 +2,7 @@
 % Please edit documentation in R/major_mutate_variations.R
 \name{mutate_cascade}
 \alias{mutate_cascade}
-\title{Function to perform mutate one time period at a time ('Cascading mutate')}
+\title{Perform mutate one time period at a time ('Cascading mutate')}
 \usage{
 mutate_cascade(.df, ..., .skip = TRUE, .backwards = FALSE,
   .group_i = TRUE, .i = NULL, .t = NULL, .d = NA,

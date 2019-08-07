@@ -4,7 +4,7 @@
 \encoding{UTF-8}
 \name{Scorecard}
 \alias{Scorecard}
-\title{Data on Earnings and Loan Repayment in US Four-Year Colleges}
+\title{Earnings and Loan Repayment in US Four-Year Colleges}
 \format{A data frame with 48,445 rows and 8 variables:
 \describe{
   \item{unitid}{College identifiers.}

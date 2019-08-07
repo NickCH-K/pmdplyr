@@ -4,7 +4,7 @@
 \alias{panel_calculations}
 \alias{within_i}
 \alias{between_i}
-\title{Functions to perform standard panel-data calculations}
+\title{Perform standard panel-data calculations}
 \usage{
 within_i(.var, .df = get(".", envir = parent.frame()),
   .fcn = function(x) mean(x, na.rm = TRUE), .i = NULL, .t = NULL,
@@ -17,7 +17,7 @@ between_i(.var, .df = get(".", envir = parent.frame()),
 \arguments{
 \item{.var}{Vector to be transformed}
 
-\item{.df}{Ungrouped data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
+\item{.df}{Data frame, pibble, or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
 
 \item{.fcn}{The function to be passed to \code{dplyr::summarize()}. \code{x - .fcn(x)} within \code{.i} is the within tranformation. \code{.fcn(x)} within \code{.i} minus \code{.fcn} overall is the between transformation. This will almost always be the default \code{.fcn = function(x) mean(x,na.rm=TRUE)}.}
 

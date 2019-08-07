@@ -2,7 +2,7 @@
 % Please edit documentation in R/panel_consistency.R
 \name{panel_locf}
 \alias{panel_locf}
-\title{Function to fill in missing (or other) values using known data}
+\title{Fill in missing (or other) values of a panel data set using known data}
 \usage{
 panel_locf(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   .backwards = FALSE, .resolve = "error", .group_i = TRUE,
@@ -11,7 +11,7 @@ panel_locf(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 \arguments{
 \item{.var}{Vector to be modified.}
 
-\item{.df}{Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
+\item{.df}{Data frame, pibble, or tibble (usually the one contains \code{.var}) that contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
 
 \item{.fill}{Vector of values to be overwritten. Just \code{NA} by default.}
 

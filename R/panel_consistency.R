@@ -1,4 +1,4 @@
-#' Function to fill in gaps in panel data
+#' Fill in gaps in panel data
 #'
 #' This function creates new observations to fill in any gaps in panel data. For example, if individual 1 has an observation in periods t = 1 and t = 3 but no others, this function will create an observation for t = 2. By default, the t = 2 observation will be identical to the t = 1 observation except for the time variable, but this can be adjusted. This function returns data sorted by \code{.i} and \code{.t}.
 #'
@@ -299,14 +299,14 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   return(.df)
 }
 
-#' Function to fill in missing (or other) values using known data
+#' Fill in missing (or other) values of a panel data set using known data
 #'
 #' This function looks for a list of values (usually, just \code{NA}) in a variable \code{.var} and overwrites those values with the most recent (or next-coming) values that are not from that list.
 #'
 #' \code{panel_locf()} is unusual among last-observation-carried-forward functions (like \code{zoo}'s \code{na.locf}) in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
 #'
 #' @param .var Vector to be modified.
-#' @param .df Data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
+#' @param .df Data frame, pibble, or tibble (usually the one contains \code{.var}) that contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
 #' @param .fill Vector of values to be overwritten. Just \code{NA} by default.
 #' @param .backwards By default, values of newly-created observations are copied from the most recently available period. Set \code{.backwards = TRUE} to instead copy values from the closest *following* period.
 #' @param .resolve If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{panel_locf()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = function(x) mean(x)} to get the mean value of all observations present for that individual/period. \code{.resolve} will also be used to fill in values if some values in a given individual/period are to be overwritten and others aren't.
@@ -487,11 +487,11 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 }
 
 
-#' Function to check for inconsistency in variables that should be fixed
+#' Check for inconsistency in variables that should be fixed
 #'
 #' This function checks whether one set of variables is consistent within values of another set of variables. If they are, returns \code{TRUE}. If they aren't, it will return a list of data frames, one for each element of \code{.var}, consisting only of the observations and variables in which there are inconsistencies.
 #'
-#' @param .df Data frame or tibble.
+#' @param .df Data frame, pibble, or tibble.
 #' @param .var Quoted or unquoted variable(s) in \code{.df} that are to be checked for consistency. If not specified, uses all variables in \code{.df} that are not in \code{.within}.
 #' @param .within Quotes or unquoted variable(s) that the \code{.var} variables should be consistent within.
 #' @examples
@@ -559,13 +559,13 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
   }
 }
 
-#' Function to enforce consistency in variables
+#' Enforce consistency in variables
 #'
 #' This function forces values the variables in \code{.var} to take constant values within combinations of the variables in \code{.within}. \code{fixed_force()} will return a data frame with consistency enforced.
 #'
 #' Inconsistencies will be resolved by the function \code{.resolve}. Or, set \code{.resolve} to \code{'drop'} (or any string, really) to drop all cases with inconsistency.
 #'
-#' @param .df Data frame or tibble.
+#' @param .df Data frame, pibble, or tibble.
 #' @param .var Quoted or unquoted variable(s) in \code{.df} that should be consistent. If not specified, uses all variables in \code{.df} that are not in \code{.within}.
 #' @param .within Quotes or unquoted variable(s) that the \code{.var} variables should be consistent within.
 #' @param .resolve Function capable of being passed to \code{dplyr::summarize()} that will be used to resolve inconsistencies. Or, set to \code{'drop'} or any string to drop all inconsistent observations. By default, this will return the mode (ties use the first observed value).

@@ -2,7 +2,7 @@
 % Please edit documentation in R/pibble.R
 \name{is_pibble}
 \alias{is_pibble}
-\title{Function to check whether an object has been declared as panel data}
+\title{Check whether an object has been declared as panel data}
 \usage{
 is_pibble(.df, .silent = FALSE)
 }

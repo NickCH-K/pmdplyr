@@ -2,7 +2,7 @@
 % Please edit documentation in R/tlag.R
 \name{tlag}
 \alias{tlag}
-\title{Function to retrieve time-lagged data}
+\title{Time-lag a variable}
 \usage{
 tlag(.var, .df = get(".", envir = parent.frame()), .n = 1,
   .default = NA, .quick = FALSE, .resolve = "error",
@@ -12,7 +12,7 @@ tlag(.var, .df = get(".", envir = parent.frame()), .n = 1,
 \arguments{
 \item{.var}{Unquoted variable from \code{.df} to be lagged.}
 
-\item{.df}{Ungrouped data frame or tibble (usually the data frame or tibble that contains \code{.var}) which contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
+\item{.df}{Data frame, pibble, or tibble (usually the object that contains \code{.var}) that contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.}
 
 \item{.n}{Number of periods to lag by. 1 by default. Note that this is automatically scaled by \code{.d}. If \code{.d = 2} and \code{.n = 1}, then the lag of \code{.t = 3} will be \code{.t = 1}. Allows negative values, equivalent to \code{tlead()} with the same value but positive. Note that \code{.n} is ignored if \code{.d=0}.}
 

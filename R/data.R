@@ -1,4 +1,4 @@
-#' Data on Earnings and Loan Repayment in US Four-Year Colleges
+#' Earnings and Loan Repayment in US Four-Year Colleges
 #'
 #' From the College Scorecard, this data set contains by-college-by-year data on how students who attended those colleges are doing.
 #'
@@ -25,7 +25,7 @@
 "Scorecard"
 
 
-#' Data on 2,000 Spanish train trips
+#' 2,000 Spanish train trips
 #'
 #' This data set is a random subsample of a much larger database of trips taken on the Spanish High Speed Train Service (Renfe AVE).
 #'

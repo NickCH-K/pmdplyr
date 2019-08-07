@@ -2,7 +2,7 @@
 % Please edit documentation in R/pibble.R
 \name{pibble}
 \alias{pibble}
-\title{pibble}
+\title{Create a pibble panel data set object}
 \arguments{
 \item{.df}{Data frame or tibble to declare as a panel.}
 

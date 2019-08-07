@@ -9,7 +9,7 @@
 \alias{inexact_semi_join}
 \alias{inexact_nest_join}
 \alias{inexact_anti_join}
-\title{Function to join two data frames inexactly}
+\title{Join two data frames inexactly}
 \usage{
 inexact_inner_join(x, y, by = NULL, copy = FALSE, suffix = c(".x",
   ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE)
