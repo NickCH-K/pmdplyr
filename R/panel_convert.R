@@ -40,6 +40,11 @@
 #' # But starting with another type will of course work!
 #' S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
 #'
+#' # Get a tsibble
+#' if ("tsibble" %in% utils::installed.packages()) {
+#'   head(panel_convert(S_pibble, to = "tsibble"))
+#' }
+#'
 #'
 #' @export
 
