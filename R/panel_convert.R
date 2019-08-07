@@ -33,6 +33,13 @@
 #' @param ... Additional arguments to be sent to, respectively, \code{as_pibble()}, \code{tsibble::as_tsibble()}, \code{plm::pdata.frame()}, or \code{panelr::panel_data()}.
 #'
 #' @examples
+#' # Only run examples if the relevant packages are installed
+#' data(Scorecard)
+#'
+#' # The example will turn a pibble to everything else
+#' # But starting with another type will of course work!
+#' S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
+#'
 #'
 #' @export
 
