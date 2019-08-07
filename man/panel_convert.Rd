@@ -44,21 +44,26 @@ In addition to the above, be aware that the different packages have different re
 You may run into some trouble if your data contains variables by the names \code{panel_convert_id}, \code{panel_convert_time}, \code{pibble_d}, or \code{panel_convert_regular}.
 }
 \examples{
-# Only run examples if all the relevant packages are installed
-if (sum(c("tsibble", "plm", "panelr") \%in\% utils::installed.packages()) == 3) {
-  data(Scorecard)
+# Only run examples if the relevant packages are installed
+data(Scorecard)
 
-  # The example will turn a pibble to everything else
-  # But starting with another type will of course work!
-  S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
+# The example will turn a pibble to everything else
+# But starting with another type will of course work!
+S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
 
-  # Get a tsibble
-  panel_convert(S_pibble, to = "tsibble")
-
-  # Now for pdata.frame
-  head(panel_convert(S_pibble, to = "plm"))
-
-  # And finally panel_data
-  panel_convert(S_pibble, to = "panelr")
+# Get a tsibble
+if ("tsibble" \%in\% utils::installed.packages()) {
+  head(panel_convert(S_pibble, to = "tsibble"))
 }
+
+# Now for pdata.frame
+if ("tsibble" \%in\% utils::installed.packages()) {
+  head(panel_convert(S_pibble, to = "plm"))
+}
+
+# And finally panel_data
+if ("panelr" \%in\% utils::installed.packages()) {
+  head(panel_convert(S_pibble, to = "panelr"))
+}
+
 }

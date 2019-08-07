@@ -75,10 +75,12 @@ id_variable <- function(..., .method = "number", .minwidth = FALSE) {
     # Fill out to fixed width to ensure uniqueness.
     # Drop the | in there in case something ends with a period and to make clear where each ID component begins and ends
     if (.minwidth == FALSE) {
-      idvar <- lapply(1:length(var), function(x) paste("|", idf[, x], "|",
+      idvar <- lapply(1:length(var), function(x) {
+        paste("|", idf[, x], "|",
           sapply(as.character(idf[, x]), function(y) paste0(rep(".", maxlen[x] - nchar(y)), collapse = "")),
           sep = ""
-        ))
+        )
+      })
     }
     else {
       idvar <- lapply(data.frame(idf[, 1:length(var)]), as.character)

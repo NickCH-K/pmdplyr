@@ -234,14 +234,16 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
     dplyr::left_join(lookup, by = arrnames)
 
   if (!is.na(.default)) {
-    .df <- .df %>% dplyr::mutate_at(varname, .funs = function(x)
-      ifelse(is.na(.df[[foundmatch]]), .default, .df[[varname]]))
+    .df <- .df %>% dplyr::mutate_at(varname, .funs = function(x) {
+      ifelse(is.na(.df[[foundmatch]]), .default, .df[[varname]])
+    })
   }
 
   # Failure to look up is NA, not NaN
   .df <- .df %>%
-    dplyr::mutate_at(varname, .funs = function(x)
-      ifelse(is.nan(x), NA, x))
+    dplyr::mutate_at(varname, .funs = function(x) {
+      ifelse(is.nan(x), NA, x)
+    })
 
   return(.df[[varname]])
 }

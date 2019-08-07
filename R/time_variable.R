@@ -299,12 +299,13 @@ Note that when .method='month', the first element of .breaks should usually be 1
 
       # Set your month value to the most recent break, and merge with the lookup table
       td <- td %>%
-        dplyr::mutate(.breaks = sapply(td$timevarM, FUN = function(x)
+        dplyr::mutate(.breaks = sapply(td$timevarM, FUN = function(x) {
           if (is.na(x)) {
             NA
           } else {
             max(.breaks[.breaks <= x])
-          })) %>%
+          }
+        })) %>%
         # get rid of timevar and reform
         dplyr::select(-timevarM) %>%
         dplyr::left_join(breakstb, by = ".breaks")
@@ -468,13 +469,14 @@ time_variable_turnover <- function(..., .turnover = NA, .turnover_start = NA) {
   td <- data
 
   # Set everything to start at 1
-  td <- data.frame(sapply(1:length(var), function(x)
+  td <- data.frame(sapply(1:length(var), function(x) {
     if (is.na(.turnover[x])) {
       td[, x] - min(td[, x], na.rm = TRUE) + 1
     }
     else {
       td[, x] - .turnover_start[x] + 1
-    }))
+    }
+  }))
 
   # And reduce the top-end to match
   .turnover <- ifelse(is.na(.turnover), NA, .turnover - .turnover_start + 1)

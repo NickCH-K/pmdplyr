@@ -208,10 +208,12 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       .funs =
         function(x) abs(x - dplyr::lead(x)) / inp$d - 1
     ) %>%
-    dplyr::mutate_at(copyname, .funs = function(x) dplyr::case_when(
-      is.na(x) | is.infinite(x) ~ 0,
-      TRUE ~ x
-    ))
+    dplyr::mutate_at(copyname, .funs = function(x) {
+      dplyr::case_when(
+        is.na(x) | is.infinite(x) ~ 0,
+        TRUE ~ x
+      )
+    })
 
   # And propogate that result to others in the same .t, since only the last-listed obs
   # in that period will get the right number
@@ -261,13 +263,14 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   # Increment the time to fill in, using .id
   # Which goes up or down depending on whether it's backwards or forwards
   tocopy <- tocopy %>%
-    dplyr::mutate_at(inp$t, .funs = function(x)
+    dplyr::mutate_at(inp$t, .funs = function(x) {
       if (.backwards == FALSE) {
         tocopy[[inp$t]] + tocopy[[newidname]] * inp$d
       }
       else {
         tocopy[[inp$t]] - tocopy[[newidname]] * inp$d
-      })
+      }
+    })
   tocopy[, newidname] <- NULL
 
   # plop everything back together, arrange, restore the original grouping, and return
@@ -429,8 +432,10 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   # Check if there's uniformity, if .resolve = 'error'
   if (is.character(.resolve) & dfmult > 0) {
     if (max((dfmult %>%
-             dplyr::mutate_at(worknames[1],
-                              function(x) dplyr::first(x) != x))[[worknames[1]]]) == 1) {
+      dplyr::mutate_at(
+        worknames[1],
+        function(x) dplyr::first(x) != x
+      ))[[worknames[1]]]) == 1) {
       stop("Values are not consistent within (.i, if specified, and) .t. See .resolve option.")
     }
     .resolve <- dplyr::first
@@ -448,8 +453,8 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
     .df <- .df %>%
       # implement the .resolve function
       dplyr::mutate_at(worknames[1], .funs = .resolve)
-      # If there aren't comparison values, can often resolve to NAN causing problems
-    .df[[worknames[1]]] <- ifelse(is.nan(.df[[worknames[1]]]),NA,.df[[worknames[1]]])
+    # If there aren't comparison values, can often resolve to NAN causing problems
+    .df[[worknames[1]]] <- ifelse(is.nan(.df[[worknames[1]]]), NA, .df[[worknames[1]]])
   }
 
   # If we're grouping by i, do that
@@ -476,11 +481,14 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
   .df[[worknames[1]]] <- (.df %>%
     dplyr::do(
-      data.frame(panel_consistency_length_measure_191817 = rle_na(.[[worknames[1]]])$lengths,
-       panel_consistency_values_measure_277616 = rle_na(.[[worknames[1]]])$values)
+      data.frame(
+        panel_consistency_length_measure_191817 = rle_na(.[[worknames[1]]])$lengths,
+        panel_consistency_values_measure_277616 = rle_na(.[[worknames[1]]])$values
+      )
     ) %>%
     tidyr::uncount(panel_consistency_length_measure_191817,
-                   .remove = FALSE))$panel_consistency_values_measure_277616
+      .remove = FALSE
+    ))$panel_consistency_values_measure_277616
 
   # Reorder back how it was and pull the variable out
   .var <- .df %>%
@@ -488,7 +496,7 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
     dplyr::pull(-2)
 
   # Fill in anything that was missing
-  #.var <- ifelse(is.na(.var), .df[[worknames[1]]], .var)
+  # .var <- ifelse(is.na(.var), .df[[worknames[1]]], .var)
   # Failure to lookup (NaN) is really a NA for us
   .var <- ifelse(is.nan(.var), NA, .var)
 
@@ -505,13 +513,14 @@ rle_na <- function(x) {
 
   y <- x[-1L] != x[-n]
   i <- c(which(y |
-                 (is.na(y) & !is.na(c(y[-1],1))) |
-                 (!is.na(x[-n]) & is.na(c(x[-c(1,n)],1)))), n)
+    (is.na(y) & !is.na(c(y[-1], 1))) |
+    (!is.na(x[-n]) & is.na(c(x[-c(1, n)], 1)))), n)
 
-  v <- ifelse(is.na(x[i]), c(NA,x[i][-length(i)]), x[i])
+  v <- ifelse(is.na(x[i]), c(NA, x[i][-length(i)]), x[i])
 
   structure(list(lengths = diff(c(0L, i)), values = v),
-            class = "rle")
+    class = "rle"
+  )
 }
 
 
@@ -572,12 +581,13 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
     dplyr::group_by_at(.withincall)
 
   # for each element of .var, drop consistent obs
-  result <- lapply(.varcall, function(x)
+  result <- lapply(.varcall, function(x) {
     .df %>%
       dplyr::arrange_at(x) %>%
       dplyr::filter_at(x, dplyr::any_vars(dplyr::first(.) != dplyr::last(.) |
-                                     is.na(dplyr::first(.)) != is.na(dplyr::last(.)))) %>%
-      dplyr::ungroup())
+        is.na(dplyr::first(.)) != is.na(dplyr::last(.)))) %>%
+      dplyr::ungroup()
+  })
 
   # check if there are any inconsistent obs
   # if so, return that. Otherwise return TRUE
@@ -702,4 +712,3 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = function(x)
 
   return(.df)
 }
-

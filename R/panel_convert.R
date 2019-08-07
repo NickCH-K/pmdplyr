@@ -33,23 +33,28 @@
 #' @param ... Additional arguments to be sent to, respectively, \code{as_pibble()}, \code{tsibble::as_tsibble()}, \code{plm::pdata.frame()}, or \code{panelr::panel_data()}.
 #'
 #' @examples
-#' # Only run examples if all the relevant packages are installed
-#' if (sum(c("tsibble", "plm", "panelr") %in% utils::installed.packages()) == 3) {
-#'   data(Scorecard)
+#' # Only run examples if the relevant packages are installed
+#' data(Scorecard)
 #'
-#'   # The example will turn a pibble to everything else
-#'   # But starting with another type will of course work!
-#'   S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
+#' # The example will turn a pibble to everything else
+#' # But starting with another type will of course work!
+#' S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
 #'
-#'   # Get a tsibble
-#'   panel_convert(S_pibble, to = "tsibble")
-#'
-#'   # Now for pdata.frame
-#'   head(panel_convert(S_pibble, to = "plm"))
-#'
-#'   # And finally panel_data
-#'   panel_convert(S_pibble, to = "panelr")
+#' # Get a tsibble
+#' if ("tsibble" %in% utils::installed.packages()) {
+#'   head(panel_convert(S_pibble, to = "tsibble"))
 #' }
+#'
+#' # Now for pdata.frame
+#' if ("tsibble" %in% utils::installed.packages()) {
+#'   head(panel_convert(S_pibble, to = "plm"))
+#' }
+#'
+#' # And finally panel_data
+#' if ("panelr" %in% utils::installed.packages()) {
+#'   head(panel_convert(S_pibble, to = "panelr"))
+#' }
+#'
 #' @export
 
 panel_convert <- function(data, to, ...) {
