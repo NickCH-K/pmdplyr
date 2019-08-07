@@ -21,6 +21,18 @@ Any grouping will be lost. You must have the relevant package installed to conve
 
 When using \code{panel_convert}, be aware of the requirements that each type has:
 
+\tabular{lcccc}{
+   Feature/Requirement \tab  \code{pibble}   \tab  \code{tsibble} \tab  \code{pdata.frame} \tab  \code{panel_data} \cr
+                         \tab           \tab                \tab                 \tab \cr
+   ID                    \tab \code{.i} \tab \code{key}     \tab \code{index[1]} \tab \code{id} \cr
+   Time                  \tab \code{.t} \tab \code{index}   \tab \code{index[2]} \tab \code{wave} \cr
+   Gap control           \tab \code{.d} \tab \code{regular} \tab No              \tab No  \cr
+   ID must exist         \tab No        \tab No             \tab Yes             \tab Yes \cr
+   Time must exist       \tab No        \tab Yes            \tab Yes             \tab Yes[1] \cr
+   Only one ID variable[2]\tab No        \tab No             \tab Yes             \tab Yes \cr
+   Unique identification \tab No        \tab Yes            \tab No[3]           \tab No[3]
+ }
+
 [1] \code{pdata.frame} does not require that time be provided, but if not provided will create it based on original ordering of the data. The \code{pdata.frame} option to set \code{index} equal to an integer for a balanced panel and have it figure out the rest by itself is not supported.
 
 [2] Use \code{pmdplyr::id_variable()} to generate a single ID variable from multiple if one is required.
@@ -45,7 +57,7 @@ if ("tsibble" \%in\% utils::installed.packages()) {
 }
 
 # Now for pdata.frame
-if ("tsibble" \%in\% utils::installed.packages()) {
+if ("plm" \%in\% utils::installed.packages()) {
   head(panel_convert(S_pibble, to = "plm"))
 }
 

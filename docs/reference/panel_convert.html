@@ -153,56 +153,69 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Only run examples if all the relevant packages are installed</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tsibble"</span>, <span class='st'>"plm"</span>, <span class='st'>"panelr"</span>) <span class='kw'>%in%</span> <span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>()) <span class='kw'>==</span> <span class='fl'>3</span>) {
-  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
+    <pre class="examples"><div class='input'><span class='co'># Only run examples if the relevant packages are installed</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
 
-  <span class='no'>S_pibble</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='as_pibble.html'>as_pibble</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>)
-  <span class='no'>S_tsibble</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tsibble</span><span class='kw ns'>::</span><span class='fu'><a href='https://tsibble.tidyverts.org/reference/as-tsibble.html'>as_tsibble</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='no'>year</span>)
-  <span class='no'>S_pdata.frame</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>plm</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>pdata.frame</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"unitid"</span>, <span class='st'>"year"</span>))
-  <span class='no'>S_panel_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>panelr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/panelr/man/panel_data.html'>panel_data</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>wave</span> <span class='kw'>=</span> <span class='no'>year</span>)
+<span class='co'># The example will turn a pibble to everything else</span>
+<span class='co'># But starting with another type will of course work!</span>
+<span class='no'>S_pibble</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='as_pibble.html'>as_pibble</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>)
 
-  <span class='co'># Make everything a pibble</span>
-  <span class='co'># Note variable order may be different coming from panelr, which changes variable order</span>
-  <span class='no'>S_pibble</span>
-  <span class='fu'>panel_convert</span>(<span class='no'>S_tsibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"pibble"</span>)
-  <span class='fu'>panel_convert</span>(<span class='no'>S_pdata.frame</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"pibble"</span>)
-  <span class='fu'>panel_convert</span>(<span class='no'>S_panel_data</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"pibble"</span>)
-
-  <span class='co'># Make everything a tsibble</span>
-  <span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"tsibble"</span>)
-  <span class='no'>S_tsibble</span>
-  <span class='fu'>panel_convert</span>(<span class='no'>S_pdata.frame</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"tsibble"</span>)
-  <span class='fu'>panel_convert</span>(<span class='no'>S_panel_data</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"tsibble"</span>)
-
-  <span class='co'># Now for pdata.frame</span>
+<span class='co'># Get a tsibble</span>
+<span class='kw'>if</span> (<span class='st'>"tsibble"</span> <span class='kw'>%in%</span> <span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>()) {
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"tsibble"</span>))
+}</div><div class='output co'>#&gt; <span style='color: #555555;'># A tsibble: 6 x 9 [1Y]</span><span>
+#&gt; </span><span style='color: #555555;'># Key:       unitid [1]</span><span>
+#&gt;   unitid inst_name state_abbr pred_degree_awa~  year earnings_med
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                 </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span> </span><span style='text-decoration: underline;'>100</span><span>654 Alabama ~ AL                        3  </span><span style='text-decoration: underline;'>2</span><span>007        </span><span style='text-decoration: underline;'>36</span><span>600
+#&gt; </span><span style='color: #555555;'>2</span><span> </span><span style='text-decoration: underline;'>100</span><span>654 Alabama ~ AL                        3  </span><span style='text-decoration: underline;'>2</span><span>009        </span><span style='text-decoration: underline;'>32</span><span>600
+#&gt; </span><span style='color: #555555;'>3</span><span> </span><span style='text-decoration: underline;'>100</span><span>654 Alabama ~ AL                        3  </span><span style='text-decoration: underline;'>2</span><span>011        </span><span style='text-decoration: underline;'>31</span><span>400
+#&gt; </span><span style='color: #555555;'>4</span><span> </span><span style='text-decoration: underline;'>100</span><span>654 Alabama ~ AL                        3  </span><span style='text-decoration: underline;'>2</span><span>012        </span><span style='text-decoration: underline;'>30</span><span>300
+#&gt; </span><span style='color: #555555;'>5</span><span> </span><span style='text-decoration: underline;'>100</span><span>654 Alabama ~ AL                        3  </span><span style='text-decoration: underline;'>2</span><span>013        </span><span style='text-decoration: underline;'>29</span><span>900
+#&gt; </span><span style='color: #555555;'>6</span><span> </span><span style='text-decoration: underline;'>100</span><span>654 Alabama ~ AL                        3  </span><span style='text-decoration: underline;'>2</span><span>014        </span><span style='text-decoration: underline;'>31</span><span>000
+#&gt; </span><span style='color: #555555;'># ... with 3 more variables: count_not_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, count_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>,
+#&gt; #   repay_rate </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
+<span class='co'># Now for pdata.frame</span>
+<span class='kw'>if</span> (<span class='st'>"plm"</span> <span class='kw'>%in%</span> <span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>()) {
   <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
-  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_tsibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
-  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>S_pdata.frame</span>)
-  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_panel_data</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
-
-  <span class='co'># And finally panel_data</span>
-  <span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>)
-  <span class='fu'>panel_convert</span>(<span class='no'>S_tsibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>)
-  <span class='fu'>panel_convert</span>(<span class='no'>S_pdata.frame</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>)
-  <span class='no'>S_panel_data</span>
-}</div><div class='output co'>#&gt; <span style='color: #555555;'># Panel data:    48,445 x 9</span><span>
-#&gt; </span><span style='color: #555555;'># entities:      unitid [7424]</span><span>
-#&gt; </span><span style='color: #555555;'># wave variable: year [2007, 2009, 2011, ... (8 waves)]</span><span>
-#&gt;    unitid  year inst_name state_abbr pred_degree_awa~ earnings_med
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                 </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>007 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>36</span><span>600
-#&gt; </span><span style='color: #555555;'> 2</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>009 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>32</span><span>600
-#&gt; </span><span style='color: #555555;'> 3</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>011 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>31</span><span>400
-#&gt; </span><span style='color: #555555;'> 4</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>012 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>30</span><span>300
-#&gt; </span><span style='color: #555555;'> 5</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>013 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>29</span><span>900
-#&gt; </span><span style='color: #555555;'> 6</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>014 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>31</span><span>000
-#&gt; </span><span style='color: #555555;'> 7</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>015 Alabama ~ AL                        3           </span><span style='color: #BB0000;'>NA</span><span>
-#&gt; </span><span style='color: #555555;'> 8</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>016 Alabama ~ AL                        3           </span><span style='color: #BB0000;'>NA</span><span>
-#&gt; </span><span style='color: #555555;'> 9</span><span> 100663  </span><span style='text-decoration: underline;'>2</span><span>007 Universi~ AL                        3        </span><span style='text-decoration: underline;'>40</span><span>800
-#&gt; </span><span style='color: #555555;'>10</span><span> 100663  </span><span style='text-decoration: underline;'>2</span><span>009 Universi~ AL                        3        </span><span style='text-decoration: underline;'>42</span><span>800
-#&gt; </span><span style='color: #555555;'># ... with 48,435 more rows, and 3 more variables: count_not_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>,
-#&gt; #   count_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, repay_rate </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+}</div><div class='output co'>#&gt;             unitid                inst_name state_abbr
+#&gt; 100654-2007 100654 Alabama A &amp; M University         AL
+#&gt; 100654-2009 100654 Alabama A &amp; M University         AL
+#&gt; 100654-2011 100654 Alabama A &amp; M University         AL
+#&gt; 100654-2012 100654 Alabama A &amp; M University         AL
+#&gt; 100654-2013 100654 Alabama A &amp; M University         AL
+#&gt; 100654-2014 100654 Alabama A &amp; M University         AL
+#&gt;             pred_degree_awarded_ipeds year earnings_med count_not_working
+#&gt; 100654-2007                         3 2007        36600               116
+#&gt; 100654-2009                         3 2009        32600               202
+#&gt; 100654-2011                         3 2011        31400               214
+#&gt; 100654-2012                         3 2012        30300               239
+#&gt; 100654-2013                         3 2013        29900               246
+#&gt; 100654-2014                         3 2014        31000               212
+#&gt;             count_working repay_rate
+#&gt; 100654-2007          1139         NA
+#&gt; 100654-2009          1410         NA
+#&gt; 100654-2011          1532         NA
+#&gt; 100654-2012          1601         NA
+#&gt; 100654-2013          1741  0.5118364
+#&gt; 100654-2014          1784  0.4202658</div><div class='input'>
+<span class='co'># And finally panel_data</span>
+<span class='kw'>if</span> (<span class='st'>"panelr"</span> <span class='kw'>%in%</span> <span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>()) {
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>))
+}</div><div class='output co'>#&gt; </span><span style='color: #555555;'># Panel data:    6 x 9</span><span>
+#&gt; </span><span style='color: #555555;'># entities:      unitid [1]</span><span>
+#&gt; </span><span style='color: #555555;'># wave variable: year [2007, 2009, 2011, ... (6 waves)]</span><span>
+#&gt;   unitid  year inst_name state_abbr pred_degree_awa~ earnings_med
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                 </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>007 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>36</span><span>600
+#&gt; </span><span style='color: #555555;'>2</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>009 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>32</span><span>600
+#&gt; </span><span style='color: #555555;'>3</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>011 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>31</span><span>400
+#&gt; </span><span style='color: #555555;'>4</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>012 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>30</span><span>300
+#&gt; </span><span style='color: #555555;'>5</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>013 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>29</span><span>900
+#&gt; </span><span style='color: #555555;'>6</span><span> 100654  </span><span style='text-decoration: underline;'>2</span><span>014 Alabama ~ AL                        3        </span><span style='text-decoration: underline;'>31</span><span>000
+#&gt; </span><span style='color: #555555;'># ... with 3 more variables: count_not_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, count_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>,
+#&gt; #   repay_rate </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

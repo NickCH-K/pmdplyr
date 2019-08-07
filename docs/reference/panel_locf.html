@@ -122,7 +122,7 @@
     </tr>
     <tr>
       <th>.df</th>
-      <td><p>Data frame, pibble, or tibble (usually the one contains <code>.var</code>) that contains the panel structure variables either listed in <code>.i</code> and <code>.t</code>, or earlier declared with <code><a href='as_pibble.html'>as_pibble()</a></code>. If <code>tlag</code> is called inside of a <code>dplyr</code> verb, this can be omitted and the data will be picked up automatically.</p></td>
+      <td><p>Data frame, pibble, or tibble (usually the one containing <code>.var</code>) that contains the panel structure variables either listed in <code>.i</code> and <code>.t</code>, or earlier declared with <code><a href='as_pibble.html'>as_pibble()</a></code>. If <code>tlag</code> is called inside of a <code>dplyr</code> verb, this can be omitted and the data will be picked up automatically.</p></td>
     </tr>
     <tr>
       <th>.fill</th>
@@ -134,7 +134,7 @@
     </tr>
     <tr>
       <th>.resolve</th>
-      <td><p>If there is more than one observation per individal/period, and the value of <code>.var</code> is identical for all of them, that's no problem. But what should <code>panel_locf()</code> do if they're not identical? Set <code>.resolve = 'error'</code> (or, really, any string) to throw an error in this circumstance. Or, set <code>.resolve</code> to a function that can be used within <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>dplyr::summarize()</a></code> to select a single value per individual/period. For example, <code>.resolve = function(x) mean(x)</code> to get the mean value of all observations present for that individual/period. <code>.resolve</code> will also be used to fill in values if some values in a given individual/period are to be overwritten and others aren't.</p></td>
+      <td><p>If there is more than one observation per individal/period, and the value of <code>.var</code> is identical for all of them, that's no problem. But what should <code>panel_locf()</code> do if they're not identical? Set <code>.resolve = 'error'</code> (or, really, any string) to throw an error in this circumstance. Or, set <code>.resolve</code> to a function that can be used within <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>dplyr::summarize()</a></code> to select a single value per individual/period. For example, <code>.resolve = function(x) mean(x)</code> to get the mean value of all observations present for that individual/period. <code>.resolve</code> will also be used to fill in values if some values in a given individual/period are to be overwritten and others aren't. Using a function will be quicker than <code>.resolve = 'error'</code>, so if you're certain there's no issue, you can speed up execution by setting, say, <code>.resolve = dplyr::first</code>.</p></td>
     </tr>
     <tr>
       <th>.group_i</th>
@@ -165,46 +165,41 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'># Examples are too slow to run</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
 
-  <span class='co'># The SPrail data has some missing price values.</span>
-  <span class='co'># Let's fill them in!</span>
-  <span class='co'># Note .d=0 tells it to ignore how big the gaps are</span>
-  <span class='co'># between one period and the next, just look for the most recent insert_date</span>
-  <span class='co'># .resolve tells it what value to pick if there are multiple</span>
-  <span class='co'># observed prices for that route/insert_date</span>
-  <span class='co'># (.resolve is not necessary if .i and .t uniquely identify obs,</span>
-  <span class='co'># or if .var is either NA or constant within them)</span>
-  <span class='co'># Also note - this will fill in using CURRENT-period</span>
-  <span class='co'># data first (if available) before looking for lagged data.</span>
-  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>SPrail</span>)
-  <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>SPrail</span>$<span class='no'>price</span>))
-  <span class='no'>SPrail</span> <span class='kw'>&lt;-</span> <span class='no'>SPrail</span> <span class='kw'>%&gt;%</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>price</span> <span class='kw'>=</span> <span class='fu'>panel_locf</span>(<span class='no'>price</span>,
-      <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>origin</span>, <span class='no'>destination</span>), <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>insert_date</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-      <span class='kw'>.resolve</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-    ))
+<span class='co'># The SPrail data has some missing price values.</span>
+<span class='co'># Let's fill them in!</span>
+<span class='co'># Note .d=0 tells it to ignore how big the gaps are</span>
+<span class='co'># between one period and the next, just look for the most recent insert_date</span>
+<span class='co'># .resolve tells it what value to pick if there are multiple</span>
+<span class='co'># observed prices for that route/insert_date</span>
+<span class='co'># (.resolve is not necessary if .i and .t uniquely identify obs,</span>
+<span class='co'># or if .var is either NA or constant within them)</span>
+<span class='co'># Also note - this will fill in using CURRENT-period</span>
+<span class='co'># data first (if available) before looking for lagged data.</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>SPrail</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>SPrail</span>$<span class='no'>price</span>))</div><div class='output co'>#&gt; [1] 249</div><div class='input'><span class='no'>SPrail</span> <span class='kw'>&lt;-</span> <span class='no'>SPrail</span> <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>price</span> <span class='kw'>=</span> <span class='fu'>panel_locf</span>(<span class='no'>price</span>,
+    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>origin</span>, <span class='no'>destination</span>), <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>insert_date</span>, <span class='kw'>.d</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+    <span class='kw'>.resolve</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  ))
 
-  <span class='co'># The spec is a little easier with data like Scorecard where</span>
-  <span class='co'># .i and .t uniquely identify observations.</span>
-  <span class='co'># Note that when the raw Scorecard data came in, it had -3 in place of NA. Let's restore that</span>
-  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
-  <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Scorecard</span>$<span class='no'>earnings_med</span>))
-  <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>earnings_med</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span>(
-      <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>earnings_med</span>) ~ <span class='fu'><a href='https://rdrr.io/r/base/double.html'>as.double</a></span>(-<span class='fl'>3</span>),
-      <span class='fl'>TRUE</span> ~ <span class='fu'><a href='https://rdrr.io/r/base/double.html'>as.double</a></span>(<span class='no'>earnings_med</span>)
-    )) <span class='kw'>%&gt;%</span>
-    <span class='co'># Now let's fill in NAs and also -3s</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>earnings_med</span> <span class='kw'>=</span> <span class='fu'>panel_locf</span>(<span class='no'>earnings_med</span>,
-      <span class='kw'>.fill</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, -<span class='fl'>3</span>),
-      <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>
-    ))
-  <span class='co'># Note that there are still some missings - these are missings that come before the first</span>
-  <span class='co'># non-missing value in that unitid, so there's nothing to pull from.</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Scorecard</span>$<span class='no'>earnings_med</span>))
-}</div></pre>
+<span class='co'># The spec is a little easier with data like Scorecard where</span>
+<span class='co'># .i and .t uniquely identify observations.</span>
+<span class='co'># Note that when the raw Scorecard data came in, it had -3 in place of NA. Let's restore that</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Scorecard</span>$<span class='no'>earnings_med</span>))</div><div class='output co'>#&gt; [1] 15706</div><div class='input'><span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>earnings_med</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span>(
+    <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>earnings_med</span>) ~ <span class='fu'><a href='https://rdrr.io/r/base/double.html'>as.double</a></span>(-<span class='fl'>3</span>),
+    <span class='fl'>TRUE</span> ~ <span class='fu'><a href='https://rdrr.io/r/base/double.html'>as.double</a></span>(<span class='no'>earnings_med</span>)
+  )) <span class='kw'>%&gt;%</span>
+  <span class='co'># Now let's fill in NAs and also -3s</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>earnings_med</span> <span class='kw'>=</span> <span class='fu'>panel_locf</span>(<span class='no'>earnings_med</span>,
+    <span class='kw'>.fill</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, -<span class='fl'>3</span>),
+    <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>
+  ))
+<span class='co'># Note that there are still some missings - these are missings that come before the first</span>
+<span class='co'># non-missing value in that unitid, so there's nothing to pull from.</span>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Scorecard</span>$<span class='no'>earnings_med</span>))</div><div class='output co'>#&gt; [1] 9864</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -45,6 +45,15 @@
 #'   head(panel_convert(S_pibble, to = "tsibble"))
 #' }
 #'
+#' # Now for pdata.frame
+#' if ("plm" %in% utils::installed.packages()) {
+#'   head(panel_convert(S_pibble, to = "plm"))
+#' }
+#'
+#' # And finally panel_data
+#' if ("panelr" %in% utils::installed.packages()) {
+#'   head(panel_convert(S_pibble, to = "panelr"))
+#' }
 #'
 #' @export
 
