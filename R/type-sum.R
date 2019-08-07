@@ -26,20 +26,24 @@ tbl_sum.tbl_pb <- function(x) {
   d <- x %@% ".d"
   groups <- x %@% "groups"
 
-  if (!rlang::is_empty(i) & !is.na(i)) {
-    n_distinct_i <- x %>%
-      dplyr::distinct(!!!syms(i)) %>%
-      NROW()
-    if (length(i) > 1) {
-      i <- paste(i, collapse = ", ")
-      res <- c(res, "Individual-level identifiers (.i)" = paste(i, brackets(n_distinct_i)))
-    } else {
-      res <- c(res, "Individual-level identifier (.i)" = paste(i, brackets(n_distinct_i)))
+  if (!rlang::is_empty(i)) {
+    if (!is.na(i)) {
+      n_distinct_i <- x %>%
+        dplyr::distinct(!!!syms(i)) %>%
+        NROW()
+      if (length(i) > 1) {
+        i <- paste(i, collapse = ", ")
+        res <- c(res, "Individual-level identifiers (.i)" = paste(i, brackets(n_distinct_i)))
+      } else {
+        res <- c(res, "Individual-level identifier (.i)" = paste(i, brackets(n_distinct_i)))
+      }
     }
   }
 
-  if (!is_empty(t) & !is.na(t)) {
-    res <- c(res, "Time variable (.t)" = paste(t, unique_brackets(x, t)))
+  if (!is_empty(t)) {
+    if (!is.na(t)) {
+      res <- c(res, "Time variable (.t)" = paste(t, unique_brackets(x, t)))
+    }
   }
 
   if (!is_empty(d)) {

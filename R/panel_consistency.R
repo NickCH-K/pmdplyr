@@ -208,10 +208,10 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       .funs =
         function(x) abs(x - dplyr::lead(x)) / inp$d - 1
     ) %>%
-    dplyr::mutate_at(copyname, .funs = list(. = ~ dplyr::case_when(
-      is.na(.) | is.infinite(.) ~ 0,
-      TRUE ~ .
-    )))
+    dplyr::mutate_at(copyname, .funs = function(x) dplyr::case_when(
+      is.na(x) | is.infinite(x) ~ 0,
+      TRUE ~ x
+    ))
 
   # And propogate that result to others in the same .t, since only the last-listed obs
   # in that period will get the right number
@@ -306,10 +306,10 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 #' \code{panel_locf()} is unusual among last-observation-carried-forward functions (like \code{zoo}'s \code{na.locf}) in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
 #'
 #' @param .var Vector to be modified.
-#' @param .df Data frame, pibble, or tibble (usually the one contains \code{.var}) that contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
+#' @param .df Data frame, pibble, or tibble (usually the one containing \code{.var}) that contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
 #' @param .fill Vector of values to be overwritten. Just \code{NA} by default.
 #' @param .backwards By default, values of newly-created observations are copied from the most recently available period. Set \code{.backwards = TRUE} to instead copy values from the closest *following* period.
-#' @param .resolve If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{panel_locf()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = function(x) mean(x)} to get the mean value of all observations present for that individual/period. \code{.resolve} will also be used to fill in values if some values in a given individual/period are to be overwritten and others aren't.
+#' @param .resolve If there is more than one observation per individal/period, and the value of \code{.var} is identical for all of them, that's no problem. But what should \code{panel_locf()} do if they're not identical? Set \code{.resolve = 'error'} (or, really, any string) to throw an error in this circumstance. Or, set \code{.resolve} to a function that can be used within \code{dplyr::summarize()} to select a single value per individual/period. For example, \code{.resolve = function(x) mean(x)} to get the mean value of all observations present for that individual/period. \code{.resolve} will also be used to fill in values if some values in a given individual/period are to be overwritten and others aren't. Using a function will be quicker than \code{.resolve = 'error'}, so if you're certain there's no issue, you can speed up execution by setting, say, \code{.resolve = dplyr::first}.
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{panel_locf()} will group the data by \code{.i}, ignoring any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.
 #' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pibble()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
@@ -317,46 +317,43 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
 #' @examples
 #'
-#' # Examples are too slow to run
-#' if (interactive()) {
 #'
-#'   # The SPrail data has some missing price values.
-#'   # Let's fill them in!
-#'   # Note .d=0 tells it to ignore how big the gaps are
-#'   # between one period and the next, just look for the most recent insert_date
-#'   # .resolve tells it what value to pick if there are multiple
-#'   # observed prices for that route/insert_date
-#'   # (.resolve is not necessary if .i and .t uniquely identify obs,
-#'   # or if .var is either NA or constant within them)
-#'   # Also note - this will fill in using CURRENT-period
-#'   # data first (if available) before looking for lagged data.
-#'   data(SPrail)
-#'   sum(is.na(SPrail$price))
-#'   SPrail <- SPrail %>%
-#'     dplyr::mutate(price = panel_locf(price,
-#'       .i = c(origin, destination), .t = insert_date, .d = 0,
-#'       .resolve = function(x) mean(x, na.rm = TRUE)
-#'     ))
+#' # The SPrail data has some missing price values.
+#' # Let's fill them in!
+#' # Note .d=0 tells it to ignore how big the gaps are
+#' # between one period and the next, just look for the most recent insert_date
+#' # .resolve tells it what value to pick if there are multiple
+#' # observed prices for that route/insert_date
+#' # (.resolve is not necessary if .i and .t uniquely identify obs,
+#' # or if .var is either NA or constant within them)
+#' # Also note - this will fill in using CURRENT-period
+#' # data first (if available) before looking for lagged data.
+#' data(SPrail)
+#' sum(is.na(SPrail$price))
+#' SPrail <- SPrail %>%
+#'   dplyr::mutate(price = panel_locf(price,
+#'     .i = c(origin, destination), .t = insert_date, .d = 0,
+#'     .resolve = function(x) mean(x, na.rm = TRUE)
+#'   ))
 #'
-#'   # The spec is a little easier with data like Scorecard where
-#'   # .i and .t uniquely identify observations.
-#'   # Note that when the raw Scorecard data came in, it had -3 in place of NA. Let's restore that
-#'   data(Scorecard)
-#'   sum(is.na(Scorecard$earnings_med))
-#'   Scorecard <- Scorecard %>%
-#'     dplyr::mutate(earnings_med = dplyr::case_when(
-#'       is.na(earnings_med) ~ as.double(-3),
-#'       TRUE ~ as.double(earnings_med)
-#'     )) %>%
-#'     # Now let's fill in NAs and also -3s
-#'     dplyr::mutate(earnings_med = panel_locf(earnings_med,
-#'       .fill = c(NA, -3),
-#'       .i = unitid, .t = year
-#'     ))
-#'   # Note that there are still some missings - these are missings that come before the first
-#'   # non-missing value in that unitid, so there's nothing to pull from.
-#'   sum(is.na(Scorecard$earnings_med))
-#' }
+#' # The spec is a little easier with data like Scorecard where
+#' # .i and .t uniquely identify observations.
+#' # Note that when the raw Scorecard data came in, it had -3 in place of NA. Let's restore that
+#' data(Scorecard)
+#' sum(is.na(Scorecard$earnings_med))
+#' Scorecard <- Scorecard %>%
+#'   dplyr::mutate(earnings_med = dplyr::case_when(
+#'     is.na(earnings_med) ~ as.double(-3),
+#'     TRUE ~ as.double(earnings_med)
+#'   )) %>%
+#'   # Now let's fill in NAs and also -3s
+#'   dplyr::mutate(earnings_med = panel_locf(earnings_med,
+#'     .fill = c(NA, -3),
+#'     .i = unitid, .t = year
+#'   ))
+#' # Note that there are still some missings - these are missings that come before the first
+#' # non-missing value in that unitid, so there's nothing to pull from.
+#' sum(is.na(Scorecard$earnings_med))
 #' @export
 
 panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA, .backwards = FALSE, .resolve = "error", .group_i = TRUE, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
@@ -417,24 +414,26 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   .df[, ncol(.df) + 1] <- .var
   # and the original order
   .df[, ncol(.df) + 1] <- 1:nrow(.df)
-  # and indicators of needing to be filled in
-  .df[, ncol(.df) + 1] <- is.na(.var)
 
   # get the names of our variables
-  worknames <- names(.df)[(ncol(.df) - 2):ncol(.df)]
+  worknames <- names(.df)[(ncol(.df) - 1):ncol(.df)]
 
   # and group as appropriate
   .df <- .df %>% dplyr::group_by_at(arrnames)
 
+  # Check if there's ever more than one obs per group. If not no need to
+  # check uniformity or use the resolve function
+  dfmult <- nrow(.df %>%
+    dplyr::filter(dplyr::n() > 1))
+
   # Check if there's uniformity, if .resolve = 'error'
-  if (is.character(.resolve)) {
-    if (max((.df %>%
-      dplyr::mutate_at(worknames[1],
-        .funs = function(x) dplyr::n_distinct(x)
-      ))[[worknames[1]]]) > 1) {
+  if (is.character(.resolve) & dfmult > 0) {
+    if (max((dfmult %>%
+             dplyr::mutate_at(worknames[1],
+                              function(x) dplyr::first(x) != x))[[worknames[1]]]) == 1) {
       stop("Values are not consistent within (.i, if specified, and) .t. See .resolve option.")
     }
-    .resolve <- function(x) dplyr::first(x)
+    .resolve <- dplyr::first
   }
 
   # If we're backwards, go backwards!
@@ -445,16 +444,20 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
     .df[[inp$t]] <- -.df[[inp$t]]
   }
 
-  .df <- .df %>%
-    # implement the .resolve function
-    dplyr::mutate_at(worknames[1], .funs = .resolve)
+  if (dfmult > 0) {
+    .df <- .df %>%
+      # implement the .resolve function
+      dplyr::mutate_at(worknames[1], .funs = .resolve)
+      # If there aren't comparison values, can often resolve to NAN causing problems
+    .df[[worknames[1]]] <- ifelse(is.nan(.df[[worknames[1]]]),NA,.df[[worknames[1]]])
+  }
 
   # If we're grouping by i, do that
   if (length(arrnames) > 1) {
     .df <- .df %>%
+      dplyr::ungroup() %>%
       dplyr::group_by_at(arrnames[-length(arrnames)])
-  }
-  else {
+  } else {
     .df <- .df %>%
       dplyr::ungroup()
   }
@@ -464,26 +467,51 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
 
   # Now it's time to fill in
-  # first, find the highest row number that is nonmissing up to that point
-  .df <- .df %>%
+
+  # Within groups, get number of each value in a row, fill in NAs with a dplyr::lag,
+  # and then uncount() to recover our .var
+  # So check() doesn't complain
+  panel_consistency_length_measure_191817 <- NULL
+  panel_consistency_values_measure_277616 <- NULL
+
+  .df[[worknames[1]]] <- (.df %>%
     dplyr::do(
-      dplyr::mutate_at(., worknames[3], function(x) dplyr::row_number() -
-          cummax(dplyr::row_number() *
-            (!is.na(.[[worknames[1]]])))) %>%
-        # If it's the first row, set to 0 so it doesn't try to reach
-        dplyr::mutate_at(worknames[3], function(x) ifelse(dplyr::row_number() == .[[worknames[3]]], 0, .[[worknames[3]]])) %>%
-        # Then, count how many back we need to go for a nonmissing, find it, and fill in
-        dplyr::mutate_at(worknames[1], function(x) .[[worknames[1]]][1:nrow(.) - .[[worknames[3]]]])
+      data.frame(panel_consistency_length_measure_191817 = rle_na(.[[worknames[1]]])$lengths,
+       panel_consistency_values_measure_277616 = rle_na(.[[worknames[1]]])$values)
     ) %>%
-    # reorder back how it was
-    dplyr::arrange_at(worknames[2])
+    tidyr::uncount(panel_consistency_length_measure_191817,
+                   .remove = FALSE))$panel_consistency_values_measure_277616
+
+  # Reorder back how it was and pull the variable out
+  .var <- .df %>%
+    dplyr::arrange_at(worknames[2]) %>%
+    dplyr::pull(-2)
 
   # Fill in anything that was missing
-  .var <- ifelse(is.na(.var), .df[[worknames[1]]], .var)
+  #.var <- ifelse(is.na(.var), .df[[worknames[1]]], .var)
   # Failure to lookup (NaN) is really a NA for us
   .var <- ifelse(is.nan(.var), NA, .var)
 
   return(.var)
+}
+
+
+# Regular rle treats consecutive NA values as different. Unacceptable!
+# Also implements the filling-in while we're at it.
+# Don't use this for regular rle-but-with-NA purposes!!
+# Or at least if you do get rid of the v part
+rle_na <- function(x) {
+  n <- length(x)
+
+  y <- x[-1L] != x[-n]
+  i <- c(which(y |
+                 (is.na(y) & !is.na(c(y[-1],1))) |
+                 (!is.na(x[-n]) & is.na(c(x[-c(1,n)],1)))), n)
+
+  v <- ifelse(is.na(x[i]), c(NA,x[i][-length(i)]), x[i])
+
+  structure(list(lengths = diff(c(0L, i)), values = v),
+            class = "rle")
 }
 
 
@@ -547,7 +575,9 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
   result <- lapply(.varcall, function(x)
     .df %>%
       dplyr::arrange_at(x) %>%
-      dplyr::filter_at(x, function(y) dplyr::first(y) != dplyr::last(y)))
+      dplyr::filter_at(x, dplyr::any_vars(dplyr::first(.) != dplyr::last(.) |
+                                     is.na(dplyr::first(.)) != is.na(dplyr::last(.)))) %>%
+      dplyr::ungroup())
 
   # check if there are any inconsistent obs
   # if so, return that. Otherwise return TRUE
@@ -672,3 +702,4 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = function(x)
 
   return(.df)
 }
+

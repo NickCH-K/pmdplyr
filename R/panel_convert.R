@@ -37,35 +37,18 @@
 #' if (sum(c("tsibble", "plm", "panelr") %in% utils::installed.packages()) == 3) {
 #'   data(Scorecard)
 #'
+#'   # The example will turn a pibble to everything else
+#'   # But starting with another type will of course work!
 #'   S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
-#'   S_tsibble <- tsibble::as_tsibble(Scorecard, key = unitid, index = year)
-#'   S_pdata.frame <- plm::pdata.frame(Scorecard, index = c("unitid", "year"))
-#'   S_panel_data <- panelr::panel_data(Scorecard, id = unitid, wave = year)
 #'
-#'   # Make everything a pibble
-#'   # Note variable order may be different coming from panelr, which changes variable order
-#'   S_pibble
-#'   panel_convert(S_tsibble, to = "pibble")
-#'   panel_convert(S_pdata.frame, to = "pibble")
-#'   panel_convert(S_panel_data, to = "pibble")
-#'
-#'   # Make everything a tsibble
+#'   # Get a tsibble
 #'   panel_convert(S_pibble, to = "tsibble")
-#'   S_tsibble
-#'   panel_convert(S_pdata.frame, to = "tsibble")
-#'   panel_convert(S_panel_data, to = "tsibble")
 #'
 #'   # Now for pdata.frame
 #'   head(panel_convert(S_pibble, to = "plm"))
-#'   head(panel_convert(S_tsibble, to = "plm"))
-#'   head(S_pdata.frame)
-#'   head(panel_convert(S_panel_data, to = "plm"))
 #'
 #'   # And finally panel_data
 #'   panel_convert(S_pibble, to = "panelr")
-#'   panel_convert(S_tsibble, to = "panelr")
-#'   panel_convert(S_pdata.frame, to = "panelr")
-#'   S_panel_data
 #' }
 #' @export
 
