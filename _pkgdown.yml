@@ -8,7 +8,7 @@ reference:
     - ends_with("pibble")
     - panel_convert
 
-- title: dplyr verb variants for pibbles
+- title: dplyr verb variants
   contents:
     - inexact_inner_join
     - inexact_left_join
@@ -17,6 +17,7 @@ reference:
     - inexact_semi_join
     - inexact_nest_join
     - inexact_anti_join
+    - safe_join
     - mutate_cascade
     - mutate_subset
 

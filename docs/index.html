@@ -81,6 +81,8 @@
 <li>
 <code>inexact_join</code>: Set of wrappers for the <code>dplyr</code> <code>join</code> functions which allows for a variable to be matched inexactly, for example joining a time variable in <code>x</code> to the most recent previous value in <code>y</code>.</li>
 <li>
+<code>safe_join</code>: Wrapper for the <code><a href="https://dplyr.tidyverse.org/reference/join.html">dplyr::join</a></code> and <code><a href="reference/inexact_join.html">pmdplyr::inexact_join</a></code> functions which checks before merging whether each data set is uniquely identified as expected.</li>
+<li>
 <code>pdeclare</code>, <code>as_pdeclare</code>, and <code>is_pdeclare</code>: Set the panel structure for a data set, or check if it is already set.</li>
 <li>
 <code>panel_convert</code>: Converts between the panel data types <code><a href="reference/pibble.html">pmdplyr::pibble</a></code>, <code><a href="https://tsibble.tidyverts.org/reference/tsibble.html">tsibble::tsibble</a></code>, <code><a href="https://rdrr.io/pkg/plm/man/pdata.frame.html">plm::pdata.frame</a></code>, and <code><a href="https://rdrr.io/pkg/panelr/man/panel_data.html">panelr::panel_data</a></code>.</li>

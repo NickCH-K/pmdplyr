@@ -34,6 +34,8 @@
 #'
 #' @examples
 #' # Only run examples if the relevant packages are installed
+#' pkgs <- utils::installed.packages()
+#'
 #' data(Scorecard)
 #'
 #' # The example will turn a pibble to everything else
@@ -41,17 +43,17 @@
 #' S_pibble <- as_pibble(Scorecard, .i = unitid, .t = year)
 #'
 #' # Get a tsibble
-#' if ("tsibble" %in% utils::installed.packages()) {
+#' if ("tsibble" %in% pkgs) {
 #'   head(panel_convert(S_pibble, to = "tsibble"))
 #' }
 #'
 #' # Now for pdata.frame
-#' if ("plm" %in% utils::installed.packages()) {
+#' if ("plm" %in% pkgs) {
 #'   head(panel_convert(S_pibble, to = "plm"))
 #' }
 #'
 #' # And finally panel_data
-#' if ("panelr" %in% utils::installed.packages()) {
+#' if ("panelr" %in% pkgs) {
 #'   head(panel_convert(S_pibble, to = "panelr"))
 #' }
 #'

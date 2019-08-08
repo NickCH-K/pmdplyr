@@ -154,6 +154,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Only run examples if the relevant packages are installed</span>
+<span class='no'>pkgs</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>()
+
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
 
 <span class='co'># The example will turn a pibble to everything else</span>
@@ -161,7 +163,7 @@
 <span class='no'>S_pibble</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='as_pibble.html'>as_pibble</a></span>(<span class='no'>Scorecard</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>)
 
 <span class='co'># Get a tsibble</span>
-<span class='kw'>if</span> (<span class='st'>"tsibble"</span> <span class='kw'>%in%</span> <span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>()) {
+<span class='kw'>if</span> (<span class='st'>"tsibble"</span> <span class='kw'>%in%</span> <span class='no'>pkgs</span>) {
   <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"tsibble"</span>))
 }</div><div class='output co'>#&gt; <span style='color: #555555;'># A tsibble: 6 x 9 [1Y]</span><span>
 #&gt; </span><span style='color: #555555;'># Key:       unitid [1]</span><span>
@@ -176,7 +178,7 @@
 #&gt; </span><span style='color: #555555;'># ... with 3 more variables: count_not_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>, count_working </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span style='color: #555555;'>,
 #&gt; #   repay_rate </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
 <span class='co'># Now for pdata.frame</span>
-<span class='kw'>if</span> (<span class='st'>"plm"</span> <span class='kw'>%in%</span> <span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>()) {
+<span class='kw'>if</span> (<span class='st'>"plm"</span> <span class='kw'>%in%</span> <span class='no'>pkgs</span>) {
   <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"plm"</span>))
 }</div><div class='output co'>#&gt;             unitid                inst_name state_abbr
 #&gt; 100654-2007 100654 Alabama A &amp; M University         AL
@@ -200,7 +202,7 @@
 #&gt; 100654-2013          1741  0.5118364
 #&gt; 100654-2014          1784  0.4202658</div><div class='input'>
 <span class='co'># And finally panel_data</span>
-<span class='kw'>if</span> (<span class='st'>"panelr"</span> <span class='kw'>%in%</span> <span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/utils/installed.packages.html'>installed.packages</a></span>()) {
+<span class='kw'>if</span> (<span class='st'>"panelr"</span> <span class='kw'>%in%</span> <span class='no'>pkgs</span>) {
   <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>panel_convert</span>(<span class='no'>S_pibble</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"panelr"</span>))
 }</div><div class='output co'>#&gt; </span><span style='color: #555555;'># Panel data:    6 x 9</span><span>
 #&gt; </span><span style='color: #555555;'># entities:      unitid [1]</span><span>

@@ -57,18 +57,16 @@ SPrail <- SPrail \%>\%
   ))
 
 # The spec is a little easier with data like Scorecard where
-# .i and .t uniquely identify observations.
-# Note that when the raw Scorecard data came in, it had -3 in place of NA. Let's restore that
+# .i and .t uniquely identify observations
+# so .resolve isn't needed.
 data(Scorecard)
 sum(is.na(Scorecard$earnings_med))
 Scorecard <- Scorecard \%>\%
-  dplyr::mutate(earnings_med = dplyr::case_when(
-    is.na(earnings_med) ~ as.double(-3),
-    TRUE ~ as.double(earnings_med)
-  )) \%>\%
-  # Now let's fill in NAs and also -3s
+  # Let's speed this up by just doing four-year colleges
+  dplyr::filter(pred_degree_awarded_ipeds == 3) \%>\%
+  # Now let's fill in NAs and also in case there are any erroneous 0s
   dplyr::mutate(earnings_med = panel_locf(earnings_med,
-    .fill = c(NA, -3),
+    .fill = c(NA, 0),
     .i = unitid, .t = year
   ))
 # Note that there are still some missings - these are missings that come before the first

@@ -1,3 +1,120 @@
+#' Join two data frames safely
+#'
+#' This function is a wrapper for the standard \code{dplyr} \code{join} functions and the \code{pmdplyr} \code{inexact_join} functions.
+#'
+#' When performing a join, we generally expect that one or both of the joined data sets is uniquely identified by the set of joining variables.
+#'
+#' If this is not true, the results of the join will often not be what you expect. Unfortunately, \code{join} does not warn you that you may have just done something strange.
+#'
+#' This issue is especially likely to arise with panel data, where you may have multiple different data sets at different observation levels.
+#'
+#' \code{safe_join} forces you to specify which of your data sets you think are uniquely identified by the joining variables. If you are wrong, it will return an error. If you are right, it will pass you on to your preferred \code{join} function, given in \code{join}. If \code{join} is not specified, it will just return \code{TRUE}.
+#'
+#' \code{expect = 'x'}, \code{expect = 'y'}, and \code{expect = c('x','y')} are comparable to Stata's \code{merge 1:m}, \code{merge m:1}, and \code{merge 1:1}, respectively.
+#'
+#' @param x,y The left and right data sets to join.
+#' @param expect Either \code{'x'}, \code{'y'}, or \code{c('x','y')} - the data sets you expect to be uniquely identified by the joining variables.
+#' @param join A \code{join} or \code{inexact_join} function to run if \code{safe_join} determines your join is safe. By default, simply returns \code{TRUE} instead of running the join.
+#' @param ... Other arguments to be passed to the function specified in \code{join}. If performing an \code{inexact_join}, put the \code{var} and \code{jvar} arguments in as quoted variables.
+#'
+#' @examples
+#' # left is panel data and i does not uniquely identify observations
+#' left <- data.frame(i = c(1, 1, 2, 2),
+#'                    t = c(1, 2, 1, 2),
+#'                    a = 1:4)
+#' # right is individual-level data uniquely identified by i
+#' right <- data.frame(i = c(1, 2),
+#'                     b = 1:2)
+#'
+#' # I think that I can do a one-to-one merge on i
+#' # Forgetting that left is identified by i and t together
+#' # So, this produces an error
+#' \dontrun{
+#' safe_join(left, right, expect = c('x', 'y'), join = left_join)
+#' }
+#'
+#' # If I realize I'm doing a many-to-one merge, that is correct,
+#' # so safe_join will perform it for us
+#' safe_join(left, right, expect = 'y', join = left_join)
+#'
+#' @export
+
+safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
+  if (!is.character(expect)) {
+    stop("expect must be specified as a character.")
+  }
+  if (!("x" %in% expect) & !("y" %in% expect)) {
+    stop("expect must contain the strings 'x' and/or 'y'")
+  }
+  if (!is.null(join) & !is.function(join)) {
+    stop("join must be NULL or one of the dplyr::join or pmdplyr::inexact_join functions.")
+  }
+
+  dots <- list(...)
+
+  # Get the list of matching variables
+  if (!is.null(dots[['by']])) {
+    matchvars <- dots[['by']]
+  } else {
+    matchvars <- intersect(names(x), names(y))
+  }
+
+  # Do the checking for x and y
+  errormessagex <- NULL
+  errormessagey <- NULL
+
+  if ("x" %in% expect) {
+
+    # If we're doing an inexact_join, there may be a var to consider
+    matchvarsx <- matchvars
+
+    if (!rlang::is_empty(dots[['var']])) {
+      matchvarsx <- c(matchvars, dots[['var']])
+    }
+
+    plural <- " "
+    if (length(matchvarsx) > 1) {
+      plural <- "s "
+    }
+
+    if (anyDuplicated(x[, matchvarsx]) > 0) {
+      errormessagex <- paste("The left-hand data set x is not uniquely identified by the matching variable",
+                             plural ,paste0(matchvarsx, collapse = ', '), ".", sep = '')
+    }
+  }
+  if ("y" %in% expect) {
+
+    # If we're doing an inexact_join, there may be a var to consider
+    matchvarsy <- matchvars
+    if (!is.null(dots[['jvar']])) {
+      matchvarsy <- c(matchvars, dots[['jvar']])
+    }
+
+    plural <- " "
+    if (length(matchvarsy) > 1) {
+      plural <- "s "
+    }
+
+    if (anyDuplicated(y[, matchvarsy]) > 0) {
+      errormessagey <- paste("The right-hand data set y is not uniquely identified by the matching variable",
+                             plural, paste0(matchvarsy, collapse = ', '), ".", sep = '')
+    }
+  }
+
+  # If we found a problem, stop with an error
+  if (!is.null(errormessagex) | !is.null(errormessagey)) {
+    stop(paste(errormessagex, errormessagey, sep = "\n"))
+  }
+
+  # If we're fine, and join is null, just return TRUE.
+  if (is.null(join)) {
+    return(TRUE)
+  }
+
+  # Otherwise, pass on to the function
+  return(join(x, y, ...))
+}
+
 #' Join two data frames inexactly
 #'
 #' These functions are modifications of the standard \code{dplyr} \code{join} functions, except that it allows a variable of an ordered type (like date or numeric) in \code{x} to be matched in inexact ways to variables in \code{y}.

@@ -19,7 +19,8 @@ Unlike other suites dealing with panel data, all functions in \code{pmdplyr} are
     \item{\code{\link{fixed_force}}}{ Forces a list of variables to be constant within a panel structure.}
     \item{\code{\link{id_variable}}}{ Takes a list of variables that make up an individual identifier and turns it into a single variable.}
     \item{\code{\link{time_variable}}}{ Takes a time variable, or set of time variables, and turns them into a single well-behaved integer time variable of the kind required by most panel functions.}
-    \item{\code{\link{inexact_join}}}{ Set of wrappers for the \code{dplyr} \code{\link[dplyr]{join}} functions which allows for a variable to be matched inexactly, for example joining a time variable in \code{x} to the most recent previous value in \code{y}.}
+    \item{\code{\link{inexact_join}}}{ Wrapper for the \code{dplyr} \code{\link[dplyr]{join}} functions which allows for a variable to be matched inexactly, for example joining a time variable in \code{x} to the most recent previous value in \code{y}.}
+    \item{\code{\link{safe_join}}}{ Set of wrappers for the \code{dplyr::\link[dplyr]{join}} and \code{pmdplyr::inexact_join} functions which checks before merging whether each data set is uniquely identified as expected.}
     \item{\code{\link{pibble}}, \code{\link{as_pibble}}, and \code{\link{is_pibble}}}{ Set the panel structure for a data set, or check if it is already set.}
     \item{\code{\link{panel_convert}}}{ Converts between the panel data types \code{pmdplyr::pibble}, \code{tsibble::tsibble}, \code{plm::pdata.frame}, and \code{panelr::panel_data}.}
     \item{\code{\link{mutate_cascade}}}{ A wrapper for \code{dplyr} \code{\link[dplyr]{mutate}} which runs one period at a time, allowing changes in one period to finalize before the next period is calculated.}
