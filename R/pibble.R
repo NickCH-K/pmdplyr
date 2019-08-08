@@ -98,6 +98,7 @@ new_pibble <- function(x, ..., class = NULL) {
 }
 
 #' @importFrom rlang .data
+#' @importFrom rlang :=
 #' @importFrom vctrs vec_restore
 #' @method vec_restore tbl_pb
 vec_restore.tbl_pb <- function(x, to) {

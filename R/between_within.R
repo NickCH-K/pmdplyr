@@ -70,13 +70,14 @@ within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = functi
     .df <- .df %>% dplyr::select_at(inp$i)
   }
 
-  .df[, ncol(.df) + 1] <- .var
-  varname <- names(.df)[ncol(.df)]
+  # Figure out longest variable name and expand it so we don't overwrite names
+  varname <- paste(utils::tail(names(.df)[order(nchar(names(.df)))],1), ".1", sep="")
 
   # Calculate within transformation
   return(.df %>%
+    dplyr::mutate(!!varname := .var) %>%
     dplyr::group_by_at(inp$i) %>%
-    dplyr::mutate_at(varname, .funs = function(x) x - .fcn(x)) %>%
+    dplyr::mutate(!!varname := .data[[varname]] - .fcn(.data[[varname]])) %>%
     dplyr::ungroup() %>%
     dplyr::pull(varname))
 }
@@ -128,16 +129,17 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
     .df <- .df %>% dplyr::select_at(inp$i)
   }
 
-  .df[, ncol(.df) + 1] <- .var
-  varname <- names(.df)[ncol(.df)]
 
-  # Grand mean
-  gm <- .fcn(.df[[varname]])
+  # Figure out longest variable name and expand it so we don't overwrite names
+  varname <- paste(utils::tail(names(.df)[order(nchar(names(.df)))],1), ".1", sep="")
+  gm <- paste(varname, ".1" , sep="")
 
   # Calculate between transformation
   return(.df %>%
+    dplyr::mutate(!!varname := .var) %>%
+    dplyr::mutate(!!gm := .fcn(.[[varname]])) %>%
     dplyr::group_by_at(inp$i) %>%
-    dplyr::mutate_at(varname, .funs = function(x) .fcn(x) - gm) %>%
+    dplyr::mutate(!!varname := .fcn(.data[[varname]] - .data[[gm]])) %>%
     dplyr::ungroup() %>%
     dplyr::pull(varname))
 }
