@@ -424,7 +424,7 @@ Observations in these weekdays will be given a missing time value.")
     timevar <- time_variable_turnover(data, .turnover = .turnover, .turnover_start = .turnover_start)
   }
 
-  return(timevar)
+  return(as.integer(timevar))
 }
 
 
