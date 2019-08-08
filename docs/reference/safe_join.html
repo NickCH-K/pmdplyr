@@ -143,26 +143,29 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># left is panel data and i does not uniquely identify observations</span>
-<span class='no'>left</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>2</span>),
-                   <span class='kw'>t</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>2</span>),
-                   <span class='kw'>a</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>4</span>)
+<span class='no'>left</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+  <span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>2</span>),
+  <span class='kw'>t</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>2</span>),
+  <span class='kw'>a</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>4</span>
+)
 <span class='co'># right is individual-level data uniquely identified by i</span>
-<span class='no'>right</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>),
-                    <span class='kw'>b</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>)
+<span class='no'>right</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+  <span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>),
+  <span class='kw'>b</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>
+)
 
 <span class='co'># I think that I can do a one-to-one merge on i</span>
 <span class='co'># Forgetting that left is identified by i and t together</span>
 <span class='co'># So, this produces an error</span></div><span class='co'># NOT RUN {</span>
-<span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'x'</span>, <span class='st'>'y'</span>), <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)
+<span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>), <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)
 <span class='co'># }</span><div class='input'>
 <span class='co'># If I realize I'm doing a many-to-one merge, that is correct,</span>
 <span class='co'># so safe_join will perform it for us</span>
-<span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='st'>'y'</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "i"</span></div><div class='output co'>#&gt;   i t a b
+<span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "i"</span></div><div class='output co'>#&gt;   i t a b
 #&gt; 1 1 1 1 1
 #&gt; 2 1 2 2 1
 #&gt; 3 2 1 3 2
-#&gt; 4 2 2 4 2</div><div class='input'>
-</div></pre>
+#&gt; 4 2 2 4 2</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

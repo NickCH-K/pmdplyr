@@ -31,22 +31,25 @@ This issue is especially likely to arise with panel data, where you may have mul
 }
 \examples{
 # left is panel data and i does not uniquely identify observations
-left <- data.frame(i = c(1, 1, 2, 2),
-                   t = c(1, 2, 1, 2),
-                   a = 1:4)
+left <- data.frame(
+  i = c(1, 1, 2, 2),
+  t = c(1, 2, 1, 2),
+  a = 1:4
+)
 # right is individual-level data uniquely identified by i
-right <- data.frame(i = c(1, 2),
-                    b = 1:2)
+right <- data.frame(
+  i = c(1, 2),
+  b = 1:2
+)
 
 # I think that I can do a one-to-one merge on i
 # Forgetting that left is identified by i and t together
 # So, this produces an error
 \dontrun{
-safe_join(left, right, expect = c('x', 'y'), join = left_join)
+safe_join(left, right, expect = c("x", "y"), join = left_join)
 }
 
 # If I realize I'm doing a many-to-one merge, that is correct,
 # so safe_join will perform it for us
-safe_join(left, right, expect = 'y', join = left_join)
-
+safe_join(left, right, expect = "y", join = left_join)
 }

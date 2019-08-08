@@ -19,24 +19,27 @@
 #'
 #' @examples
 #' # left is panel data and i does not uniquely identify observations
-#' left <- data.frame(i = c(1, 1, 2, 2),
-#'                    t = c(1, 2, 1, 2),
-#'                    a = 1:4)
+#' left <- data.frame(
+#'   i = c(1, 1, 2, 2),
+#'   t = c(1, 2, 1, 2),
+#'   a = 1:4
+#' )
 #' # right is individual-level data uniquely identified by i
-#' right <- data.frame(i = c(1, 2),
-#'                     b = 1:2)
+#' right <- data.frame(
+#'   i = c(1, 2),
+#'   b = 1:2
+#' )
 #'
 #' # I think that I can do a one-to-one merge on i
 #' # Forgetting that left is identified by i and t together
 #' # So, this produces an error
 #' \dontrun{
-#' safe_join(left, right, expect = c('x', 'y'), join = left_join)
+#' safe_join(left, right, expect = c("x", "y"), join = left_join)
 #' }
 #'
 #' # If I realize I'm doing a many-to-one merge, that is correct,
 #' # so safe_join will perform it for us
-#' safe_join(left, right, expect = 'y', join = left_join)
-#'
+#' safe_join(left, right, expect = "y", join = left_join)
 #' @export
 
 safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
@@ -53,8 +56,8 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
   dots <- list(...)
 
   # Get the list of matching variables
-  if (!is.null(dots[['by']])) {
-    matchvars <- dots[['by']]
+  if (!is.null(dots[["by"]])) {
+    matchvars <- dots[["by"]]
   } else {
     matchvars <- intersect(names(x), names(y))
   }
@@ -68,8 +71,8 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
     # If we're doing an inexact_join, there may be a var to consider
     matchvarsx <- matchvars
 
-    if (!rlang::is_empty(dots[['var']])) {
-      matchvarsx <- c(matchvars, dots[['var']])
+    if (!rlang::is_empty(dots[["var"]])) {
+      matchvarsx <- c(matchvars, dots[["var"]])
     }
 
     plural <- " "
@@ -79,15 +82,17 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
 
     if (anyDuplicated(x[, matchvarsx]) > 0) {
       errormessagex <- paste("The left-hand data set x is not uniquely identified by the matching variable",
-                             plural ,paste0(matchvarsx, collapse = ', '), ".", sep = '')
+        plural, paste0(matchvarsx, collapse = ", "), ".",
+        sep = ""
+      )
     }
   }
   if ("y" %in% expect) {
 
     # If we're doing an inexact_join, there may be a var to consider
     matchvarsy <- matchvars
-    if (!is.null(dots[['jvar']])) {
-      matchvarsy <- c(matchvars, dots[['jvar']])
+    if (!is.null(dots[["jvar"]])) {
+      matchvarsy <- c(matchvars, dots[["jvar"]])
     }
 
     plural <- " "
@@ -97,7 +102,9 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
 
     if (anyDuplicated(y[, matchvarsy]) > 0) {
       errormessagey <- paste("The right-hand data set y is not uniquely identified by the matching variable",
-                             plural, paste0(matchvarsy, collapse = ', '), ".", sep = '')
+        plural, paste0(matchvarsy, collapse = ", "), ".",
+        sep = ""
+      )
     }
   }
 
