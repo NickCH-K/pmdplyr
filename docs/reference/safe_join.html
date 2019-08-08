@@ -120,7 +120,7 @@
     </tr>
     <tr>
       <th>expect</th>
-      <td><p>Either <code>'x'</code>, <code>'y'</code>, or <code><a href='https://rdrr.io/r/base/c.html'>c('x','y')</a></code> - the data sets you expect to be uniquely identified by the joining variables.</p></td>
+      <td><p>Either <code>'x'</code>, <code>'y'</code>, or <code><a href='https://rdrr.io/r/base/c.html'>c('x','y')</a></code> - the data sets you expect to be uniquely identified by the joining variables. You can alternately use <code>expect = "1:m"</code> instead of <code>"x"</code> for one-to-many merge, <code>"m:1"</code> instead of <code>"y"</code> for many-to-one, or <code>"1:1"</code> instead of <code><a href='https://rdrr.io/r/base/c.html'>c("x", "y")</a></code> for one-to-one.</p></td>
     </tr>
     <tr>
       <th>join</th>
@@ -138,7 +138,6 @@
 <p>If this is not true, the results of the join will often not be what you expect. Unfortunately, <code>join</code> does not warn you that you may have just done something strange.</p>
 <p>This issue is especially likely to arise with panel data, where you may have multiple different data sets at different observation levels.</p>
 <p><code>safe_join</code> forces you to specify which of your data sets you think are uniquely identified by the joining variables. If you are wrong, it will return an error. If you are right, it will pass you on to your preferred <code>join</code> function, given in <code>join</code>. If <code>join</code> is not specified, it will just return <code>TRUE</code>.</p>
-<p><code>expect = 'x'</code>, <code>expect = 'y'</code>, and <code>expect = c('x','y')</code> are comparable to Stata's <code>merge 1:m</code>, <code>merge m:1</code>, and <code>merge 1:1</code>, respectively.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

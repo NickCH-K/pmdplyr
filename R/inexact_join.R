@@ -10,10 +10,8 @@
 #'
 #' \code{safe_join} forces you to specify which of your data sets you think are uniquely identified by the joining variables. If you are wrong, it will return an error. If you are right, it will pass you on to your preferred \code{join} function, given in \code{join}. If \code{join} is not specified, it will just return \code{TRUE}.
 #'
-#' \code{expect = 'x'}, \code{expect = 'y'}, and \code{expect = c('x','y')} are comparable to Stata's \code{merge 1:m}, \code{merge m:1}, and \code{merge 1:1}, respectively.
-#'
 #' @param x,y The left and right data sets to join.
-#' @param expect Either \code{'x'}, \code{'y'}, or \code{c('x','y')} - the data sets you expect to be uniquely identified by the joining variables.
+#' @param expect Either \code{'x'}, \code{'y'}, or \code{c('x','y')} - the data sets you expect to be uniquely identified by the joining variables. You can alternately use \code{expect = "1:m"} instead of \code{"x"} for one-to-many merge, \code{"m:1"} instead of \code{"y"} for many-to-one, or \code{"1:1"} instead of \code{c("x", "y")} for one-to-one.
 #' @param join A \code{join} or \code{inexact_join} function to run if \code{safe_join} determines your join is safe. By default, simply returns \code{TRUE} instead of running the join.
 #' @param ... Other arguments to be passed to the function specified in \code{join}. If performing an \code{inexact_join}, put the \code{var} and \code{jvar} arguments in as quoted variables.
 #'
@@ -46,6 +44,17 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
   if (!is.character(expect)) {
     stop("expect must be specified as a character.")
   }
+
+  if (expect == "1:m") {
+    expect <- "x"
+  }
+  if (expect == "m:1") {
+    expect <- "y"
+  }
+  if (expect == "1:1") {
+    expect <- c("x", "y")
+  }
+
   if (!("x" %in% expect) & !("y" %in% expect)) {
     stop("expect must contain the strings 'x' and/or 'y'")
   }

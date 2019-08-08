@@ -9,7 +9,7 @@ safe_join(x, y, expect = NULL, join = NULL, ...)
 \arguments{
 \item{x, y}{The left and right data sets to join.}
 
-\item{expect}{Either \code{'x'}, \code{'y'}, or \code{c('x','y')} - the data sets you expect to be uniquely identified by the joining variables.}
+\item{expect}{Either \code{'x'}, \code{'y'}, or \code{c('x','y')} - the data sets you expect to be uniquely identified by the joining variables. You can alternately use \code{expect = "1:m"} instead of \code{"x"} for one-to-many merge, \code{"m:1"} instead of \code{"y"} for many-to-one, or \code{"1:1"} instead of \code{c("x", "y")} for one-to-one.}
 
 \item{join}{A \code{join} or \code{inexact_join} function to run if \code{safe_join} determines your join is safe. By default, simply returns \code{TRUE} instead of running the join.}
 
@@ -26,8 +26,6 @@ If this is not true, the results of the join will often not be what you expect. 
 This issue is especially likely to arise with panel data, where you may have multiple different data sets at different observation levels.
 
 \code{safe_join} forces you to specify which of your data sets you think are uniquely identified by the joining variables. If you are wrong, it will return an error. If you are right, it will pass you on to your preferred \code{join} function, given in \code{join}. If \code{join} is not specified, it will just return \code{TRUE}.
-
-\code{expect = 'x'}, \code{expect = 'y'}, and \code{expect = c('x','y')} are comparable to Stata's \code{merge 1:m}, \code{merge m:1}, and \code{merge 1:1}, respectively.
 }
 \examples{
 # left is panel data and i does not uniquely identify observations
