@@ -37,6 +37,7 @@ To apply \code{mutate_cascade()} to non-panel data and without any grouping (per
 }
 \examples{
 
+# Example is too slow to run
 if (interactive()) {
   data(Scorecard)
   # I'd like to build a decaying function that remembers previous earnings but at a declining rate

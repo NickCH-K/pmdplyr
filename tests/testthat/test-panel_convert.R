@@ -8,7 +8,9 @@ pb <- pibble(
   .t = t
 )
 
-if ("tsibble" %in% utils::installed.packages()) {
+pkgs <- utils::installed.packages()
+
+if ("tsibble" %in% pkgs) {
   ts <- tsibble::tsibble(
     i = c(1, 1, 2, 2),
     t = c(1, 2, 1, 2),
@@ -22,7 +24,7 @@ if ("tsibble" %in% utils::installed.packages()) {
   })
 }
 
-if ("plm" %in% utils::installed.packages()) {
+if ("plm" %in% pkgs) {
   pd <- plm::pdata.frame(data.frame(
     i = c(1, 1, 2, 2),
     t = c(1, 2, 1, 2),
@@ -36,7 +38,7 @@ if ("plm" %in% utils::installed.packages()) {
   })
 }
 
-if ("panelr" %in% utils::installed.packages()) {
+if ("panelr" %in% pkgs) {
   pb <- pibble(
     i = as.factor(c(1, 1, 2, 2)),
     t = c(1, 2, 1, 2),

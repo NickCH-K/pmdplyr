@@ -16,6 +16,7 @@
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
 #' @examples
 #'
+#' # Example is too slow to run
 #' if (interactive()) {
 #'   data(Scorecard)
 #'   # I'd like to build a decaying function that remembers previous earnings but at a declining rate
