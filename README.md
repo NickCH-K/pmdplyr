@@ -2,8 +2,8 @@
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Travis build status](https://travis-ci.org/philip-khor/pmdplyr.svg?branch=master)](https://travis-ci.org/philip-khor/pmdplyr) 
-[![Codecov test coverage](https://codecov.io/gh/philip-khor/pmdplyr/branch/master/graph/badge.svg)](https://codecov.io/gh/philip-khor/pmdplyr?branch=master)
+[![Travis build status](https://travis-ci.org/nickch-k/pmdplyr.svg?branch=master)](https://travis-ci.org/nickch-k/pmdplyr) 
+[![Codecov test coverage](https://codecov.io/gh/nickch-k/pmdplyr/branch/master/graph/badge.svg)](https://codecov.io/gh/nickch-k/pmdplyr?branch=master)
 <!-- badges: end -->
   
 An R package for cleaning and manipulating panel and hierarchical data.
