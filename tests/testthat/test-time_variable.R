@@ -7,34 +7,34 @@ td <- data.frame(
 present_t <- td %>%
   dplyr::mutate(t = time_variable(year, month,
                                   .method = "present")) %>%
-  dplyr::pull(4)
+  dplyr::pull(t)
 
 year_t <- td %>%
   dplyr::mutate(t = time_variable(date,
                                   .method = "year")) %>%
-  dplyr::pull(4)
+  dplyr::pull(t)
 
 month_t <- td %>%
   dplyr::mutate(t = time_variable(date,
                                   .method = "month")) %>%
-  dplyr::pull(4)
+  dplyr::pull(t)
 
 week_t <- td %>%
   dplyr::mutate(t = time_variable(date,
                                   .method = "week")) %>%
-  dplyr::pull(4)
+  dplyr::pull(t)
 
 day_t <- td %>%
   dplyr::mutate(t = time_variable(date,
                                   .method = "day")) %>%
-  dplyr::pull(4)
+  dplyr::pull(t)
 
 turnover_t <- td %>%
   dplyr::mutate(t = time_variable(year, month,
                                   .method = "turnover",
                                   .turnover = c(NA, 12),
                                   .turnover_start = c(NA, 1))) %>%
-  dplyr::pull(4)
+  dplyr::pull(t)
 
 test_that("time_variable works", {
   expect_equal(present_t, 3:1)
