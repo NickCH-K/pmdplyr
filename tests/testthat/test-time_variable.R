@@ -6,34 +6,40 @@ td <- data.frame(
 
 present_t <- td %>%
   dplyr::mutate(t = time_variable(year, month,
-                                  .method = "present")) %>%
+    .method = "present"
+  )) %>%
   dplyr::pull(t)
 
 year_t <- td %>%
   dplyr::mutate(t = time_variable(date,
-                                  .method = "year")) %>%
+    .method = "year"
+  )) %>%
   dplyr::pull(t)
 
 month_t <- td %>%
   dplyr::mutate(t = time_variable(date,
-                                  .method = "month")) %>%
+    .method = "month"
+  )) %>%
   dplyr::pull(t)
 
 week_t <- td %>%
   dplyr::mutate(t = time_variable(date,
-                                  .method = "week")) %>%
+    .method = "week"
+  )) %>%
   dplyr::pull(t)
 
 day_t <- td %>%
   dplyr::mutate(t = time_variable(date,
-                                  .method = "day")) %>%
+    .method = "day"
+  )) %>%
   dplyr::pull(t)
 
 turnover_t <- td %>%
   dplyr::mutate(t = time_variable(year, month,
-                                  .method = "turnover",
-                                  .turnover = c(NA, 12),
-                                  .turnover_start = c(NA, 1))) %>%
+    .method = "turnover",
+    .turnover = c(NA, 12),
+    .turnover_start = c(NA, 1)
+  )) %>%
   dplyr::pull(t)
 
 test_that("time_variable works", {
