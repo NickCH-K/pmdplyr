@@ -6,7 +6,9 @@ df <- pibble(
 
 test_that("tlag works", {
   expect_equal(
-    (df %>% dplyr::mutate(y = tlag(x, .resolve = mean)))$y,
+    df %>%
+      dplyr::mutate(y = tlag(x, .resolve = mean)) %>%
+      dplyr::pull(y),
     c(NA, NA, 1.5, 1.5)
   )
 })
