@@ -1,6 +1,8 @@
-df <- pibble(i = 1:2,
-             X = 3:4,
-             .i = i)
+df <- pibble(
+  i = 1:2,
+  X = 3:4,
+  .i = i
+)
 
 # Here, run all methods to ensure they hold on to tbl_pb status
 test_that("tbl_pb methods maintain tbl_pb", {
