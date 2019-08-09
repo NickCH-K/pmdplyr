@@ -71,7 +71,7 @@ within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = functi
   }
 
   # Figure out longest variable name and expand it so we don't overwrite names
-  varname <- paste(utils::tail(names(.df)[order(nchar(names(.df)))], 1), ".1", sep = "")
+  varname <- uniqname(.df)
 
   # Calculate within transformation
   return(.df %>%
@@ -131,7 +131,7 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
 
 
   # Figure out longest variable name and expand it so we don't overwrite names
-  varname <- paste(utils::tail(names(.df)[order(nchar(names(.df)))], 1), ".1", sep = "")
+  varname <- uniqname(.df)
   gm <- paste(varname, ".1", sep = "")
 
   # Calculate between transformation
@@ -142,4 +142,12 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
     dplyr::mutate(!!varname := .fcn(.data[[varname]] - .data[[gm]])) %>%
     dplyr::ungroup() %>%
     dplyr::pull(varname))
+}
+
+
+# For generating non-conflicting variable names
+uniqname <- function(df) {
+  paste(utils::tail(
+    names(df)[order(nchar(names(df)))], 1),
+    ".1", sep = "")
 }

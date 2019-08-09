@@ -11,5 +11,5 @@ test_that("students' grades over time", {
   expect_s3_class(grades, "tbl_pb")
   expect_identical(attr(grades, ".i") %>% unname(), c("student_id", "module_id"))
   expect_identical(attr(grades, ".t") %>% unname(), "semester")
-  expect_output(print(grades), regexp = "# A pibble:\\s+5 × 4")
+  expect_output(print(grades), regexp = "# A pibble:\\s+5 x 4")
 })

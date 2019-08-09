@@ -89,7 +89,9 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
       plural <- "s "
     }
 
-    if (anyDuplicated(x[, matchvarsx]) > 0) {
+    if (x %>%
+        dplyr::select_at(matchvarsx) %>%
+        anyDuplicated() > 0) {
       errormessagex <- paste("The left-hand data set x is not uniquely identified by the matching variable",
         plural, paste0(matchvarsx, collapse = ", "), ".",
         sep = ""
@@ -109,7 +111,9 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
       plural <- "s "
     }
 
-    if (anyDuplicated(y[, matchvarsy]) > 0) {
+    if (y %>%
+        dplyr::select_at(matchvarsy) %>%
+        anyDuplicated() > 0) {
       errormessagey <- paste("The right-hand data set y is not uniquely identified by the matching variable",
         plural, paste0(matchvarsy, collapse = ", "), ".",
         sep = ""
@@ -445,13 +449,14 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 
   # If there aren't any matchvars, create one that's identical for everyone
   if (length(matchvars) == 0) {
-    x[, ncol(x) + 1] <- 1
-    matchvars <- names(x)[ncol(x)]
+    # Figure out longest variable name in either data frame and expand it so we don't overwrite names
+    bothnames <- c(names(x), names(y))
+    matchvars <- paste(utils::tail(bothnames[order(nchar(bothnames))],1), ".1", sep="")
 
-    if (max(matchvars %in% jvar) == 1) {
-      stop("Please give your jvars non-generic names.")
-    }
-    y[[matchvars]] <- 1
+    x <- x %>%
+      dplyr::mutate(!!matchvars := 1)
+    y <- y %>%
+      dplyr::mutate(!!matchvars := 1)
 
     # flag the matchvar variable to remove it
     rem_flag <- TRUE
@@ -460,34 +465,40 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   }
 
   # We need a unique data set of Group by the set of matching variables and the jvars
-  z <- y %>%
-    dplyr::select_at(c(matchvars, jvar))
+  yidname <- uniqname(y)
 
-  # collapse all the matchvars into one
-  z[, ncol(z) + 1] <- id_variable(z %>% dplyr::select_at(matchvars), .method = "character")
-  yidname <- names(z)[ncol(z)]
-  z[, matchvars] <- NULL
-  z <- z %>%
-    ungroup() %>%
-    # and one observation each
+  z <- y %>%
+    dplyr::select_at(c(matchvars, jvar)) %>%
+    # collapse all the matchvars into one
+    dplyr::mutate(!!yidname := id_variable(.[, matchvars], .method = "character")) %>%
+    dplyr::select(-!!matchvars) %>%
+    dplyr::ungroup() %>%
+    # one observation each
     dplyr::distinct()
 
   # similar one-column ID for x
-  x[, ncol(x) + 1] <- id_variable(x %>% dplyr::select_at(matchvars), .method = "character")
-  xidname <- names(x)[ncol(x)]
+  xidname <- uniqname(x)
 
-  # We'll be matching additionally on jvar[1]
-  x[, jvar[1]] <- NA
+  x <- x %>%
+    dplyr::mutate(!!xidname := id_variable(x[, matchvars], .method = "character"),
+                  # We'll be matching additionally on jvar[1]
+                  !!jvar[1] := NA)
 
   # findIntervals lets us do the 'last' method quickly
   if (method == "last") {
     for (i in unique(z[[yidname]])) {
       # get list of jvar values present for this id
-      vals <- sort(z[z[[yidname]] == i, ][[jvar]])
-      vals <- vals[!is.na(vals)]
+      vals <- z %>%
+        dplyr::filter_at(yidname, dplyr::any_vars(. == i)) %>%
+        dplyr::arrange_at(jvar) %>%
+        dplyr::pull(!!jvar)
 
       # find, by index, which interval each observation fits in
-      intervals <- findInterval(x[x[[xidname]] == i, ][[var]], vals, left.open = !exact)
+      intervals <- findInterval(x %>%
+                                  dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
+                                  dplyr::pull(!!var),
+                                vals, left.open = !exact)
+
       # Create a version without 0s so it doesn't mess up indexing
       intervalsno0 <- ifelse(intervals == 0, 1, intervals)
 
@@ -499,11 +510,16 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   } else if (method == "next") {
     for (i in unique(z[[yidname]])) {
       # get list of jvar values present for this id
-      vals <- sort(z[z[[yidname]] == i, jvar])
-      vals <- vals[!is.na(vals)]
+      vals <- z %>%
+        dplyr::filter_at(yidname, dplyr::any_vars(. == i)) %>%
+        dplyr::arrange_at(jvar) %>%
+        dplyr::pull(!!jvar)
 
       # find, by index, which interval each observation fits in
-      intervals <- findInterval(x[x[[xidname]] == i, var], vals, left.open = TRUE)
+      intervals <- findInterval(x %>%
+                                  dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
+                                  dplyr::pull(!!var),
+                                vals, left.open = TRUE)
       # If it's an exact match but exact == FALSE, findInterval will shunt you to the gap BELOW
       # but we want you in the gap ABOVE
       # also, we want to shift the index by 1 so as to match that upper-end number
@@ -511,7 +527,9 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
         intervals <- intervals + 1
       } else {
         intervals <- intervals + sapply(
-          x[x[[xidname]] == i, var],
+          x %>%
+            dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
+            dplyr::pull(!!var),
           function(w) ifelse(max(w %in% vals) == 1, 2, 1)
         )
       }
@@ -527,11 +545,15 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   } else if (method == "closest") {
     for (i in unique(z[[yidname]])) {
       # get list of jvar values present for this id
-      vals <- sort(z[z[[yidname]] == i, jvar])
-      vals <- vals[!is.na(vals)]
+      vals <- z %>%
+        dplyr::filter_at(yidname, dplyr::any_vars(. == i)) %>%
+        dplyr::arrange_at(jvar) %>%
+        dplyr::pull(!!jvar)
 
       # find, by index, which interval each observation fits in
-      intervals <- findInterval(x[x[[xidname]] == i, var], vals)
+      intervals <- findInterval(x %>%
+                                   dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
+                                   dplyr::pull(!!var), vals)
       # Create a version without 0s so it doesn't mess up indexing
       intervalsno0 <- ifelse(intervals == 0, 1, intervals)
 
@@ -554,7 +576,8 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
       )
     }
   } else if (method == "between") {
-    z <- z[order(z[[jvar[1]]]), ]
+    z <- z %>%
+      dplyr::arrange_at(jvar[1])
 
     # 'between' unfortunately needs this slower version because of potential corner cases
     # Go through each of the values in z and add them to the appropriate x rows
@@ -566,11 +589,11 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
     }
   }
   # Get rid of the ID variable we were using
-  x[[xidname]] <- NULL
+  x <- x %>% select(-!!xidname)
 
   # Get rid of the matchvar if we created a fake one
   if (rem_flag == TRUE) {
-    x[[matchvars]] <- NULL
+    x <- x %>% select(-!!matchvars)
   }
 
   return(x)
