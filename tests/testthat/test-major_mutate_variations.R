@@ -6,16 +6,18 @@ cascade_data <- pibble(
 
 test_that("mutate_cascade with tlag works", {
   expect_equal(
-    (cascade_data %>%
-      mutate_cascade(x = x + tlag(x, .quick = TRUE)))$x,
+    cascade_data %>%
+      mutate_cascade(x = x + tlag(x, .quick = TRUE)) %>%
+      dplyr::pull(x),
     c(1, 3, 6)
   )
 })
 
 test_that("mutate_subset works", {
   expect_equal(
-    (cascade_data %>%
-      mutate_subset(y = mean(x), .filter = t <= 2))$y,
+    cascade_data %>%
+      mutate_subset(y = mean(x), .filter = t <= 2) %>%
+      dplyr::pull(y),
     c(1.5, 1.5, 1.5)
   )
 })

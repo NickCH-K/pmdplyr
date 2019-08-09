@@ -31,42 +31,44 @@ id_variable <- function(..., .method = "number", .minwidth = FALSE) {
   # What we're working with
   idf <- data.frame(...)
   var <- names(idf)
+
   # original order. We need two unused names
-  idf[, (ncol(idf) + 1)] <- 1:nrow(idf)
-  origordername <- names(idf)[ncol(idf)]
-  idf[, (ncol(idf) + 1)] <- 1:nrow(idf)
-  secondname <- names(idf)[ncol(idf)]
-  idf[, secondname] <- NULL
+  # Figure out longest variable name and expand it so we don't overwrite names
+  origordername <- paste(utils::tail(names(idf)[order(nchar(names(idf)))],1), ".1", sep="")
+  secondname <- paste(origordername, ".1", sep="")
+
+  idf <- idf %>%
+    dplyr::mutate(!!origordername := 1:nrow(.))
 
   if (.method == "number") {
-    # toss out origorder
-    idvar <- idf
-    idvar[[origordername]] <- NULL
-    idvar <- idvar %>%
+    idvar <- idf %>%
+      # toss out origorder
+      dplyr::select(-!!origordername) %>%
       # Get uniques
-      unique()
-
-    # number sequentially
-    idvar[, ncol(idvar) + 1] <- 1:nrow(idvar)
-    names(idvar)[ncol(idvar)] <- secondname
-    idvar <- (idvar %>%
+      unique() %>%
+      # Number sequentially
+      dplyr::mutate(!!secondname := 1:nrow(.)) %>%
+      # Bring back in
       dplyr::right_join(idf, by = var) %>%
-      dplyr::arrange_at(origordername))[[secondname]]
+      # Put back in order
+      dplyr::arrange_at(origordername) %>%
+      # And get the result
+      dplyr::pull(secondname)
   }
   else if (.method == "random") {
-    # toss out origorder
-    idvar <- idf
-    idvar[[origordername]] <- NULL
-    idvar <- idvar %>%
+    idvar <- idf %>%
+      # toss out origorder
+      dplyr::select(-!!origordername) %>%
       # Get uniques
-      unique()
-
-    # how many uniques we working with? Allow random IDs up to ten times that
-    idvar[, ncol(idvar) + 1] <- sample(1:(10 * nrow(idvar)), nrow(idvar), replace = FALSE)
-    names(idvar)[ncol(idvar)] <- secondname
-    idvar <- (idvar %>%
+      unique() %>%
+      # how many uniques we working with? Allow random IDs up to ten times that
+      dplyr::mutate(!!secondname := sample(1:(10 * nrow(.)), nrow(.), replace = FALSE)) %>%
+      # Bring back in
       dplyr::right_join(idf, by = var) %>%
-      dplyr::arrange_at(origordername))[[secondname]]
+      # Put back in order
+      dplyr::arrange_at(origordername) %>%
+      # And get the result
+      dplyr::pull(secondname)
   }
   else if (.method == "character") {
     # Figure out the lengths we'll need to fill in
