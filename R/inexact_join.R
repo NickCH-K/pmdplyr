@@ -90,8 +90,8 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
     }
 
     if (x %>%
-        dplyr::select_at(matchvarsx) %>%
-        anyDuplicated() > 0) {
+      dplyr::select_at(matchvarsx) %>%
+      anyDuplicated() > 0) {
       errormessagex <- paste("The left-hand data set x is not uniquely identified by the matching variable",
         plural, paste0(matchvarsx, collapse = ", "), ".",
         sep = ""
@@ -112,8 +112,8 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
     }
 
     if (y %>%
-        dplyr::select_at(matchvarsy) %>%
-        anyDuplicated() > 0) {
+      dplyr::select_at(matchvarsy) %>%
+      anyDuplicated() > 0) {
       errormessagey <- paste("The right-hand data set y is not uniquely identified by the matching variable",
         plural, paste0(matchvarsy, collapse = ", "), ".",
         sep = ""
@@ -451,7 +451,7 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   if (length(matchvars) == 0) {
     # Figure out longest variable name in either data frame and expand it so we don't overwrite names
     bothnames <- c(names(x), names(y))
-    matchvars <- paste(utils::tail(bothnames[order(nchar(bothnames))],1), ".1", sep="")
+    matchvars <- paste(utils::tail(bothnames[order(nchar(bothnames))], 1), ".1", sep = "")
 
     x <- x %>%
       dplyr::mutate(!!matchvars := 1)
@@ -480,9 +480,11 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   xidname <- uniqname(x)
 
   x <- x %>%
-    dplyr::mutate(!!xidname := id_variable(x[, matchvars], .method = "character"),
-                  # We'll be matching additionally on jvar[1]
-                  !!jvar[1] := NA)
+    dplyr::mutate(
+      !!xidname := id_variable(x[, matchvars], .method = "character"),
+      # We'll be matching additionally on jvar[1]
+      !!jvar[1] := NA
+    )
 
   # findIntervals lets us do the 'last' method quickly
   if (method == "last") {
@@ -495,9 +497,11 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 
       # find, by index, which interval each observation fits in
       intervals <- findInterval(x %>%
-                                  dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
-                                  dplyr::pull(!!var),
-                                vals, left.open = !exact)
+        dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
+        dplyr::pull(!!var),
+      vals,
+      left.open = !exact
+      )
 
       # Create a version without 0s so it doesn't mess up indexing
       intervalsno0 <- ifelse(intervals == 0, 1, intervals)
@@ -517,9 +521,11 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 
       # find, by index, which interval each observation fits in
       intervals <- findInterval(x %>%
-                                  dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
-                                  dplyr::pull(!!var),
-                                vals, left.open = TRUE)
+        dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
+        dplyr::pull(!!var),
+      vals,
+      left.open = TRUE
+      )
       # If it's an exact match but exact == FALSE, findInterval will shunt you to the gap BELOW
       # but we want you in the gap ABOVE
       # also, we want to shift the index by 1 so as to match that upper-end number
@@ -552,8 +558,8 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 
       # find, by index, which interval each observation fits in
       intervals <- findInterval(x %>%
-                                   dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
-                                   dplyr::pull(!!var), vals)
+        dplyr::filter_at(xidname, dplyr::any_vars(. == !!i)) %>%
+        dplyr::pull(!!var), vals)
       # Create a version without 0s so it doesn't mess up indexing
       intervalsno0 <- ifelse(intervals == 0, 1, intervals)
 

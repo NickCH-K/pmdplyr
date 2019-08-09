@@ -35,7 +35,7 @@ id_variable <- function(..., .method = "number", .minwidth = FALSE) {
   # original order. We need two unused names
   # Figure out longest variable name and expand it so we don't overwrite names
   origordername <- uniqname(idf)
-  secondname <- paste(origordername, ".1", sep="")
+  secondname <- paste(origordername, ".1", sep = "")
 
   idf <- idf %>%
     dplyr::mutate(!!origordername := 1:nrow(.))

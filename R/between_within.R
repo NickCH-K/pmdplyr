@@ -148,6 +148,9 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
 # For generating non-conflicting variable names
 uniqname <- function(df) {
   paste(utils::tail(
-    names(df)[order(nchar(names(df)))], 1),
-    ".1", sep = "")
+    names(df)[order(nchar(names(df)))], 1
+  ),
+  ".1",
+  sep = ""
+  )
 }

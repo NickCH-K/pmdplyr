@@ -40,11 +40,13 @@ test_that("panel_locf works", {
 })
 
 test_that("fixed_check works", {
-  expect_equal(fixed_check(df, .var = x, .within = i)[['x']], non_fixed)
+  expect_equal(fixed_check(df, .var = x, .within = i)[["x"]], non_fixed)
   expect_equal(fixed_check(df, .var = x, .within = c(i, t)), TRUE)
 })
 
 test_that("fixed_force works", {
-  expect_equal(fixed_force(df, .var = x, .within = i) %>% dplyr::pull(x),
-               c(1, 1, 1, NA, NA, NA, NA))
+  expect_equal(
+    fixed_force(df, .var = x, .within = i) %>% dplyr::pull(x),
+    c(1, 1, 1, NA, NA, NA, NA)
+  )
 })
