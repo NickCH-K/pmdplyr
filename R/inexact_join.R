@@ -424,7 +424,7 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   if (method == "closest" & is.character(x[[var]])) {
     stop("The 'closest' method requires var/jvar to be a variable type that supports subtraction, like numeric or Date.")
   }
-  if (method == "closest" & !exact) {
+  if (method == "closest" & !max(exact)) {
     warning("exact=FALSE is ignored for the 'closest' method.")
   }
   if (!method %in% c("last", "next", "closest", "between")) {
@@ -467,14 +467,18 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   # We need a unique data set of Group by the set of matching variables and the jvars
   yidname <- uniqname(y)
 
-  z <- y %>%
-    dplyr::select_at(c(matchvars, jvar)) %>%
-    # collapse all the matchvars into one
-    dplyr::mutate(!!yidname := id_variable(.[, matchvars], .method = "character")) %>%
-    dplyr::select(-!!matchvars) %>%
-    dplyr::ungroup() %>%
-    # one observation each
-    dplyr::distinct()
+  # Likely to drop pibble status if it's a pibble
+  suppressWarnings(
+    z <- y %>%
+      dplyr::select_at(c(matchvars, jvar)) %>%
+      # collapse all the matchvars into one
+      dplyr::mutate(!!yidname := id_variable(.[, matchvars], .method = "character")) %>%
+      # May give warning for dropping pibble status
+      dplyr::select(-!!matchvars) %>%
+      dplyr::ungroup() %>%
+      # one observation each
+      dplyr::distinct()
+  )
 
   # similar one-column ID for x
   xidname <- uniqname(x)
@@ -589,11 +593,16 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
     # Go through each of the values in z and add them to the appropriate x rows
     for (i in 1:nrow(z)) {
       # If it's the same ID, hasn't been matched yet, and x is between the two y's we have our match
-      x[Vectorize(isTRUE)(is.na(x[[jvar[1]]]) & x[[xidname]] == z[i, yidname] &
-        (x[[var]] > z[i, jvar[1]] | (exact[1] == TRUE & x[[var]] == z[i, jvar[1]])) &
-        (x[[var]] < z[i, jvar[2]] | (exact[2] == TRUE & x[[var]] == z[i, jvar[2]]))), jvar[1]] <- z[i, jvar[1]]
+      to_replace <- Vectorize(isTRUE)(is.na(x[[jvar[1]]]) & x[[xidname]] == z[i, yidname][[1]] &
+                                        (x[[var]] > z[i, jvar[1]][[1]] | (exact[1] == TRUE & x[[var]] == z[i, jvar[1]][[1]])) &
+                                        (x[[var]] < z[i, jvar[2]][[1]] | (exact[2] == TRUE & x[[var]] == z[i, jvar[2]][[1]])))
+
+      if (sum(to_replace > 0)) {
+        x[to_replace,][[jvar[1]]] <- z[i, jvar[1]][[1]]
+      }
     }
   }
+
   # Get rid of the ID variable we were using
   x <- x %>% select(-!!xidname)
 
