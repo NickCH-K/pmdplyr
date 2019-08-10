@@ -16,24 +16,26 @@
 #' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
 #' @examples
 #'
-#' # Example is too slow to run
-#' if (interactive()) {
-#'   data(Scorecard)
-#'   # I'd like to build a decaying function that remembers previous earnings but at a declining rate
-#'   # Let's only use nonmissing earnings
-#'   Scorecard <- Scorecard %>%
-#'     dplyr::filter(!is.na(earnings_med))
-#'   Scorecard <- Scorecard %>%
-#'     # Almost all instances involve a variable being set to a function of a lag of itself
-#'     # we don't want to overwrite so let's make another
-#'     dplyr::mutate(decay_earnings = earnings_med) %>%
-#'     # Now we can cascade
-#'     mutate_cascade(
-#'       decay_earnings = decay_earnings +
-#'         .5 * tlag(decay_earnings, .i = unitid, .t = year, .quick = TRUE),
-#'       .i = unitid, .t = year
-#'     )
-#' }
+#' data(Scorecard)
+#' # I'd like to build a decaying function that remembers previous earnings but at a declining rate
+#' # Let's only use nonmissing earnings
+#' # And let's say we're only interested in four-year colleges in Colorado
+#' # (mutate_cascade + tlag can be very slow so we're working with a smaller sample)
+#' Scorecard <- Scorecard %>%
+#'   dplyr::filter(!is.na(earnings_med),
+#'                   pred_degree_awarded_ipeds == 3,
+#'                   state_abbr == "CO") %>%
+#'    # And declare the panel structure
+#'   as_pibble(.i = unitid, .t = year)
+#' Scorecard <- Scorecard %>%
+#'   # Almost all instances involve a variable being set to a function of a lag of itself
+#'   # we don't want to overwrite so let's make another
+#'   dplyr::mutate(decay_earnings = earnings_med) %>%
+#'   # Now we can cascade
+#'   mutate_cascade(
+#'   decay_earnings = decay_earnings +
+#'     .5 * tlag(decay_earnings, .quick = TRUE)
+#'  )
 #' @export
 mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
   if (!is.logical(.backwards)) {
@@ -75,21 +77,28 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
       dplyr::group_by_at(inp$i)
   }
 
-  .df[, ncol(.df) + 1] <- 1:nrow(.df)
+  indexnames <- uniqname(.df)
+
+  # Use base-R because we don't want this grouped
+  # No longer need, return if necessary functions require changing the order
+  # .df[[indexnames]] <- 1:nrow(.df)
+
+  indexnames[2] <- uniqname(.df)
+
   # Figure out (within groups if present) first period so it can be skipped
   if (.skip == TRUE) {
     if (.backwards == FALSE) {
-      .df[, ncol(.df) + 1] <- (.df %>%
-        dplyr::mutate_at(inp$t, min))[[inp$t]]
+      .df <- .df %>%
+        dplyr::mutate(!!indexnames[2] := min(.data[[inp$t]]))
     } else {
-      .df[, ncol(.df) + 1] <- (.df %>%
-        dplyr::mutate_at(inp$t, max))[[inp$t]]
+      .df <- .df %>%
+        dplyr::mutate(!!indexnames[2] := max(.data[[inp$t]]))
     }
   } else {
-    .df[, ncol(.df) + 1] <- min(.df[[inp$t]]) - 1
+    firstperiod <- min(.df[[inp$t]]) - 1
+    .df <- .df %>%
+      dplyr::mutate(!!indexnames[2] := !!firstperiod)
   }
-
-  indexnames <- names(.df)[(ncol(.df) - 1):ncol(.df)]
 
   # Do an explicit loop because each iteration needs to complete before moving on
   list_of_times <- sort(unique(.df[[inp$t]]))
@@ -97,24 +106,37 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
     list_of_times <- rev(list_of_times)
   }
 
-  for (t in list_of_times) {
-    # Perform manipulation on the whole thing (it will need access for lags)
-    # but only store the current working part
-    .df <- dplyr::bind_rows(
-      # part of data being kept
-      .df[.df[[inp$t]] != t | .df[[indexnames[2]]] == t, ],
-      # and the part of the data not kept, and mutated
-      (.df %>% dplyr::mutate(...))[.df[[inp$t]] == t & .df[[indexnames[2]]] != t, ]
-    ) %>%
-      dplyr::arrange_at(indexnames[1])
-  }
+  # If there are new variables created, make sure they're present
 
-  .df[, indexnames] <- NULL
+  begin <- Sys.time()
+  for (t in list_of_times) {
+    # Skip if there's nothing to do
+    if (sum(.df[[inp$t]] == t & .df[[indexnames[2]]] != t) > 0) {
+      # Replace only the observations in this t
+      .df[.df[[inp$t]] == t & .df[[indexnames[2]]] != t, ] <-
+        .df %>%
+        dplyr::mutate(...) %>%
+        dplyr::filter(.data[[inp$t]] == !!t & .data[[indexnames[2]]] != !!t)
+    }
+  }
+  Sys.time() - begin
+
+  # Rearrange by indexnames[1] if necessary here
+
+  .df <- .df %>%
+    dplyr::select(-!!indexnames[2])
 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
     if (inp$is_tbl_pb) {
-      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck = FALSE)
+      if (is.na(inp$orig_i)) {
+        inp$orig_i <- NULL
+      }
+      if (is.na(inp$orig_t)) {
+        inp$orig_t <- NULL
+      }
+
+      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_d, .uniqcheck = FALSE)
     } else {
       attr(.df, ".i") <- NULL
       attr(.df, ".t") <- NULL
@@ -198,7 +220,7 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
   groups <- names(.df %@% "groups")
   # Last element is .rows
   if (!is.null(groups)) {
-    groups <- groups[1:(length(groups) - 1)]
+    groups <- utils::head(groups, -1)
   }
   # now, find which variables in summ are not grouping variables
   notgroups <- names(summ)[!(names(summ) %in% groups)]
@@ -222,7 +244,14 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
     if (inp$is_tbl_pb) {
-      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck = FALSE)
+      if (is.na(inp$orig_i)) {
+        inp$orig_i <- NULL
+      }
+      if (is.na(inp$orig_t)) {
+        inp$orig_t <- NULL
+      }
+
+      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_d, .uniqcheck = FALSE)
     } else {
       attr(.df, ".i") <- NULL
       attr(.df, ".t") <- NULL

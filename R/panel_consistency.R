@@ -290,7 +290,14 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
     if (inp$is_tbl_pb) {
-      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_i, .uniqcheck = FALSE)
+      if (is.na(inp$orig_i)) {
+        inp$orig_i <- NULL
+      }
+      if (is.na(inp$orig_t)) {
+        inp$orig_t <- NULL
+      }
+
+      .df <- as_pibble(.df, inp$orig_i, inp$orig_t, inp$orig_d, .uniqcheck = FALSE)
     } else {
       attr(.df, ".i") <- NULL
       attr(.df, ".t") <- NULL
@@ -499,26 +506,6 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   .var <- ifelse(is.nan(.var), NA, .var)
 
   return(.var)
-}
-
-
-# Regular rle treats consecutive NA values as different. Unacceptable!
-# Also implements the filling-in while we're at it.
-# Don't use this for regular rle-but-with-NA purposes!!
-# Or at least if you do get rid of the v part
-rle_na <- function(x) {
-  n <- length(x)
-
-  y <- x[-1L] != x[-n]
-  i <- c(which(y |
-    (is.na(y) & !is.na(c(y[-1], 1))) |
-    (!is.na(x[-n]) & is.na(c(x[-c(1, n)], 1)))), n)
-
-  v <- ifelse(is.na(x[i]), c(NA, x[i][-length(i)]), x[i])
-
-  structure(list(lengths = diff(c(0L, i)), values = v),
-    class = "rle"
-  )
 }
 
 

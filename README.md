@@ -197,4 +197,4 @@ SPrail
 ```
 
 And so there we have it - `Preferente` will really set you back relative
-to the cheapo ticket on the same route on the same day.
+to the cheapo ticket on the same route.

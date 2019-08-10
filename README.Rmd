@@ -142,4 +142,4 @@ SPrail <- SPrail %>%
 SPrail
 ```
 
-And so there we have it - `Preferente` will really set you back relative to the cheapo ticket on the same route on the same day.
+And so there we have it - `Preferente` will really set you back relative to the cheapo ticket on the same route.
