@@ -170,24 +170,28 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'># Example is too slow to run</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
-  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
-  <span class='co'># I'd like to build a decaying function that remembers previous earnings but at a declining rate</span>
-  <span class='co'># Let's only use nonmissing earnings</span>
-  <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>earnings_med</span>))
-  <span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-    <span class='co'># Almost all instances involve a variable being set to a function of a lag of itself</span>
-    <span class='co'># we don't want to overwrite so let's make another</span>
-    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>decay_earnings</span> <span class='kw'>=</span> <span class='no'>earnings_med</span>) <span class='kw'>%&gt;%</span>
-    <span class='co'># Now we can cascade</span>
-    <span class='fu'>mutate_cascade</span>(
-      <span class='kw'>decay_earnings</span> <span class='kw'>=</span> <span class='no'>decay_earnings</span> +
-        <span class='fl'>.5</span> * <span class='fu'><a href='tlag.html'>tlag</a></span>(<span class='no'>decay_earnings</span>, <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>, <span class='kw'>.quick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
-      <span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>
-    )
-}</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
+<span class='co'># I'd like to build a decaying function that remembers previous earnings but at a declining rate</span>
+<span class='co'># Let's only use nonmissing earnings</span>
+<span class='co'># And let's say we're only interested in four-year colleges in Colorado</span>
+<span class='co'># (mutate_cascade + tlag can be very slow so we're working with a smaller sample)</span>
+<span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(
+    !<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>earnings_med</span>),
+    <span class='no'>pred_degree_awarded_ipeds</span> <span class='kw'>==</span> <span class='fl'>3</span>,
+    <span class='no'>state_abbr</span> <span class='kw'>==</span> <span class='st'>"CO"</span>
+  ) <span class='kw'>%&gt;%</span>
+  <span class='co'># And declare the panel structure</span>
+  <span class='fu'><a href='as_pibble.html'>as_pibble</a></span>(<span class='kw'>.i</span> <span class='kw'>=</span> <span class='no'>unitid</span>, <span class='kw'>.t</span> <span class='kw'>=</span> <span class='no'>year</span>)
+<span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
+  <span class='co'># Almost all instances involve a variable being set to a function of a lag of itself</span>
+  <span class='co'># we don't want to overwrite so let's make another</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>decay_earnings</span> <span class='kw'>=</span> <span class='no'>earnings_med</span>) <span class='kw'>%&gt;%</span>
+  <span class='co'># Now we can cascade</span>
+  <span class='fu'>mutate_cascade</span>(
+    <span class='kw'>decay_earnings</span> <span class='kw'>=</span> <span class='no'>decay_earnings</span> +
+      <span class='fl'>.5</span> * <span class='fu'><a href='tlag.html'>tlag</a></span>(<span class='no'>decay_earnings</span>, <span class='kw'>.quick</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  )</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -43,10 +43,12 @@ data(Scorecard)
 # And let's say we're only interested in four-year colleges in Colorado
 # (mutate_cascade + tlag can be very slow so we're working with a smaller sample)
 Scorecard <- Scorecard \%>\%
-  dplyr::filter(!is.na(earnings_med),
-                  pred_degree_awarded_ipeds == 3,
-                  state_abbr == "CO") \%>\%
-   # And declare the panel structure
+  dplyr::filter(
+    !is.na(earnings_med),
+    pred_degree_awarded_ipeds == 3,
+    state_abbr == "CO"
+  ) \%>\%
+  # And declare the panel structure
   as_pibble(.i = unitid, .t = year)
 Scorecard <- Scorecard \%>\%
   # Almost all instances involve a variable being set to a function of a lag of itself
@@ -54,7 +56,7 @@ Scorecard <- Scorecard \%>\%
   dplyr::mutate(decay_earnings = earnings_med) \%>\%
   # Now we can cascade
   mutate_cascade(
-  decay_earnings = decay_earnings +
-    .5 * tlag(decay_earnings, .quick = TRUE)
- )
+    decay_earnings = decay_earnings +
+      .5 * tlag(decay_earnings, .quick = TRUE)
+  )
 }

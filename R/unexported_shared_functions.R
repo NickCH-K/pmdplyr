@@ -69,12 +69,12 @@ rle_na <- function(x) {
 
   y <- x[-1L] != x[-n]
   i <- c(which(y |
-                 (is.na(y) & !is.na(c(y[-1], 1))) |
-                 (!is.na(x[-n]) & is.na(c(x[-c(1, n)], 1)))), n)
+    (is.na(y) & !is.na(c(y[-1], 1))) |
+    (!is.na(x[-n]) & is.na(c(x[-c(1, n)], 1)))), n)
 
   v <- ifelse(is.na(x[i]), c(NA, x[i][-length(i)]), x[i])
 
   structure(list(lengths = diff(c(0L, i)), values = v),
-            class = "rle"
+    class = "rle"
   )
 }

@@ -336,4 +336,3 @@ is_pibble <- function(.df, .silent = FALSE) {
     return(FALSE)
   }
 }
-

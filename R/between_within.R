@@ -143,5 +143,3 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
     dplyr::ungroup() %>%
     dplyr::pull(varname))
 }
-
-
