@@ -63,18 +63,29 @@ uniqname <- function(df) {
 # Regular rle treats consecutive NA values as different. Unacceptable!
 # Also implements the filling-in while we're at it.
 # Because of filling-in, don't use this for regular rle-but-with-NA purposes!!
-# Or at least if you do get rid of the v part
+# Or at least if you do get rid of the while loop
 rle_na <- function(x) {
   n <- length(x)
+
+  # Fill in NAs using previous values until there are no more NAs (except perhaps the first obs)
+  # How many NAs do we lead off with?
+  lead_NA <- sum(cummin(is.na(x)))
+  if (lead_NA == 0) {
+    lead_NA <- 1
+  }
+  while (sum(
+    is.na(
+      utils::tail(x,-lead_NA)
+    )) > 0) {
+    x <- ifelse(is.na(x), c(NA, x[-length(x)]), x)
+  }
 
   y <- x[-1L] != x[-n]
   i <- c(which(y |
     (is.na(y) & !is.na(c(y[-1], 1))) |
     (!is.na(x[-n]) & is.na(c(x[-c(1, n)], 1)))), n)
 
-  v <- ifelse(is.na(x[i]), c(NA, x[i][-length(i)]), x[i])
-
-  structure(list(lengths = diff(c(0L, i)), values = v),
+  structure(list(lengths = diff(c(0L, i)), values = x[i]),
     class = "rle"
   )
 }

@@ -50,3 +50,10 @@ test_that("fixed_force works", {
     c(1, 1, 1, NA, NA, NA, NA)
   )
 })
+
+
+test_that("mode_order works", {
+  expect_equal(mode_order(c(1, 2, 2, NA, 5, 3, 4)), 2)
+  expect_equal(mode_order(c(2, 2, 1, 1)), 2)
+  expect_equal(mode_order(c("a", "a", "b")), "a")
+})

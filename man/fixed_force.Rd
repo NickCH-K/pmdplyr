@@ -4,8 +4,8 @@
 \alias{fixed_force}
 \title{Enforce consistency in variables}
 \usage{
-fixed_force(.df, .var = NULL, .within = NULL, .resolve = function(x)
-  unique(x)[which.max(tabulate(match(x, unique(x))))], .flag = NA)
+fixed_force(.df, .var = NULL, .within = NULL, .resolve = mode_order,
+  .flag = NA)
 }
 \arguments{
 \item{.df}{Data frame, pibble, or tibble.}

@@ -9,7 +9,7 @@ safe_join(x, y, expect = NULL, join = NULL, ...)
 \arguments{
 \item{x, y}{The left and right data sets to join.}
 
-\item{expect}{Either \code{'x'}, \code{'y'}, or \code{c('x','y')} - the data sets you expect to be uniquely identified by the joining variables. You can alternately use \code{expect = "1:m"} instead of \code{"x"} for one-to-many merge, \code{"m:1"} instead of \code{"y"} for many-to-one, or \code{"1:1"} instead of \code{c("x", "y")} for one-to-one.}
+\item{expect}{Either \code{"1:m"} (or \code{"x"}), \code{"m:1"} (or \code{"y"}), or \code{"1:1"} (or \code{c("x","y")} or \code{"xy"}) - the match you expect to perform. You can specify this as the kind of match you expect to be performing (one-to-many, many-to-one, or one-to-one), or as the data set(s) you expect to be uniquely identified by the joining variables (\code{"x"}, \code{"y"}, or \code{c("x", "y")}/\code{"xy"}). Alternately, set to \code{expect = "no m:m"} if you don't care what join you're doing as long as it isn't many-to-many.}
 
 \item{join}{A \code{join} or \code{inexact_join} function to run if \code{safe_join} determines your join is safe. By default, simply returns \code{TRUE} instead of running the join.}
 
@@ -44,10 +44,10 @@ right <- data.frame(
 # Forgetting that left is identified by i and t together
 # So, this produces an error
 \dontrun{
-safe_join(left, right, expect = c("x", "y"), join = left_join)
+safe_join(left, right, expect = "1:1", join = left_join)
 }
 
 # If I realize I'm doing a many-to-one merge, that is correct,
 # so safe_join will perform it for us
-safe_join(left, right, expect = "y", join = left_join)
+safe_join(left, right, expect = "m:1", join = left_join)
 }

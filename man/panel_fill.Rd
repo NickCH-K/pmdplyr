@@ -29,9 +29,9 @@ panel_fill(.df, .set_NA = FALSE, .min = NA, .max = NA,
 
 \item{.d}{Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.}
 
-\item{.uniqcheck}{Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.}
+\item{.uniqcheck}{Logical parameter. Set to \code{TRUE} to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.}
 
-\item{.setpanel}{Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.}
+\item{.setpanel}{Logical parameter. \code{TRUE} by default, and so if \code{.i}, \code{.t}, and/or \code{.d} are declared, will return a \code{pibble} set in that way.}
 }
 \description{
 This function creates new observations to fill in any gaps in panel data. For example, if individual 1 has an observation in periods t = 1 and t = 3 but no others, this function will create an observation for t = 2. By default, the t = 2 observation will be identical to the t = 1 observation except for the time variable, but this can be adjusted. This function returns data sorted by \code{.i} and \code{.t}.

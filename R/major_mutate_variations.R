@@ -11,9 +11,9 @@
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, ignoring any grouping already implemented (although the original grouping structure will be returned at the end). Set \code{.group_i = FALSE} to avoid this.
 #' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pibble()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Quoted or unquoted variables indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
-#' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
+#' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. The default \code{.d = NA} here will become \code{.d = 1} if either \code{.i} or \code{.t} are declared.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
-#' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
+#' @param .setpanel Logical parameter. \code{TRUE} by default, and so if \code{.i}, \code{.t}, and/or \code{.d} are declared, will return a \code{pibble} set in that way.
 #' @examples
 #'
 #' data(Scorecard)
@@ -64,6 +64,13 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   inp <- declare_in_fcn_check(.df, .i = .icall, .t = .tcall, .d, .uniqcheck, .setpanel)
   if (is.na(inp$t)) {
     stop("mutate_cascade() requires that .t be declared either in the function or by as_pibble().")
+  }
+
+  # Get original grouping
+  origgroups <- names(.df %@% "groups")
+  # Last element is .rows
+  if (!is.null(origgroups)) {
+    origgroups <- utils::head(origgroups, -1)
   }
 
   # Panel-declare data if any changes have been made.
@@ -128,6 +135,16 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   .df <- .df %>%
     dplyr::select(-!!indexnames[2])
 
+  # Restore original grouping
+  if (!is.null(origgroups)) {
+    .df <- .df %>%
+      dplyr::ungroup() %>%
+      dplyr::group_by_at(origgroups)
+  } else {
+    .df <- .df %>%
+      dplyr::ungroup()
+  }
+
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {
     if (inp$is_tbl_pb) {
@@ -162,9 +179,9 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
 #' @param .group_i By default, if \code{.i} is specified or found in the data, \code{mutate_cascade} will group the data by \code{.i}, overwriting any grouping already implemented. Set \code{.group_i = FALSE} to avoid this.
 #' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pibble()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
-#' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
+#' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. The default \code{.d = NA} here will become \code{.d = 1} if either \code{.i} or \code{.t} are declared.
 #' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
-#' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
+#' @param .setpanel Logical parameter. \code{TRUE} by default, and so if \code{.i}, \code{.t}, and/or \code{.d} are declared, will return a \code{pibble} set in that way.
 #' @examples
 #'
 #' data(SPrail)
@@ -201,12 +218,18 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
 
   # Panel-declare data if any changes have been made.
   if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
-    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d = .d, .uniqcheck = .uniqcheck)
+    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
   }
 
+  # Get original grouping
+  origgroups <- names(.df %@% "groups")
+  # Last element is .rows
+  if (!is.null(groups)) {
+    origgroups <- utils::head(origgroups, -1)
+  }
 
   if (.group_i == TRUE & (min(is.na(inp$i)) == 0)) {
     .df <- .df %>%
@@ -242,6 +265,15 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
       dplyr::left_join(summ, by = groups))
   }
 
+  # Restore original grouping
+  if (!is.null(origgroups)) {
+    .df <- .df %>%
+      dplyr::ungroup() %>%
+      dplyr::group_by_at(origgroups)
+  } else {
+    .df <- .df %>%
+      dplyr::ungroup()
+  }
 
   # If it wants the original panel setting back, do that
   if (.setpanel == FALSE) {

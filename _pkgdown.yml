@@ -8,7 +8,22 @@ reference:
     - ends_with("pibble")
     - panel_convert
 
-- title: dplyr verb variants
+- title: ID and time variables
+  contents:
+    - id_variable
+    - time_variable
+
+- title: Filling in data
+  contents:
+    - panel_fill
+    - panel_locf
+
+- title: Panel consistency
+  contents:
+    - fixed_check
+    - fixed_force
+
+- title: Joins
   contents:
     - inexact_inner_join
     - inexact_left_join
@@ -18,20 +33,21 @@ reference:
     - inexact_nest_join
     - inexact_anti_join
     - safe_join
+
+- title: Mutate variations
+  contents:
     - mutate_cascade
     - mutate_subset
 
-- title: Panel data tools
+- title: Time lag
   contents:
-    - id_variable
-    - fixed_check
-    - fixed_force
+    - tlag
+
+- title: Additional calculations
+  contents:
     - within_i
     - between_i
-    - panel_fill
-    - panel_locf
-    - time_variable
-    - tlag
+    - mode_order
 
 - title: Datasets
   contents:

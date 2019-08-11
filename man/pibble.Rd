@@ -3,8 +3,11 @@
 \name{pibble}
 \alias{pibble}
 \title{Create a pibble panel data set object}
+\usage{
+pibble(..., .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE)
+}
 \arguments{
-\item{.df}{Data frame or tibble to declare as a panel.}
+\item{...}{A set of name-value pairs to make up the variables of a \code{pibble}.}
 
 \item{.i}{Quoted or unquoted variable(s) that identify the individual cases. If this is omitted, \code{pibble} will assume the data set is a single time series.}
 

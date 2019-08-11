@@ -11,7 +11,7 @@
 #' \code{safe_join} forces you to specify which of your data sets you think are uniquely identified by the joining variables. If you are wrong, it will return an error. If you are right, it will pass you on to your preferred \code{join} function, given in \code{join}. If \code{join} is not specified, it will just return \code{TRUE}.
 #'
 #' @param x,y The left and right data sets to join.
-#' @param expect Either \code{'x'}, \code{'y'}, or \code{c('x','y')} - the data sets you expect to be uniquely identified by the joining variables. You can alternately use \code{expect = "1:m"} instead of \code{"x"} for one-to-many merge, \code{"m:1"} instead of \code{"y"} for many-to-one, or \code{"1:1"} instead of \code{c("x", "y")} for one-to-one.
+#' @param expect Either \code{"1:m"} (or \code{"x"}), \code{"m:1"} (or \code{"y"}), or \code{"1:1"} (or \code{c("x","y")} or \code{"xy"}) - the match you expect to perform. You can specify this as the kind of match you expect to be performing (one-to-many, many-to-one, or one-to-one), or as the data set(s) you expect to be uniquely identified by the joining variables (\code{"x"}, \code{"y"}, or \code{c("x", "y")}/\code{"xy"}). Alternately, set to \code{expect = "no m:m"} if you don't care what join you're doing as long as it isn't many-to-many.
 #' @param join A \code{join} or \code{inexact_join} function to run if \code{safe_join} determines your join is safe. By default, simply returns \code{TRUE} instead of running the join.
 #' @param ... Other arguments to be passed to the function specified in \code{join}. If performing an \code{inexact_join}, put the \code{var} and \code{jvar} arguments in as quoted variables.
 #'
@@ -32,12 +32,12 @@
 #' # Forgetting that left is identified by i and t together
 #' # So, this produces an error
 #' \dontrun{
-#' safe_join(left, right, expect = c("x", "y"), join = left_join)
+#' safe_join(left, right, expect = "1:1", join = left_join)
 #' }
 #'
 #' # If I realize I'm doing a many-to-one merge, that is correct,
 #' # so safe_join will perform it for us
-#' safe_join(left, right, expect = "y", join = left_join)
+#' safe_join(left, right, expect = "m:1", join = left_join)
 #' @export
 
 safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
@@ -51,12 +51,12 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
   if (max(expect == "m:1") == 1) {
     expect <- "y"
   }
-  if (max(expect == "1:1") == 1) {
+  if (max(expect == "1:1") == 1 | max(expect == "xy") == 1) {
     expect <- c("x", "y")
   }
 
-  if (!("x" %in% expect) & !("y" %in% expect)) {
-    stop("expect must contain the strings 'x' and/or 'y'")
+  if (!("x" %in% expect) & !("y" %in% expect)  & !("no m:m" %in% expect)) {
+    stop("Invalid value of expect")
   }
   if (!is.null(join) & !is.function(join)) {
     stop("join must be NULL or one of the dplyr::join or pmdplyr::inexact_join functions.")
@@ -75,50 +75,66 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
   errormessagex <- NULL
   errormessagey <- NULL
 
-  if ("x" %in% expect) {
+  # If we're doing an inexact_join, there may be a var to consider
+  matchvarsx <- matchvars
 
-    # If we're doing an inexact_join, there may be a var to consider
-    matchvarsx <- matchvars
-
-    if (!rlang::is_empty(dots[["var"]])) {
-      matchvarsx <- c(matchvars, dots[["var"]])
-    }
-
-    plural <- " "
-    if (length(matchvarsx) > 1) {
-      plural <- "s "
-    }
-
-    if (x %>%
-      dplyr::select_at(matchvarsx) %>%
-      anyDuplicated() > 0) {
-      errormessagex <- paste("The left-hand data set x is not uniquely identified by the matching variable",
-        plural, paste0(matchvarsx, collapse = ", "), ".",
-        sep = ""
-      )
-    }
+  if (!rlang::is_empty(dots[["var"]])) {
+    matchvarsx <- c(matchvars, dots[["var"]])
   }
-  if ("y" %in% expect) {
 
-    # If we're doing an inexact_join, there may be a var to consider
-    matchvarsy <- matchvars
-    if (!is.null(dots[["jvar"]])) {
-      matchvarsy <- c(matchvars, dots[["jvar"]])
-    }
+  pluralx <- " "
+  if (length(matchvarsx) > 1) {
+    pluralx <- "s "
+  }
 
-    plural <- " "
-    if (length(matchvarsy) > 1) {
-      plural <- "s "
-    }
+  # Avoid "Removing Pibble Status" warning
+  x_not_unique <- suppressWarnings(x %>%
+    dplyr::select_at(matchvarsx) %>%
+    anyDuplicated() > 0)
 
-    if (y %>%
-      dplyr::select_at(matchvarsy) %>%
-      anyDuplicated() > 0) {
-      errormessagey <- paste("The right-hand data set y is not uniquely identified by the matching variable",
-        plural, paste0(matchvarsy, collapse = ", "), ".",
-        sep = ""
-      )
-    }
+  # If we're doing an inexact_join, there may be a var to consider
+  matchvarsy <- matchvars
+  if (!is.null(dots[["jvar"]])) {
+    matchvarsy <- c(matchvars, dots[["jvar"]])
+  }
+
+  pluraly <- " "
+  if (length(matchvarsy) > 1) {
+    pluraly <- "s "
+  }
+
+  y_not_unique <- suppressWarnings(y %>%
+    dplyr::select_at(matchvarsy) %>%
+    anyDuplicated() > 0)
+
+  if ("x" %in% expect & !("no m:m" %in% expect) & x_not_unique) {
+    errormessagex <- paste("The left-hand data set x is not uniquely identified by the joining variable",
+      pluralx, paste0(matchvarsx, collapse = ", "), ".",
+      sep = ""
+    )
+  } else if(!("x" %in% expect) & !("no m:m" %in% expect) & !x_not_unique) {
+    errormessagex <- paste("The left-hand data set x is uniquely identified by the joining variable",
+                           pluralx, paste0(matchvarsx, collapse = ", "), ".",
+                           sep = ""
+    )
+  }
+
+  if ("y" %in% expect & !("no m:m" %in% expect) & y_not_unique) {
+    errormessagey <- paste("The right-hand data set y is not uniquely identified by the joining variable",
+                           pluraly, paste0(matchvarsy, collapse = ", "), ".",
+                           sep = ""
+    )
+  } else if (!("y" %in% expect) & !("no m:m" %in% expect) & !y_not_unique) {
+    errormessagey <- paste("The right-hand data set y is uniquely identified by the joining variable",
+                           pluraly, paste0(matchvarsy, collapse = ", "), ".",
+                           sep = ""
+    )
+  }
+  if ("no m:m" %in% expect & x_not_unique & y_not_unique) {
+    errormessagex <- paste("Many-to-many! Neither x nor y are uniquely identified by the joining variable",
+                           pluralx, paste0(matchvarsx, collapse = ", "), ".",
+                           sep = ""
+    )
   }
 
   # If we found a problem, stop with an error
@@ -144,10 +160,10 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
 #' The available methods for matching are:
 #'
 #' \itemize{
-#'   \item \code{method = 'last'} matches \code{var} to the closest value of \code{jvar} that is *lower*.
-#'   \item \code{method = 'next'} matches \code{var} to the closest value of \code{jvar} that is *higher*.
-#'   \item \code{method = 'closest'} matches \code{var} to the closest value of \code{jvar}, above or below. If equidistant between two values, picks the lower of the two.
-#'   \item \code{method = 'between'} requires two variables in \code{jvar} which constitute the beginning and end of a range, and matches \code{var} to the range it is in. Make sure that the ranges are non-overlapping within the joining variables, or else you will get strange results (specifically, it should join to the earliest-starting range). If the end of one range is the exact start of another, \code{exact = c(TRUE,FALSE)} or \code{exact = c(FALSE,TRUE)} is recommended to avoid overlaps. Defaults to \code{exact = c(TRUE,FALSE)}.
+#'   \item \code{method = "last"} matches \code{var} to the closest value of \code{jvar} that is *lower*.
+#'   \item \code{method = "next"} matches \code{var} to the closest value of \code{jvar} that is *higher*.
+#'   \item \code{method = "closest"} matches \code{var} to the closest value of \code{jvar}, above or below. If equidistant between two values, picks the lower of the two.
+#'   \item \code{method = "between"} requires two variables in \code{jvar} which constitute the beginning and end of a range, and matches \code{var} to the range it is in. Make sure that the ranges are non-overlapping within the joining variables, or else you will get strange results (specifically, it should join to the earliest-starting range). If the end of one range is the exact start of another, \code{exact = c(TRUE,FALSE)} or \code{exact = c(FALSE,TRUE)} is recommended to avoid overlaps. Defaults to \code{exact = c(TRUE,FALSE)}.
 #' }
 #'
 #' Note that if, given the method, \code{var} finds no proper match, it will be merged with any \code{is.na(jvar[1])} values.
@@ -485,7 +501,7 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 
   x <- x %>%
     dplyr::mutate(
-      !!xidname := id_variable(x[, matchvars], .method = "character"),
+      !!xidname := id_variable(.[, matchvars], .method = "character"),
       # We'll be matching additionally on jvar[1]
       !!jvar[1] := NA
     )

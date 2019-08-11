@@ -12,12 +12,11 @@
 #'
 #' Note that \code{pibble} does not require that \code{.i} and \code{.t} uniquely identify the observations in your data, but it will give a warning message (a maximum of once per session, unless \code{.uniqcheck=TRUE}) if they do not.
 #'
-#' @param .df Data frame or tibble to declare as a panel.
+#' @param ... A set of name-value pairs to make up the variables of a \code{pibble}.
 #' @param .i Quoted or unquoted variable(s) that identify the individual cases. If this is omitted, \code{pibble} will assume the data set is a single time series.
 #' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
 #' @param .uniqcheck Logical parameter. Set to TRUE to perform a check of whether \code{.i} and \code{.t} uniquely identify observations, and present a message if not. By default this is set to FALSE and the warning message occurs only once per session.
-#' @name pibble
 #'
 #' @examples
 #' # Creating a pibble from scratch
@@ -40,22 +39,7 @@
 #'   .d = 0
 #' )
 #' is_pibble(pd2)
-NULL
 #' @export
-
-# varname <- function(data,var) {
-# mean(data %>% pull({{ var }}),na.rm=TRUE)
-# }
-# varname(SPrail,!!parse_expr('price'))
-
-# varname <- function(data,var) {
-#   enexprs(var)[[1]]
-# }
-# varname(SPrail,price)
-#
-
-# quo_is_missing(enquo(var))
-
 
 pibble <- function(..., .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE) {
 

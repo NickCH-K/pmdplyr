@@ -30,10 +30,10 @@ panel_locf(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 \item{.uniqcheck}{Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.}
 }
 \description{
-This function looks for a list of values (usually, just \code{NA}) in a variable \code{.var} and overwrites those values with the most recent (or next-coming) values that are not from that list.
+This function looks for a list of values (usually, just \code{NA}) in a variable \code{.var} and overwrites those values with the most recent (or next-coming) values that are not from that list ("last observation carried forward").
 }
 \details{
-\code{panel_locf()} is unusual among last-observation-carried-forward functions (like \code{zoo}'s \code{na.locf}) in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
+\code{panel_locf()} is unusual among last-observation-carried-forward functions (like \code{zoo::na.locf()}) in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
 }
 \examples{
 

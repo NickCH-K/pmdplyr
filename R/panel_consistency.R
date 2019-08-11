@@ -18,8 +18,8 @@
 #' @param .i Quoted or unquoted variables that identify the individual cases. Note that setting any one of \code{.i}, \code{.t}, or \code{.d} will override all three already applied to the data, and will return data that is \code{as_pibble()}d with all three, unless \code{.setpanel=FALSE}.
 #' @param .t Quoted or unquoted variable indicating the time. \code{pmdplyr} accepts two kinds of time variables: numeric variables where a fixed distance \code{.d} will take you from one observation to the next, or, if \code{.d=0}, any standard variable type with an order. Consider using the \code{time_variable()} function to create the necessary variable if your data uses a \code{Date} variable for time.
 #' @param .d Number indicating the gap in \code{.t} between one period and the next. For example, if \code{.t} indicates a single day but data is collected once a week, you might set \code{.d=7}. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set \code{.d=0}. By default, \code{.d=1}.
-#' @param .uniqcheck Logical parameter. Set to TRUE to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
-#' @param .setpanel Logical parameter. Set to FALSE to return data with the same \code{.i}, \code{.t}, \code{.d} attributes it came in with, even if those are null. TRUE by default, but ignored if \code{.i}, \code{.t}, and \code{.d} are all NA.
+#' @param .uniqcheck Logical parameter. Set to \code{TRUE} to always check whether \code{.i} and \code{.t} uniquely identify observations in the data. By default this is set to FALSE and the check is only performed once per session, and only if at least one of \code{.i}, \code{.t}, or \code{.d} is set.
+#' @param .setpanel Logical parameter. \code{TRUE} by default, and so if \code{.i}, \code{.t}, and/or \code{.d} are declared, will return a \code{pibble} set in that way.
 #' @examples
 #'
 #' # Examples are too slow to run - this function is slow!
@@ -311,9 +311,9 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 
 #' Fill in missing (or other) values of a panel data set using known data
 #'
-#' This function looks for a list of values (usually, just \code{NA}) in a variable \code{.var} and overwrites those values with the most recent (or next-coming) values that are not from that list.
+#' This function looks for a list of values (usually, just \code{NA}) in a variable \code{.var} and overwrites those values with the most recent (or next-coming) values that are not from that list ("last observation carried forward").
 #'
-#' \code{panel_locf()} is unusual among last-observation-carried-forward functions (like \code{zoo}'s \code{na.locf}) in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
+#' \code{panel_locf()} is unusual among last-observation-carried-forward functions (like \code{zoo::na.locf()}) in that it is usable even if observations are not uniquely identified by \code{.t} (and \code{.i}, if defined).
 #'
 #' @param .var Vector to be modified.
 #' @param .df Data frame, pibble, or tibble (usually the one containing \code{.var}) that contains the panel structure variables either listed in \code{.i} and \code{.t}, or earlier declared with \code{as_pibble()}. If \code{tlag} is called inside of a \code{dplyr} verb, this can be omitted and the data will be picked up automatically.
@@ -417,6 +417,9 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
   # Get rid of our undesirable values
   .var <- ifelse(.var %in% .fill, NA, .var)
+  # Store our .var at this point so we know what to overwrite later
+  # Since we don't want any nonmissing values manipulated by .resolve to get passed back
+  orig_var <- .var
 
   # then add that cleaned-up vector in
   .df[, ncol(.df) + 1] <- .var
@@ -487,8 +490,8 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   .df[[worknames[1]]] <- (.df %>%
     dplyr::do(
       data.frame(
-        panel_consistency_length_measure_191817 = rle_na(.[[worknames[1]]])$lengths,
-        panel_consistency_values_measure_277616 = rle_na(.[[worknames[1]]])$values
+        panel_consistency_length_measure_191817 = rle_na(.data[[worknames[1]]])$lengths,
+        panel_consistency_values_measure_277616 = rle_na(.data[[worknames[1]]])$values
       )
     ) %>%
     tidyr::uncount(panel_consistency_length_measure_191817,
@@ -505,7 +508,7 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   # Failure to lookup (NaN) is really a NA for us
   .var <- ifelse(is.nan(.var), NA, .var)
 
-  return(.var)
+  return(ifelse(is.na(orig_var), .var, orig_var))
 }
 
 
@@ -612,7 +615,7 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
 #' # We did!
 #' @export
 
-fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = function(x) unique(x)[which.max(tabulate(match(x, unique(x))))], .flag = NA) {
+fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order, .flag = NA) {
   if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
     stop("Requires data to be a data frame or tibble.")
   }
@@ -696,4 +699,26 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = function(x)
   }
 
   return(.df)
+}
+
+
+#' Calculate the mode, and use original order to break ties
+#'
+#' \code{mode_order()} calculates the mode of a vector, mostly used as the default \code{.resolve} option in \code{fixed_force()}
+#'
+#' In the case of ties, the first-ordered value in the vector wins.
+
+#' @param x Vector to calculate the mode of.
+#' @examples
+#'
+#' x <- c(1, 2, 2, NA, 5, 3, 4)
+#' mode_order(x)
+#'
+#' # Ties are broken by order
+#' x <- c(2, 2, 1, 1)
+#' mode_order(x)
+#'
+#' @export
+mode_order <- function(x) {
+  unique(x)[which.max(tabulate(match(x, unique(x))))]
 }
