@@ -545,23 +545,16 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
   # Pull out variable names
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   if (length(.varcall) == 0) {
-    .icall <- NA_character_
+    stop('.var must be specified as variable(s) in .df.')
   }
   .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
   if (length(.withincall) == 0) {
-    .withincall <- NA_character_
+    stop('.within must be specified as variable(s) in df.')
   }
 
-  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) {
-    stop(".var and .within must be names of variables in .df")
-  }
   # if .var is unspecified
   if (max(is.na(.varcall) == 1)) {
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
-  }
-
-  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) {
-    stop(".var and .within must be names of variables in .df")
   }
 
   # apply grouping for within
@@ -617,7 +610,7 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
 
 fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order, .flag = NA) {
   if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
-    stop("Requires data to be a data frame or tibble.")
+    stop("Requires data to be a data frame, pibble, or tibble.")
   }
   if (sum(class(.df) == "data.table") > 0) {
     warning("pmdplyr functions have not been tested with data.tables.")
@@ -626,11 +619,12 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
   # Pull out variable names
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   if (length(.varcall) == 0) {
-    .icall <- NA_character_
+    stop('.var must be specified as variable(s) in .df.')
   }
   .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
+
   if (length(.withincall) == 0) {
-    .withincall <- NA_character_
+    stop('.within must be specified as variable(s) in .df.')
   }
 
   # if .var is unspecified
@@ -638,9 +632,6 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
   }
 
-  if (min(.varcall %in% names(.df)) == 0 | min(.withincall %in% names(.df)) == 0) {
-    stop(".var and .within must be names of variables in .df")
-  }
   if (!is.character(.resolve) & !is.function(.resolve)) {
     stop(".resolve must be a function or 'drop'.")
   }
@@ -664,7 +655,7 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
     origorder <- names(.df)[ncol(.df)]
 
     # for each element of .var, drop inconsistent obs
-    for (v in .var) {
+    for (v in .varcall) {
       .df <- .df %>%
         dplyr::arrange_at(v) %>%
         dplyr::filter_at(v, function(y) dplyr::first(y) == dplyr::last(y))
@@ -672,7 +663,7 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
 
     # Rearrange in original order and drop origorder
     .df <- .df %>% dplyr::arrange_at(origorder)
-    data[[origorder]] <- NULL
+    .df[[origorder]] <- NULL
   }
   else {
     # otherwise, use .resolve to, uh, resolve inconsistencies

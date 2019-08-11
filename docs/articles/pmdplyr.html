@@ -237,14 +237,14 @@
 <a class="sourceLine" id="cb7-8" title="8"></a>
 <a class="sourceLine" id="cb7-9" title="9">df</a>
 <a class="sourceLine" id="cb7-10" title="10"><span class="co">#&gt;   country       city numeric_ID random_ID           char_ID</span></a>
-<a class="sourceLine" id="cb7-11" title="11"><span class="co">#&gt; 1      US        NYC          1        31 |US|.|NYC|.......</span></a>
-<a class="sourceLine" id="cb7-12" title="12"><span class="co">#&gt; 2      US        NYC          1        31 |US|.|NYC|.......</span></a>
-<a class="sourceLine" id="cb7-13" title="13"><span class="co">#&gt; 3      US  Cambridge          2        40 |US|.|Cambridge|.</span></a>
-<a class="sourceLine" id="cb7-14" title="14"><span class="co">#&gt; 4      US        NYC          1        31 |US|.|NYC|.......</span></a>
-<a class="sourceLine" id="cb7-15" title="15"><span class="co">#&gt; 5     GBR  Cambridge          3        14 |GBR||Cambridge|.</span></a>
-<a class="sourceLine" id="cb7-16" title="16"><span class="co">#&gt; 6     GBR     London          4        42 |GBR||London|....</span></a>
-<a class="sourceLine" id="cb7-17" title="17"><span class="co">#&gt; 7     GBR Manchester          5        27 |GBR||Manchester|</span></a>
-<a class="sourceLine" id="cb7-18" title="18"><span class="co">#&gt; 8     GBR Manchester          5        27 |GBR||Manchester|</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-11" title="11"><span class="co">#&gt; 1      US        NYC          1        46 |US|.|NYC|.......</span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="co">#&gt; 2      US        NYC          1        46 |US|.|NYC|.......</span></a>
+<a class="sourceLine" id="cb7-13" title="13"><span class="co">#&gt; 3      US  Cambridge          2        41 |US|.|Cambridge|.</span></a>
+<a class="sourceLine" id="cb7-14" title="14"><span class="co">#&gt; 4      US        NYC          1        46 |US|.|NYC|.......</span></a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="co">#&gt; 5     GBR  Cambridge          3        27 |GBR||Cambridge|.</span></a>
+<a class="sourceLine" id="cb7-16" title="16"><span class="co">#&gt; 6     GBR     London          4        45 |GBR||London|....</span></a>
+<a class="sourceLine" id="cb7-17" title="17"><span class="co">#&gt; 7     GBR Manchester          5        43 |GBR||Manchester|</span></a>
+<a class="sourceLine" id="cb7-18" title="18"><span class="co">#&gt; 8     GBR Manchester          5        43 |GBR||Manchester|</span></a></code></pre></div>
 </div>
 <div id="time_variable" class="section level2">
 <h2 class="hasAnchor">
@@ -539,34 +539,36 @@
 <ol style="list-style-type: decimal">
 <li>
 <code><a href="../reference/fixed_check.html">fixed_check()</a></code> returns either a <code>logical</code> or a <code>list</code> depending on the outcome. If you want to just get <code>FALSE</code> instead of a list of data sets, do <code><a href="https://rdrr.io/r/base/logical.html">is.logical(fixed_check())</a></code> instead of <code><a href="../reference/fixed_check.html">fixed_check()</a></code>.</li>
-<li>If you do have problems and want a consistent data set, you can fix things by hand as you like, or you can use either use <code><a href="../reference/fixed_force.html">fixed_force()</a></code> (see below) or combine the list of data sets returned by <code><a href="../reference/fixed_force.html">fixed_force()</a></code> with <code><a href="https://dplyr.tidyverse.org/reference/join.html">dplyr::anti_join()</a></code>.</li>
+<li>If you do have problems and want a consistent data set, you can fix things by hand as you like, or you can use <code><a href="../reference/fixed_force.html">fixed_force()</a></code> (see below) to change the observations to be consistent, or to drop all inconsistent observations with <code><a href="../reference/fixed_force.html">fixed_force(.resolve = "drop")</a></code>.</li>
 </ol>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">anti_join</span>(df,</a>
-<a class="sourceLine" id="cb21-2" title="2">          <span class="kw"><a href="../reference/fixed_check.html">fixed_check</a></span>(df, <span class="dt">.var =</span> continent, <span class="dt">.within =</span> country)<span class="op">$</span>continent)</a>
-<a class="sourceLine" id="cb21-3" title="3"><span class="co">#&gt;   continent country year</span></a>
-<a class="sourceLine" id="cb21-4" title="4"><span class="co">#&gt; 1 S America  Brazil 2000</span></a>
-<a class="sourceLine" id="cb21-5" title="5"><span class="co">#&gt; 2 S America  Brazil 2001</span></a></code></pre></div>
 </div>
 <div id="fixed_force" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fixed_force" class="anchor"></a>fixed_force()</h2>
 <p><code><a href="../reference/fixed_force.html">fixed_force()</a></code> will take a data set <code>.df</code>, find any inconsistencies in the variables <code>.var</code> within combinations of the variables <code>.within</code>, and will “fix” those inconsistencies, using the function <code>.resolve</code> to select the correct values. It will flag any changed values with a new variable named <code>.flag</code>.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw"><a href="../reference/fixed_force.html">fixed_force</a></span>(..df,</a>
-<a class="sourceLine" id="cb22-2" title="2">            <span class="dt">.var =</span> <span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb22-3" title="3">            <span class="dt">.within =</span> <span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb22-4" title="4">            <span class="dt">.resolve =</span> mode_order,</a>
-<a class="sourceLine" id="cb22-5" title="5">            <span class="dt">.flag =</span> <span class="ot">NA</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw"><a href="../reference/fixed_force.html">fixed_force</a></span>(..df,</a>
+<a class="sourceLine" id="cb21-2" title="2">            <span class="dt">.var =</span> <span class="ot">NULL</span>,</a>
+<a class="sourceLine" id="cb21-3" title="3">            <span class="dt">.within =</span> <span class="ot">NULL</span>,</a>
+<a class="sourceLine" id="cb21-4" title="4">            <span class="dt">.resolve =</span> mode_order,</a>
+<a class="sourceLine" id="cb21-5" title="5">            <span class="dt">.flag =</span> <span class="ot">NA</span>)</a></code></pre></div>
 <p>The default resolution function is <code><a href="../reference/mode_order.html">mode_order()</a></code> (see the Additional Calculations section), which calculates the mode, selecting the first-ordered value in the data if there are ties. The mode seems most relevant here, since the most likely (and responsible) use for <code><a href="../reference/fixed_force.html">fixed_force()</a></code> is when you have data that is mostly correct but just has a few odd values that are likely just miscodes. <code><a href="../reference/mode_order.html">mode_order()</a></code> also is not just limited to numeric variables.</p>
 <p>Continuing with our France-in-Asia data set,</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw"><a href="../reference/fixed_force.html">fixed_force</a></span>(df, <span class="dt">.var =</span> continent, <span class="dt">.within =</span> country, <span class="dt">.flag =</span> <span class="st">"altered"</span>)</a>
-<a class="sourceLine" id="cb23-2" title="2"><span class="co">#&gt; # A tibble: 5 x 4</span></a>
-<a class="sourceLine" id="cb23-3" title="3"><span class="co">#&gt;   continent country  year altered</span></a>
-<a class="sourceLine" id="cb23-4" title="4"><span class="co">#&gt;   &lt;fct&gt;     &lt;fct&gt;   &lt;dbl&gt; &lt;lgl&gt;  </span></a>
-<a class="sourceLine" id="cb23-5" title="5"><span class="co">#&gt; 1 Europe    France   2000 TRUE   </span></a>
-<a class="sourceLine" id="cb23-6" title="6"><span class="co">#&gt; 2 Europe    France   2001 FALSE  </span></a>
-<a class="sourceLine" id="cb23-7" title="7"><span class="co">#&gt; 3 Europe    France   2002 FALSE  </span></a>
-<a class="sourceLine" id="cb23-8" title="8"><span class="co">#&gt; 4 S America Brazil   2000 FALSE  </span></a>
-<a class="sourceLine" id="cb23-9" title="9"><span class="co">#&gt; 5 S America Brazil   2001 FALSE</span></a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw"><a href="../reference/fixed_force.html">fixed_force</a></span>(df, <span class="dt">.var =</span> continent, <span class="dt">.within =</span> country, <span class="dt">.flag =</span> <span class="st">"altered"</span>)</a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="co">#&gt; # A tibble: 5 x 4</span></a>
+<a class="sourceLine" id="cb22-3" title="3"><span class="co">#&gt;   continent country  year altered</span></a>
+<a class="sourceLine" id="cb22-4" title="4"><span class="co">#&gt;   &lt;fct&gt;     &lt;fct&gt;   &lt;dbl&gt; &lt;lgl&gt;  </span></a>
+<a class="sourceLine" id="cb22-5" title="5"><span class="co">#&gt; 1 Europe    France   2000 TRUE   </span></a>
+<a class="sourceLine" id="cb22-6" title="6"><span class="co">#&gt; 2 Europe    France   2001 FALSE  </span></a>
+<a class="sourceLine" id="cb22-7" title="7"><span class="co">#&gt; 3 Europe    France   2002 FALSE  </span></a>
+<a class="sourceLine" id="cb22-8" title="8"><span class="co">#&gt; 4 S America Brazil   2000 FALSE  </span></a>
+<a class="sourceLine" id="cb22-9" title="9"><span class="co">#&gt; 5 S America Brazil   2001 FALSE</span></a></code></pre></div>
+<p>Another option for <code>.resolve</code> is to set <code>.resolve = "drop"</code> (or any other character, really), and it will drop the inconsistent observations.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw"><a href="../reference/fixed_force.html">fixed_force</a></span>(df, <span class="dt">.var =</span> continent, <span class="dt">.within =</span> country, <span class="dt">.resolve =</span> <span class="st">"drop"</span>)</a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="co">#&gt; # A tibble: 2 x 3</span></a>
+<a class="sourceLine" id="cb23-3" title="3"><span class="co">#&gt;   continent country  year</span></a>
+<a class="sourceLine" id="cb23-4" title="4"><span class="co">#&gt;   &lt;fct&gt;     &lt;fct&gt;   &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb23-5" title="5"><span class="co">#&gt; 1 S America Brazil   2000</span></a>
+<a class="sourceLine" id="cb23-6" title="6"><span class="co">#&gt; 2 S America Brazil   2001</span></a></code></pre></div>
 <hr>
 </div>
 </div>

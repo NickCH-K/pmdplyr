@@ -74,10 +74,10 @@ can do that we need to clean the data.
 ``` r
 Scorecard <- Scorecard %>%
   # We want pred_degree_awarded_ipeds to be consistent within college. No changers!
-  # So let's drop them by using fixed_check to find inconsistencies
-  anti_join(fixed_check(Scorecard,
-                        .var = pred_degree_awarded_ipeds,
-                        .within = unitid)[[1]]) %>%
+  # So let's drop them by using fixed_check with .resolve = "drop" to lose inconsistencies
+  fixed_force(.var = pred_degree_awarded_ipeds,
+              .within = unitid,
+              .resolve = "drop") %>%
   # Then, get rid of pred_degree_awarded_ipeds == 1
   # And simplify our terms
   filter(pred_degree_awarded_ipeds %in% c(2,3)) %>%
@@ -117,21 +117,21 @@ summary(lm(
 #> 
 #> Residuals:
 #>    Min     1Q Median     3Q    Max 
-#> -25197  -5017   -458   4191  54110 
+#> -25341  -4917   -528   4091  54587 
 #> 
 #> Coefficients:
 #>                      Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)         7.682e+03  1.986e+03   3.869 0.000113 ***
-#> FourYearTRUE        9.297e+03  3.833e+02  24.257  < 2e-16 ***
-#> unemp              -8.239e+04  3.085e+04  -2.671 0.007625 ** 
-#> lag_state_earnings  7.226e-01  4.453e-02  16.226  < 2e-16 ***
+#> (Intercept)         5.933e+03  1.772e+03   3.348 0.000826 ***
+#> FourYearTRUE        9.088e+03  3.511e+02  25.886  < 2e-16 ***
+#> unemp              -4.564e+04  2.529e+04  -1.805 0.071215 .  
+#> lag_state_earnings  7.348e-01  4.027e-02  18.244  < 2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
-#> Residual standard error: 8262 on 2071 degrees of freedom
-#>   (25564 observations deleted due to missingness)
-#> Multiple R-squared:  0.342,  Adjusted R-squared:  0.341 
-#> F-statistic: 358.8 on 3 and 2071 DF,  p-value: < 2.2e-16
+#> Residual standard error: 8209 on 2474 degrees of freedom
+#>   (25161 observations deleted due to missingness)
+#> Multiple R-squared:  0.3431, Adjusted R-squared:  0.3423 
+#> F-statistic: 430.6 on 3 and 2474 DF,  p-value: < 2.2e-16
 ```
 
 We could even improve that code - why not run the `anti_join` and

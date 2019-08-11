@@ -402,12 +402,7 @@ fixed_check(consistent_df, .var = treatment, .within = c(state, year))
 Some handy `fixed_check()` tips:
 
 1. `fixed_check()` returns either a `logical` or a `list` depending on the outcome. If you want to just get `FALSE` instead of a list of data sets, do `is.logical(fixed_check())` instead of `fixed_check()`.
-2. If you do have problems and want a consistent data set, you can fix things by hand as you like, or you can use either use `fixed_force()` (see below) or combine the list of data sets returned by `fixed_force()` with `dplyr::anti_join()`. 
-
-```{r}
-anti_join(df,
-          fixed_check(df, .var = continent, .within = country)$continent)
-```
+2. If you do have problems and want a consistent data set, you can fix things by hand as you like, or you can use `fixed_force()` (see below) to change the observations to be consistent, or to drop all inconsistent observations with `fixed_force(.resolve = "drop")`.
 
 ## fixed_force()
 
@@ -427,6 +422,11 @@ Continuing with our France-in-Asia data set,
 
 ```{r}
 fixed_force(df, .var = continent, .within = country, .flag = "altered")
+```
+
+Another option for `.resolve` is to set `.resolve = "drop"` (or any other character, really), and it will drop the inconsistent observations.
+```{r}
+fixed_force(df, .var = continent, .within = country, .resolve = "drop")
 ```
 
 -----

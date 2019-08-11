@@ -61,10 +61,10 @@ I am interested in measuring the differences in ex-student earnings `earnings_me
 ```{r}
 Scorecard <- Scorecard %>%
   # We want pred_degree_awarded_ipeds to be consistent within college. No changers!
-  # So let's drop them by using fixed_check to find inconsistencies
-  anti_join(fixed_check(Scorecard,
-                        .var = pred_degree_awarded_ipeds,
-                        .within = unitid)[[1]]) %>%
+  # So let's drop them by using fixed_check with .resolve = "drop" to lose inconsistencies
+  fixed_force(.var = pred_degree_awarded_ipeds,
+              .within = unitid,
+              .resolve = "drop") %>%
   # Then, get rid of pred_degree_awarded_ipeds == 1
   # And simplify our terms
   filter(pred_degree_awarded_ipeds %in% c(2,3)) %>%

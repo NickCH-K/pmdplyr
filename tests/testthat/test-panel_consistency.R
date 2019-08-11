@@ -49,6 +49,9 @@ test_that("fixed_force works", {
     fixed_force(df, .var = x, .within = i) %>% dplyr::pull(x),
     c(1, 1, 1, NA, NA, NA, NA)
   )
+  expect_equal(nrow(
+    fixed_force(df, .var = x, .within = i, .resolve = "drop")
+  ), 0)
 })
 
 

@@ -437,7 +437,7 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   if (max(jvar %in% names(x)) == 1) {
     stop("The variable names in jvar should not be in x")
   }
-  if (method == "closest" & is.character(x[[var]])) {
+  if (method == "closest" & (is.character(x[[var]])) | max(sapply(jvar, function(z) is.character(y[[z]]))) == 1) {
     stop("The 'closest' method requires var/jvar to be a variable type that supports subtraction, like numeric or Date.")
   }
   if (method == "closest" & !max(exact)) {
