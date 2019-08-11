@@ -44,6 +44,9 @@
   </a>
 </li>
 <li>
+  <a href="articles/pmdplyr.html">Get started</a>
+</li>
+<li>
   <a href="reference/index.html">Reference</a>
 </li>
       </ul>
@@ -149,21 +152,21 @@
 <a class="sourceLine" id="cb3-43" title="43"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb3-44" title="44"><span class="co">#&gt; Residuals:</span></a>
 <a class="sourceLine" id="cb3-45" title="45"><span class="co">#&gt;    Min     1Q Median     3Q    Max </span></a>
-<a class="sourceLine" id="cb3-46" title="46"><span class="co">#&gt; -25197  -5017   -458   4191  54110 </span></a>
+<a class="sourceLine" id="cb3-46" title="46"><span class="co">#&gt; -25341  -4917   -528   4091  54587 </span></a>
 <a class="sourceLine" id="cb3-47" title="47"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb3-48" title="48"><span class="co">#&gt; Coefficients:</span></a>
 <a class="sourceLine" id="cb3-49" title="49"><span class="co">#&gt;                      Estimate Std. Error t value Pr(&gt;|t|)    </span></a>
-<a class="sourceLine" id="cb3-50" title="50"><span class="co">#&gt; (Intercept)         7.682e+03  1.986e+03   3.869 0.000113 ***</span></a>
-<a class="sourceLine" id="cb3-51" title="51"><span class="co">#&gt; FourYearTRUE        9.297e+03  3.833e+02  24.257  &lt; 2e-16 ***</span></a>
-<a class="sourceLine" id="cb3-52" title="52"><span class="co">#&gt; unemp              -8.239e+04  3.085e+04  -2.671 0.007625 ** </span></a>
-<a class="sourceLine" id="cb3-53" title="53"><span class="co">#&gt; lag_state_earnings  7.226e-01  4.453e-02  16.226  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb3-50" title="50"><span class="co">#&gt; (Intercept)         5.933e+03  1.772e+03   3.348 0.000826 ***</span></a>
+<a class="sourceLine" id="cb3-51" title="51"><span class="co">#&gt; FourYearTRUE        9.088e+03  3.511e+02  25.886  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb3-52" title="52"><span class="co">#&gt; unemp              -4.564e+04  2.529e+04  -1.805 0.071215 .  </span></a>
+<a class="sourceLine" id="cb3-53" title="53"><span class="co">#&gt; lag_state_earnings  7.348e-01  4.027e-02  18.244  &lt; 2e-16 ***</span></a>
 <a class="sourceLine" id="cb3-54" title="54"><span class="co">#&gt; ---</span></a>
 <a class="sourceLine" id="cb3-55" title="55"><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></a>
 <a class="sourceLine" id="cb3-56" title="56"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-57" title="57"><span class="co">#&gt; Residual standard error: 8262 on 2071 degrees of freedom</span></a>
-<a class="sourceLine" id="cb3-58" title="58"><span class="co">#&gt;   (25564 observations deleted due to missingness)</span></a>
-<a class="sourceLine" id="cb3-59" title="59"><span class="co">#&gt; Multiple R-squared:  0.342,  Adjusted R-squared:  0.341 </span></a>
-<a class="sourceLine" id="cb3-60" title="60"><span class="co">#&gt; F-statistic: 358.8 on 3 and 2071 DF,  p-value: &lt; 2.2e-16</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-57" title="57"><span class="co">#&gt; Residual standard error: 8209 on 2474 degrees of freedom</span></a>
+<a class="sourceLine" id="cb3-58" title="58"><span class="co">#&gt;   (25161 observations deleted due to missingness)</span></a>
+<a class="sourceLine" id="cb3-59" title="59"><span class="co">#&gt; Multiple R-squared:  0.3431, Adjusted R-squared:  0.3423 </span></a>
+<a class="sourceLine" id="cb3-60" title="60"><span class="co">#&gt; F-statistic: 430.6 on 3 and 2474 DF,  p-value: &lt; 2.2e-16</span></a></code></pre></div>
 <p>We could even improve that code - why not run the <code>anti_join</code> and <code>inexact_left_join</code> using <code>safe_join</code>? When we do the <code>inexact_left_join</code>, for example, we’re assuming that <code>unemp_data</code> is uniquely identified by <code>unemp_year</code> - is it really? <code>safe_join</code> would check for us and minimize error.</p>
 </div>
 <div id="spanish-rail-example" class="section level2">

@@ -79,6 +79,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/pmdplyr.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -151,7 +154,7 @@
     </tr>
     <tr>
       <th>.d</th>
-      <td><p>Number indicating the gap in <code>.t</code> between one period and the next. For example, if <code>.t</code> indicates a single day but data is collected once a week, you might set <code>.d=7</code>. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set <code>.d=0</code>. By default, <code>.d=1</code>.</p></td>
+      <td><p>Number indicating the gap in <code>.t</code> between one period and the next. For example, if <code>.t</code> indicates a single day but data is collected once a week, you might set <code>.d=7</code>. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set <code>.d=0</code>. The default <code>.d = NA</code> here will become <code>.d = 1</code> if either <code>.i</code> or <code>.t</code> are declared.</p></td>
     </tr>
     <tr>
       <th>.uniqcheck</th>
@@ -159,7 +162,7 @@
     </tr>
     <tr>
       <th>.setpanel</th>
-      <td><p>Logical parameter. Set to FALSE to return data with the same <code>.i</code>, <code>.t</code>, <code>.d</code> attributes it came in with, even if those are null. TRUE by default, but ignored if <code>.i</code>, <code>.t</code>, and <code>.d</code> are all NA.</p></td>
+      <td><p>Logical parameter. <code>TRUE</code> by default, and so if <code>.i</code>, <code>.t</code>, and/or <code>.d</code> are declared, will return a <code>pibble</code> set in that way.</p></td>
     </tr>
     </table>
     

@@ -79,6 +79,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/pmdplyr.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -132,7 +135,7 @@
     </tr>
     <tr>
       <th>.n</th>
-      <td><p>Number of periods to lag by. 1 by default. Note that this is automatically scaled by <code>.d</code>. If <code>.d = 2</code> and <code>.n = 1</code>, then the lag of <code>.t = 3</code> will be <code>.t = 1</code>. Allows negative values, equivalent to <code>tlead()</code> with the same value but positive. Note that <code>.n</code> is ignored if <code>.d=0</code>.</p></td>
+      <td><p>Number of periods to lag by. 1 by default. Note that this is automatically scaled by <code>.d</code>. If <code>.d = 2</code> and <code>.n = 1</code>, then the lag of <code>.t = 3</code> will be <code>.t = 1</code>. Allows negative values, equivalent to <code>tlead()</code> with the same value but positive. Note that <code>.n</code> is ignored if <code>.d = 0</code>.</p></td>
     </tr>
     <tr>
       <th>.default</th>
@@ -160,7 +163,7 @@
     </tr>
     <tr>
       <th>.d</th>
-      <td><p>Number indicating the gap in <code>.t</code> between one period and the next. For example, if <code>.t</code> indicates a single day but data is collected once a week, you might set <code>.d=7</code>. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set <code>.d=0</code>. By default, <code>.d=1</code>.</p></td>
+      <td><p>Number indicating the gap in <code>.t</code> between one period and the next. For example, if <code>.t</code> indicates a single day but data is collected once a week, you might set <code>.d=7</code>. To ignore gap length and assume that "one period ago" is always the most recent prior observation in the data, set <code>.d = 0</code>. The default <code>.d = NA</code> here will become <code>.d = 1</code> if either <code>.i</code> or <code>.t</code> are declared.</p></td>
     </tr>
     <tr>
       <th>.uniqcheck</th>

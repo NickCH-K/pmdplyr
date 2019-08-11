@@ -55,7 +55,7 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
     expect <- c("x", "y")
   }
 
-  if (!("x" %in% expect) & !("y" %in% expect)  & !("no m:m" %in% expect)) {
+  if (!("x" %in% expect) & !("y" %in% expect) & !("no m:m" %in% expect)) {
     stop("Invalid value of expect")
   }
   if (!is.null(join) & !is.function(join)) {
@@ -112,28 +112,28 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
       pluralx, paste0(matchvarsx, collapse = ", "), ".",
       sep = ""
     )
-  } else if(!("x" %in% expect) & !("no m:m" %in% expect) & !x_not_unique) {
+  } else if (!("x" %in% expect) & !("no m:m" %in% expect) & !x_not_unique) {
     errormessagex <- paste("The left-hand data set x is uniquely identified by the joining variable",
-                           pluralx, paste0(matchvarsx, collapse = ", "), ".",
-                           sep = ""
+      pluralx, paste0(matchvarsx, collapse = ", "), ".",
+      sep = ""
     )
   }
 
   if ("y" %in% expect & !("no m:m" %in% expect) & y_not_unique) {
     errormessagey <- paste("The right-hand data set y is not uniquely identified by the joining variable",
-                           pluraly, paste0(matchvarsy, collapse = ", "), ".",
-                           sep = ""
+      pluraly, paste0(matchvarsy, collapse = ", "), ".",
+      sep = ""
     )
   } else if (!("y" %in% expect) & !("no m:m" %in% expect) & !y_not_unique) {
     errormessagey <- paste("The right-hand data set y is uniquely identified by the joining variable",
-                           pluraly, paste0(matchvarsy, collapse = ", "), ".",
-                           sep = ""
+      pluraly, paste0(matchvarsy, collapse = ", "), ".",
+      sep = ""
     )
   }
   if ("no m:m" %in% expect & x_not_unique & y_not_unique) {
     errormessagex <- paste("Many-to-many! Neither x nor y are uniquely identified by the joining variable",
-                           pluralx, paste0(matchvarsx, collapse = ", "), ".",
-                           sep = ""
+      pluralx, paste0(matchvarsx, collapse = ", "), ".",
+      sep = ""
     )
   }
 
@@ -610,11 +610,11 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
     for (i in 1:nrow(z)) {
       # If it's the same ID, hasn't been matched yet, and x is between the two y's we have our match
       to_replace <- Vectorize(isTRUE)(is.na(x[[jvar[1]]]) & x[[xidname]] == z[i, yidname][[1]] &
-                                        (x[[var]] > z[i, jvar[1]][[1]] | (exact[1] == TRUE & x[[var]] == z[i, jvar[1]][[1]])) &
-                                        (x[[var]] < z[i, jvar[2]][[1]] | (exact[2] == TRUE & x[[var]] == z[i, jvar[2]][[1]])))
+        (x[[var]] > z[i, jvar[1]][[1]] | (exact[1] == TRUE & x[[var]] == z[i, jvar[1]][[1]])) &
+        (x[[var]] < z[i, jvar[2]][[1]] | (exact[2] == TRUE & x[[var]] == z[i, jvar[2]][[1]])))
 
       if (sum(to_replace > 0)) {
-        x[to_replace,][[jvar[1]]] <- z[i, jvar[1]][[1]]
+        x[to_replace, ][[jvar[1]]] <- z[i, jvar[1]][[1]]
       }
     }
   }

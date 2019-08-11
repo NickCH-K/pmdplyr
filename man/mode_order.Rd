@@ -23,5 +23,4 @@ mode_order(x)
 # Ties are broken by order
 x <- c(2, 2, 1, 1)
 mode_order(x)
-
 }

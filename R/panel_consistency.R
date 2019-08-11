@@ -717,7 +717,6 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
 #' # Ties are broken by order
 #' x <- c(2, 2, 1, 1)
 #' mode_order(x)
-#'
 #' @export
 mode_order <- function(x) {
   unique(x)[which.max(tabulate(match(x, unique(x))))]

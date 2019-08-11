@@ -34,7 +34,7 @@
 
 <meta property="og:title" content="Fill in missing (or other) values of a panel data set using known data — panel_locf" />
 
-<meta property="og:description" content="This function looks for a list of values (usually, just NA) in a variable .var and overwrites those values with the most recent (or next-coming) values that are not from that list." />
+<meta property="og:description" content="This function looks for a list of values (usually, just NA) in a variable .var and overwrites those values with the most recent (or next-coming) values that are not from that list (&quot;last observation carried forward&quot;)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,6 +79,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/pmdplyr.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -110,7 +113,7 @@
 
     <div class="ref-description">
     
-    <p>This function looks for a list of values (usually, just <code>NA</code>) in a variable <code>.var</code> and overwrites those values with the most recent (or next-coming) values that are not from that list.</p>
+    <p>This function looks for a list of values (usually, just <code>NA</code>) in a variable <code>.var</code> and overwrites those values with the most recent (or next-coming) values that are not from that list ("last observation carried forward").</p>
     
     </div>
 
@@ -165,7 +168,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>panel_locf()</code> is unusual among last-observation-carried-forward functions (like <code>zoo</code>'s <code>na.locf</code>) in that it is usable even if observations are not uniquely identified by <code>.t</code> (and <code>.i</code>, if defined).</p>
+    <p><code>panel_locf()</code> is unusual among last-observation-carried-forward functions (like <code><a href='https://rdrr.io/pkg/zoo/man/na.locf.html'>zoo::na.locf()</a></code>) in that it is usable even if observations are not uniquely identified by <code>.t</code> (and <code>.i</code>, if defined).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -202,7 +205,7 @@
   ))
 <span class='co'># Note that there are still some missings - these are missings that come before the first</span>
 <span class='co'># non-missing value in that unitid, so there's nothing to pull from.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Scorecard</span>$<span class='no'>earnings_med</span>))</div><div class='output co'>#&gt; [1] 2814</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Scorecard</span>$<span class='no'>earnings_med</span>))</div><div class='output co'>#&gt; [1] 958</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -76,6 +76,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/pmdplyr.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -147,7 +150,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="pibble.html">pibble</a></code> </p>
+          <p><code><a href="pibble.html">pibble()</a></code> </p>
         </td>
         <td><p>Create a pibble panel data set object</p></td>
       </tr><tr>
@@ -160,7 +163,67 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-dplyr-verb-variants" class="hasAnchor"><a href="#section-dplyr-verb-variants" class="anchor"></a>dplyr verb variants</h2>
+          <h2 id="section-id-and-time-variables" class="hasAnchor"><a href="#section-id-and-time-variables" class="anchor"></a>ID and time variables</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="id_variable.html">id_variable()</a></code> </p>
+        </td>
+        <td><p>Create a single panel ID variable out of several</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="time_variable.html">time_variable()</a></code> </p>
+        </td>
+        <td><p>Create a single integer time period index variable</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-filling-in-data" class="hasAnchor"><a href="#section-filling-in-data" class="anchor"></a>Filling in data</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="panel_fill.html">panel_fill()</a></code> </p>
+        </td>
+        <td><p>Fill in gaps in panel data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="panel_locf.html">panel_locf()</a></code> </p>
+        </td>
+        <td><p>Fill in missing (or other) values of a panel data set using known data</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-panel-consistency" class="hasAnchor"><a href="#section-panel-consistency" class="anchor"></a>Panel consistency</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="fixed_check.html">fixed_check()</a></code> </p>
+        </td>
+        <td><p>Check for inconsistency in variables that should be fixed</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fixed_force.html">fixed_force()</a></code> </p>
+        </td>
+        <td><p>Enforce consistency in variables</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-joins" class="hasAnchor"><a href="#section-joins" class="anchor"></a>Joins</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -176,7 +239,15 @@
           <p><code><a href="safe_join.html">safe_join()</a></code> </p>
         </td>
         <td><p>Join two data frames safely</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-mutate-variations" class="hasAnchor"><a href="#section-mutate-variations" class="anchor"></a>Mutate variations</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="mutate_cascade.html">mutate_cascade()</a></code> </p>
@@ -192,29 +263,25 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-panel-data-tools" class="hasAnchor"><a href="#section-panel-data-tools" class="anchor"></a>Panel data tools</h2>
+          <h2 id="section-time-lag" class="hasAnchor"><a href="#section-time-lag" class="anchor"></a>Time lag</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
       <tr>
         
         <td>
-          <p><code><a href="id_variable.html">id_variable()</a></code> </p>
+          <p><code><a href="tlag.html">tlag()</a></code> </p>
         </td>
-        <td><p>Create a single panel ID variable out of several</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fixed_check.html">fixed_check()</a></code> </p>
-        </td>
-        <td><p>Check for inconsistency in variables that should be fixed</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fixed_force.html">fixed_force()</a></code> </p>
-        </td>
-        <td><p>Enforce consistency in variables</p></td>
-      </tr><tr>
+        <td><p>Time-lag a variable</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-additional-calculations" class="hasAnchor"><a href="#section-additional-calculations" class="anchor"></a>Additional calculations</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="panel_calculations.html">within_i()</a></code> <code><a href="panel_calculations.html">between_i()</a></code> </p>
@@ -223,27 +290,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="panel_fill.html">panel_fill()</a></code> </p>
+          <p><code><a href="mode_order.html">mode_order()</a></code> </p>
         </td>
-        <td><p>Fill in gaps in panel data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="panel_locf.html">panel_locf()</a></code> </p>
-        </td>
-        <td><p>Fill in missing (or other) values of a panel data set using known data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="time_variable.html">time_variable()</a></code> </p>
-        </td>
-        <td><p>Create a single integer time period index variable</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tlag.html">tlag()</a></code> </p>
-        </td>
-        <td><p>Time-lag a variable</p></td>
+        <td><p>Calculate the mode, and use original order to break ties</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -288,8 +337,13 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#section-overview">Overview</a></li>
       <li><a href="#section-setting-panel-structure">Setting panel structure</a></li>
-      <li><a href="#section-dplyr-verb-variants">dplyr verb variants</a></li>
-      <li><a href="#section-panel-data-tools">Panel data tools</a></li>
+      <li><a href="#section-id-and-time-variables">ID and time variables</a></li>
+      <li><a href="#section-filling-in-data">Filling in data</a></li>
+      <li><a href="#section-panel-consistency">Panel consistency</a></li>
+      <li><a href="#section-joins">Joins</a></li>
+      <li><a href="#section-mutate-variations">Mutate variations</a></li>
+      <li><a href="#section-time-lag">Time lag</a></li>
+      <li><a href="#section-additional-calculations">Additional calculations</a></li>
       <li><a href="#section-datasets">Datasets</a></li>
       <li><a href="#section-pibble-methods-for-dplyr-verbs">pibble methods for dplyr verbs</a></li>
     </ul>

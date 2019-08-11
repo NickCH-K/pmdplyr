@@ -75,8 +75,9 @@ rle_na <- function(x) {
   }
   while (sum(
     is.na(
-      utils::tail(x,-lead_NA)
-    )) > 0) {
+      utils::tail(x, -lead_NA)
+    )
+  ) > 0) {
     x <- ifelse(is.na(x), c(NA, x[-length(x)]), x)
   }
 

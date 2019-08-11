@@ -79,6 +79,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/pmdplyr.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -125,7 +128,7 @@
     </tr>
     <tr>
       <th>expect</th>
-      <td><p>Either <code>'x'</code>, <code>'y'</code>, or <code><a href='https://rdrr.io/r/base/c.html'>c('x','y')</a></code> - the data sets you expect to be uniquely identified by the joining variables. You can alternately use <code>expect = "1:m"</code> instead of <code>"x"</code> for one-to-many merge, <code>"m:1"</code> instead of <code>"y"</code> for many-to-one, or <code>"1:1"</code> instead of <code><a href='https://rdrr.io/r/base/c.html'>c("x", "y")</a></code> for one-to-one.</p></td>
+      <td><p>Either <code>"1:m"</code> (or <code>"x"</code>), <code>"m:1"</code> (or <code>"y"</code>), or <code>"1:1"</code> (or <code><a href='https://rdrr.io/r/base/c.html'>c("x","y")</a></code> or <code>"xy"</code>) - the match you expect to perform. You can specify this as the kind of match you expect to be performing (one-to-many, many-to-one, or one-to-one), or as the data set(s) you expect to be uniquely identified by the joining variables (<code>"x"</code>, <code>"y"</code>, or <code><a href='https://rdrr.io/r/base/c.html'>c("x", "y")</a></code>/<code>"xy"</code>). Alternately, set to <code>expect = "no m:m"</code> if you don't care what join you're doing as long as it isn't many-to-many.</p></td>
     </tr>
     <tr>
       <th>join</th>
@@ -161,11 +164,11 @@
 <span class='co'># I think that I can do a one-to-one merge on i</span>
 <span class='co'># Forgetting that left is identified by i and t together</span>
 <span class='co'># So, this produces an error</span></div><span class='co'># NOT RUN {</span>
-<span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>), <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)
+<span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='st'>"1:1"</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)
 <span class='co'># }</span><div class='input'>
 <span class='co'># If I realize I'm doing a many-to-one merge, that is correct,</span>
 <span class='co'># so safe_join will perform it for us</span>
-<span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "i"</span></div><div class='output co'>#&gt;   i t a b
+<span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='st'>"m:1"</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "i"</span></div><div class='output co'>#&gt;   i t a b
 #&gt; 1 1 1 1 1
 #&gt; 2 1 2 2 1
 #&gt; 3 2 1 3 2

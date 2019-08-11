@@ -79,6 +79,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/pmdplyr.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -165,10 +168,10 @@
     <p>This allows matching, for example, if one data set contains data from multiple days in the week, while the other data set is weekly. Another example might be matching an observation in one data set to the *most recent* previous observation in the other.</p>
 <p>The available methods for matching are:</p>
 <ul>
-<li><p><code>method = 'last'</code> matches <code>var</code> to the closest value of <code>jvar</code> that is *lower*.</p></li>
-<li><p><code>method = 'next'</code> matches <code>var</code> to the closest value of <code>jvar</code> that is *higher*.</p></li>
-<li><p><code>method = 'closest'</code> matches <code>var</code> to the closest value of <code>jvar</code>, above or below. If equidistant between two values, picks the lower of the two.</p></li>
-<li><p><code>method = 'between'</code> requires two variables in <code>jvar</code> which constitute the beginning and end of a range, and matches <code>var</code> to the range it is in. Make sure that the ranges are non-overlapping within the joining variables, or else you will get strange results (specifically, it should join to the earliest-starting range). If the end of one range is the exact start of another, <code>exact = c(TRUE,FALSE)</code> or <code>exact = c(FALSE,TRUE)</code> is recommended to avoid overlaps. Defaults to <code>exact = c(TRUE,FALSE)</code>.</p></li>
+<li><p><code>method = "last"</code> matches <code>var</code> to the closest value of <code>jvar</code> that is *lower*.</p></li>
+<li><p><code>method = "next"</code> matches <code>var</code> to the closest value of <code>jvar</code> that is *higher*.</p></li>
+<li><p><code>method = "closest"</code> matches <code>var</code> to the closest value of <code>jvar</code>, above or below. If equidistant between two values, picks the lower of the two.</p></li>
+<li><p><code>method = "between"</code> requires two variables in <code>jvar</code> which constitute the beginning and end of a range, and matches <code>var</code> to the range it is in. Make sure that the ranges are non-overlapping within the joining variables, or else you will get strange results (specifically, it should join to the earliest-starting range). If the end of one range is the exact start of another, <code>exact = c(TRUE,FALSE)</code> or <code>exact = c(FALSE,TRUE)</code> is recommended to avoid overlaps. Defaults to <code>exact = c(TRUE,FALSE)</code>.</p></li>
 </ul>
 
 <p>Note that if, given the method, <code>var</code> finds no proper match, it will be merged with any <code><a href='https://rdrr.io/r/base/NA.html'>is.na(jvar[1])</a></code> values.</p>
