@@ -13,17 +13,6 @@
 \alias{group_by_if.tbl_pb}
 \alias{ungroup.tbl_pb}
 \alias{bind_cols.tbl_pb}
-\alias{intersect.tbl_pb}
-\alias{union.tbl_pb}
-\alias{union_all.tbl_pb}
-\alias{setdiff.tbl_pb}
-\alias{left_join.tbl_pb}
-\alias{inner_join.tbl_pb}
-\alias{right_join.tbl_pb}
-\alias{full_join.tbl_pb}
-\alias{semi_join.tbl_pb}
-\alias{nest_join.tbl_pb}
-\alias{anti_join.tbl_pb}
 \alias{select.tbl_pb}
 \alias{select_all.tbl_pb}
 \alias{select_at.tbl_pb}
@@ -73,33 +62,6 @@
 \method{ungroup}{tbl_pb}(x, ...)
 
 \method{bind_cols}{tbl_pb}(.data, ...)
-
-\method{intersect}{tbl_pb}(x, y, ...)
-
-\method{union}{tbl_pb}(x, y, ...)
-
-\method{union_all}{tbl_pb}(x, y, ...)
-
-\method{setdiff}{tbl_pb}(x, y, ...)
-
-\method{left_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
-
-\method{inner_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
-
-\method{right_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
-
-\method{full_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
-
-\method{semi_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, ...)
-
-\method{nest_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  keep = FALSE, name = NULL, ...)
-
-\method{anti_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, ...)
 
 \method{select}{tbl_pb}(.data, ...)
 

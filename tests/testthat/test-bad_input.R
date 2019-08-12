@@ -2,9 +2,11 @@
 # Note that the data.table warning is not tested so as to avoid needing the package
 
 ### BETWEEN_WITHIN
-df <- pibble(i = 1:3,
-             x = 1:3,
-             .i = i)
+df <- pibble(
+  i = 1:3,
+  x = 1:3,
+  .i = i
+)
 
 test_that("between_i input failstates", {
   expect_error(df %>% dplyr::mutate(y = between_i(.)))
@@ -35,16 +37,18 @@ test_that("safe_join input failstates", {
 
 test_that("inexact_join input failstates", {
   expect_error(pmdplyr:::inexact_join_prep(left, right, var = x, jvar = y, method = "last"))
-  expect_error(pmdplyr:::inexact_join_prep(left, right, var = 'x', jvar = y, method = "last"))
+  expect_error(pmdplyr:::inexact_join_prep(left, right, var = "x", jvar = y, method = "last"))
   expect_error(inexact_left_join(left, right, var = x, jvar = c(y, z, a), method = "last"))
   expect_error(inexact_left_join(left, right, var = x, jvar = y, method = 2))
   expect_error(inexact_left_join(left, right, var = x, jvar = y, method = "last", exact = 2))
   expect_error(inexact_left_join(left, right, var = i, jvar = i, method = "last"))
   expect_error(inexact_left_join(left, right, var = x, jvar = i, method = "last"))
   expect_error(inexact_left_join(left %>% dplyr::mutate(x = c("hey", "ho")),
-                                 right, var = x, jvar = y, method = "closest"))
+    right,
+    var = x, jvar = y, method = "closest"
+  ))
   expect_error(inexact_left_join(left, right %>%
-                                   mutate(y = c("hey", "ho")), var = x, jvar = y, method = "closest"))
+    mutate(y = c("hey", "ho")), var = x, jvar = y, method = "closest"))
   expect_warning(inexact_left_join(left, right, var = x, jvar = y, method = "closest", exact = FALSE))
   expect_error(inexact_left_join(left, right, var = x, jvar = y, method = "foo"))
   expect_error(inexact_left_join(left, right, var = x, jvar = c(y, z), method = "between", exact = FALSE))
@@ -133,29 +137,34 @@ test_that("fixed_force input failstates", {
 })
 
 ### UNEXPORTED_SHARED_FUNCTIONS
-df <- data.frame(i = 1:3,
-                 t = 1:3)
+df <- data.frame(
+  i = 1:3,
+  t = 1:3
+)
 
 test_that("declare_in_fcn_check input failstates", {
   expect_error(declare_in_fcn_check(df,
-                                    .i = "i",
-                                    .t = "t",
-                                    .d = 1,
-                                    .uniqcheck = 2,
-                                    .setpanel = TRUE,
-                                    .noneed = FALSE))
+    .i = "i",
+    .t = "t",
+    .d = 1,
+    .uniqcheck = 2,
+    .setpanel = TRUE,
+    .noneed = FALSE
+  ))
   expect_error(declare_in_fcn_check(df,
-                                    .i = "i",
-                                    .t = "t",
-                                    .d = 1,
-                                    .uniqcheck = FALSE,
-                                    .setpanel = 2,
-                                    .noneed = FALSE))
+    .i = "i",
+    .t = "t",
+    .d = 1,
+    .uniqcheck = FALSE,
+    .setpanel = 2,
+    .noneed = FALSE
+  ))
   expect_error(declare_in_fcn_check(df,
-                                    .i = NA,
-                                    .t = NA,
-                                    .d = 1,
-                                    .uniqcheck = FALSE,
-                                    .setpanel = 2,
-                                    .noneed = FALSE))
+    .i = NA,
+    .t = NA,
+    .d = 1,
+    .uniqcheck = FALSE,
+    .setpanel = 2,
+    .noneed = FALSE
+  ))
 })

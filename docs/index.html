@@ -79,7 +79,7 @@
 <a href="#panel-maneuvers-in-dplyr-pmdplyr" class="anchor"></a>Panel Maneuvers in dplyr (pmdplyr)</h1></div>
 <!-- badges: start -->
 
-<p>The <code>pmdplyr</code> package is an extension to <code>dplyr</code> designed for cleaning and managing panel and hierarchical data. It contains variations on the <code>dplyr</code> <code>mutate</code> and <code>join</code> functions that address common panel data needs, and contains functions for managing and cleaning panel data. The goal is to get you a nice tidy <code>pibble</code> panel data object, which you can <code><a href="reference/panel_convert.html">panel_convert()</a></code> for use in one of the many packages that help you <em>analyze</em> panel data.</p>
+<p>The <code>pmdplyr</code> package is an extension to <code>dplyr</code> designed for cleaning and managing panel and hierarchical data. It contains variations on the <code>dplyr</code> <code>mutate</code> and <code>_join</code> functions that address common panel data needs, and contains functions for managing and cleaning panel data. The goal is to get you a nice tidy <code>pibble</code> panel data object, which you can <code><a href="reference/panel_convert.html">panel_convert()</a></code> for use in one of the many packages that help you <em>analyze</em> panel data.</p>
 <p>Unlike other panel data packages, functions in <code>pmdplyr</code> are all designed to work even if there is more than one observation per individual per period. This comes in handy if each individual is observed multiple times per period - for example, multiple classes per student per term; or if you have hierarchical data - for example, multiple companies per country.</p>
 <p>Examples of <code>pmdplyr</code> use are below. These examples only cover some of the functionality of the package. See the <a href="https://nickch-k.github.io/pmdplyr/reference/index.html">Reference</a> <code>pkgdown</code> page for a full list of functions, or <code><a href="https://rdrr.io/r/utils/help.html">help(pmdplyr)</a></code>.</p>
 <div id="installation" class="section level2">
@@ -92,7 +92,7 @@
 <div id="college-scorecard-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#college-scorecard-example" class="anchor"></a>College Scorecard Example</h2>
-<p>Let’s start with the fairly straightforward <code>Scorecard</code> data, which is uniquely identified by college ID <code>unitid</code> and year <code>year</code>, and which describes how well students who attended that college are doing years after attendance.</p>
+<p>Let’s start with the fairly straightforward <code>Scorecard</code> data, which describes how well students who attended that college are doing years after attendance. <code>Scorecard</code> observations are uniquely identified by college ID <code>unitid</code> and year <code>year</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># Note that pmdplyr automatically loads dplyr as well</span></a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(pmdplyr)</a>
 <a class="sourceLine" id="cb2-3" title="3"></a>
@@ -107,67 +107,71 @@
 <a class="sourceLine" id="cb2-12" title="12">  <span class="dt">unemp =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">017</span>, <span class="fl">.036</span>, <span class="fl">.048</span>, <span class="fl">.040</span>, <span class="fl">.028</span>, <span class="fl">.025</span>, <span class="fl">.020</span>)</a>
 <a class="sourceLine" id="cb2-13" title="13">)</a></code></pre></div>
 <p>I am interested in measuring the differences in ex-student earnings <code>earnings_med</code> between two-year and four-year colleges (<code>pred_degree_awarded_ipeds == 2</code> or <code>3</code>, respectively). But before we can do that we need to clean the data.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">Scorecard &lt;-<span class="st"> </span>Scorecard <span class="op">%&gt;%</span></a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">Scorecard <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb3-2" title="2"><span class="st">  </span><span class="co"># We want pred_degree_awarded_ipeds to be consistent within college. No changers!</span></a>
 <a class="sourceLine" id="cb3-3" title="3"><span class="st">  </span><span class="co"># So let's drop them by using fixed_check with .resolve = "drop" to lose inconsistencies</span></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="st">  </span><span class="kw"><a href="reference/fixed_force.html">fixed_force</a></span>(<span class="dt">.var =</span> pred_degree_awarded_ipeds,</a>
-<a class="sourceLine" id="cb3-5" title="5">              <span class="dt">.within =</span> unitid,</a>
-<a class="sourceLine" id="cb3-6" title="6">              <span class="dt">.resolve =</span> <span class="st">"drop"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-7" title="7"><span class="st">  </span><span class="co"># Then, get rid of pred_degree_awarded_ipeds == 1</span></a>
-<a class="sourceLine" id="cb3-8" title="8"><span class="st">  </span><span class="co"># And simplify our terms</span></a>
-<a class="sourceLine" id="cb3-9" title="9"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(pred_degree_awarded_ipeds <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span>,<span class="dv">3</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-10" title="10"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">FourYear =</span> pred_degree_awarded_ipeds <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-11" title="11"><span class="st">  </span><span class="co"># earnings_med has some missing values - let's fill them in with </span></a>
-<a class="sourceLine" id="cb3-12" title="12"><span class="st">  </span><span class="co"># the most recent nonmissing observations we have</span></a>
-<a class="sourceLine" id="cb3-13" title="13"><span class="st">  </span><span class="co"># - panel_locf respects the panel structure declared above with as_pibble()</span></a>
-<a class="sourceLine" id="cb3-14" title="14"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">earnings_med =</span> <span class="kw"><a href="reference/panel_locf.html">panel_locf</a></span>(earnings_med)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-15" title="15"><span class="st">  </span><span class="co"># Now let's bring in that unemployment data!</span></a>
-<a class="sourceLine" id="cb3-16" title="16"><span class="st">  </span><span class="co"># Since it's every other year, it won't line up properly</span></a>
-<a class="sourceLine" id="cb3-17" title="17"><span class="st">  </span><span class="co"># in the join. So let's use inexact_join to get the MOST RECENT</span></a>
-<a class="sourceLine" id="cb3-18" title="18"><span class="st">  </span><span class="co"># year to join with</span></a>
-<a class="sourceLine" id="cb3-19" title="19"><span class="st">  </span><span class="kw"><a href="reference/inexact_join.html">inexact_left_join</a></span>(unemp_data, <span class="dt">var =</span> year, <span class="dt">jvar =</span> unemp_year, <span class="dt">method =</span> <span class="st">"last"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-20" title="20"><span class="st">  </span><span class="co"># To adjust for state-level trends, let's also control for a tlag of</span></a>
-<a class="sourceLine" id="cb3-21" title="21"><span class="st">  </span><span class="co"># average earnings within state.</span></a>
-<a class="sourceLine" id="cb3-22" title="22"><span class="st">  </span><span class="co"># The lag is at the state level, and state-year doesn't uniquely identify,</span></a>
-<a class="sourceLine" id="cb3-23" title="23"><span class="st">  </span><span class="co"># But that's okay! We just pick a .resolve function to handle disagreements.</span></a>
-<a class="sourceLine" id="cb3-24" title="24"><span class="st">  </span><span class="co"># (We could also do this straight in the regression model itself)</span></a>
-<a class="sourceLine" id="cb3-25" title="25"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lag_state_earnings =</span> <span class="kw"><a href="reference/tlag.html">tlag</a></span>(earnings_med,</a>
-<a class="sourceLine" id="cb3-26" title="26">                                      <span class="dt">.i =</span> state_abbr,</a>
-<a class="sourceLine" id="cb3-27" title="27">                                      <span class="dt">.t =</span> year,</a>
-<a class="sourceLine" id="cb3-28" title="28">                                      <span class="dt">.resolve =</span> mean))</a>
-<a class="sourceLine" id="cb3-29" title="29"></a>
-<a class="sourceLine" id="cb3-30" title="30"><span class="co"># Now we can run a basic regression. </span></a>
-<a class="sourceLine" id="cb3-31" title="31"></a>
-<a class="sourceLine" id="cb3-32" title="32"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(</a>
-<a class="sourceLine" id="cb3-33" title="33">  earnings_med <span class="op">~</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb3-34" title="34"><span class="st">    </span>FourYear <span class="op">+</span></a>
-<a class="sourceLine" id="cb3-35" title="35"><span class="st">    </span>unemp <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb3-36" title="36"><span class="st">    </span>lag_state_earnings,</a>
-<a class="sourceLine" id="cb3-37" title="37">  <span class="dt">data =</span> Scorecard</a>
-<a class="sourceLine" id="cb3-38" title="38">))</a>
-<a class="sourceLine" id="cb3-39" title="39"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-40" title="40"><span class="co">#&gt; Call:</span></a>
-<a class="sourceLine" id="cb3-41" title="41"><span class="co">#&gt; lm(formula = earnings_med ~ FourYear + unemp + lag_state_earnings, </span></a>
-<a class="sourceLine" id="cb3-42" title="42"><span class="co">#&gt;     data = Scorecard)</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="st">  </span><span class="kw"><a href="reference/fixed_force.html">fixed_force</a></span>(</a>
+<a class="sourceLine" id="cb3-5" title="5">    <span class="dt">.var =</span> pred_degree_awarded_ipeds,</a>
+<a class="sourceLine" id="cb3-6" title="6">    <span class="dt">.within =</span> unitid,</a>
+<a class="sourceLine" id="cb3-7" title="7">    <span class="dt">.resolve =</span> <span class="st">"drop"</span></a>
+<a class="sourceLine" id="cb3-8" title="8">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="st">  </span><span class="co"># Then, get rid of pred_degree_awarded_ipeds == 1</span></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="st">  </span><span class="co"># And simplify our terms</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(pred_degree_awarded_ipeds <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span>, <span class="dv">3</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">FourYear =</span> pred_degree_awarded_ipeds <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="st">  </span><span class="co"># earnings_med has some missing values - let's fill them in with</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="st">  </span><span class="co"># the most recent nonmissing observations we have</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="st">  </span><span class="co"># - panel_locf respects the panel structure declared above with as_pibble()</span></a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">earnings_med =</span> <span class="kw"><a href="reference/panel_locf.html">panel_locf</a></span>(earnings_med)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-17" title="17"><span class="st">  </span><span class="co"># Now let's bring in that unemployment data!</span></a>
+<a class="sourceLine" id="cb3-18" title="18"><span class="st">  </span><span class="co"># Since it's every other year, it won't line up properly</span></a>
+<a class="sourceLine" id="cb3-19" title="19"><span class="st">  </span><span class="co"># in the join. So let's use inexact_join to get the MOST RECENT</span></a>
+<a class="sourceLine" id="cb3-20" title="20"><span class="st">  </span><span class="co"># year to join with</span></a>
+<a class="sourceLine" id="cb3-21" title="21"><span class="st">  </span><span class="kw"><a href="reference/inexact_join.html">inexact_left_join</a></span>(unemp_data, <span class="dt">var =</span> year, <span class="dt">jvar =</span> unemp_year, <span class="dt">method =</span> <span class="st">"last"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-22" title="22"><span class="st">  </span><span class="co"># To adjust for state-level trends, let's also control for a tlag of</span></a>
+<a class="sourceLine" id="cb3-23" title="23"><span class="st">  </span><span class="co"># average earnings within state.</span></a>
+<a class="sourceLine" id="cb3-24" title="24"><span class="st">  </span><span class="co"># The lag is at the state level, and state-year doesn't uniquely identify,</span></a>
+<a class="sourceLine" id="cb3-25" title="25"><span class="st">  </span><span class="co"># But that's okay! We just pick a .resolve function to handle disagreements.</span></a>
+<a class="sourceLine" id="cb3-26" title="26"><span class="st">  </span><span class="co"># (We could also do this straight in the regression model itself)</span></a>
+<a class="sourceLine" id="cb3-27" title="27"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lag_state_earnings =</span> <span class="kw"><a href="reference/tlag.html">tlag</a></span>(earnings_med,</a>
+<a class="sourceLine" id="cb3-28" title="28">    <span class="dt">.i =</span> state_abbr,</a>
+<a class="sourceLine" id="cb3-29" title="29">    <span class="dt">.t =</span> year,</a>
+<a class="sourceLine" id="cb3-30" title="30">    <span class="dt">.resolve =</span> mean</a>
+<a class="sourceLine" id="cb3-31" title="31">  )) -&gt;<span class="st"> </span>scorecard_clean</a>
+<a class="sourceLine" id="cb3-32" title="32"></a>
+<a class="sourceLine" id="cb3-33" title="33"><span class="co"># Now we can run a basic regression.</span></a>
+<a class="sourceLine" id="cb3-34" title="34"></a>
+<a class="sourceLine" id="cb3-35" title="35"><span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(</a>
+<a class="sourceLine" id="cb3-36" title="36">  earnings_med <span class="op">~</span></a>
+<a class="sourceLine" id="cb3-37" title="37"><span class="st">  </span>FourYear <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-38" title="38"><span class="st">    </span>unemp <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-39" title="39"><span class="st">    </span>lag_state_earnings,</a>
+<a class="sourceLine" id="cb3-40" title="40">  <span class="dt">data =</span> scorecard_clean</a>
+<a class="sourceLine" id="cb3-41" title="41">) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-42" title="42"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()</a>
 <a class="sourceLine" id="cb3-43" title="43"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-44" title="44"><span class="co">#&gt; Residuals:</span></a>
-<a class="sourceLine" id="cb3-45" title="45"><span class="co">#&gt;    Min     1Q Median     3Q    Max </span></a>
-<a class="sourceLine" id="cb3-46" title="46"><span class="co">#&gt; -25341  -4917   -528   4091  54587 </span></a>
+<a class="sourceLine" id="cb3-44" title="44"><span class="co">#&gt; Call:</span></a>
+<a class="sourceLine" id="cb3-45" title="45"><span class="co">#&gt; lm(formula = earnings_med ~ FourYear + unemp + lag_state_earnings, </span></a>
+<a class="sourceLine" id="cb3-46" title="46"><span class="co">#&gt;     data = scorecard_clean)</span></a>
 <a class="sourceLine" id="cb3-47" title="47"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-48" title="48"><span class="co">#&gt; Coefficients:</span></a>
-<a class="sourceLine" id="cb3-49" title="49"><span class="co">#&gt;                      Estimate Std. Error t value Pr(&gt;|t|)    </span></a>
-<a class="sourceLine" id="cb3-50" title="50"><span class="co">#&gt; (Intercept)         5.933e+03  1.772e+03   3.348 0.000826 ***</span></a>
-<a class="sourceLine" id="cb3-51" title="51"><span class="co">#&gt; FourYearTRUE        9.088e+03  3.511e+02  25.886  &lt; 2e-16 ***</span></a>
-<a class="sourceLine" id="cb3-52" title="52"><span class="co">#&gt; unemp              -4.564e+04  2.529e+04  -1.805 0.071215 .  </span></a>
-<a class="sourceLine" id="cb3-53" title="53"><span class="co">#&gt; lag_state_earnings  7.348e-01  4.027e-02  18.244  &lt; 2e-16 ***</span></a>
-<a class="sourceLine" id="cb3-54" title="54"><span class="co">#&gt; ---</span></a>
-<a class="sourceLine" id="cb3-55" title="55"><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></a>
-<a class="sourceLine" id="cb3-56" title="56"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-57" title="57"><span class="co">#&gt; Residual standard error: 8209 on 2474 degrees of freedom</span></a>
-<a class="sourceLine" id="cb3-58" title="58"><span class="co">#&gt;   (25161 observations deleted due to missingness)</span></a>
-<a class="sourceLine" id="cb3-59" title="59"><span class="co">#&gt; Multiple R-squared:  0.3431, Adjusted R-squared:  0.3423 </span></a>
-<a class="sourceLine" id="cb3-60" title="60"><span class="co">#&gt; F-statistic: 430.6 on 3 and 2474 DF,  p-value: &lt; 2.2e-16</span></a></code></pre></div>
-<p>We could even improve that code - why not run the <code>anti_join</code> and <code>inexact_left_join</code> using <code>safe_join</code>? When we do the <code>inexact_left_join</code>, for example, we’re assuming that <code>unemp_data</code> is uniquely identified by <code>unemp_year</code> - is it really? <code>safe_join</code> would check for us and minimize error.</p>
+<a class="sourceLine" id="cb3-48" title="48"><span class="co">#&gt; Residuals:</span></a>
+<a class="sourceLine" id="cb3-49" title="49"><span class="co">#&gt;    Min     1Q Median     3Q    Max </span></a>
+<a class="sourceLine" id="cb3-50" title="50"><span class="co">#&gt; -25341  -4917   -528   4091  54587 </span></a>
+<a class="sourceLine" id="cb3-51" title="51"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-52" title="52"><span class="co">#&gt; Coefficients:</span></a>
+<a class="sourceLine" id="cb3-53" title="53"><span class="co">#&gt;                      Estimate Std. Error t value Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb3-54" title="54"><span class="co">#&gt; (Intercept)         5.933e+03  1.772e+03   3.348 0.000826 ***</span></a>
+<a class="sourceLine" id="cb3-55" title="55"><span class="co">#&gt; FourYearTRUE        9.088e+03  3.511e+02  25.886  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb3-56" title="56"><span class="co">#&gt; unemp              -4.564e+04  2.529e+04  -1.805 0.071215 .  </span></a>
+<a class="sourceLine" id="cb3-57" title="57"><span class="co">#&gt; lag_state_earnings  7.348e-01  4.027e-02  18.244  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb3-58" title="58"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb3-59" title="59"><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></a>
+<a class="sourceLine" id="cb3-60" title="60"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-61" title="61"><span class="co">#&gt; Residual standard error: 8209 on 2474 degrees of freedom</span></a>
+<a class="sourceLine" id="cb3-62" title="62"><span class="co">#&gt;   (25161 observations deleted due to missingness)</span></a>
+<a class="sourceLine" id="cb3-63" title="63"><span class="co">#&gt; Multiple R-squared:  0.3431, Adjusted R-squared:  0.3423 </span></a>
+<a class="sourceLine" id="cb3-64" title="64"><span class="co">#&gt; F-statistic: 430.6 on 3 and 2474 DF,  p-value: &lt; 2.2e-16</span></a></code></pre></div>
+<p>We could even improve that code - why not run the <code>anti_join()</code> and <code><a href="reference/inexact_join.html">inexact_left_join()</a></code> using <code><a href="reference/safe_join.html">safe_join()</a></code>? When we do the <code><a href="reference/inexact_join.html">inexact_left_join()</a></code>, for example, we’re assuming that <code>unemp_data</code> is uniquely identified by <code>unemp_year</code>—is it really? <code><a href="reference/safe_join.html">safe_join()</a></code> would check for us and minimize error.</p>
 </div>
 <div id="spanish-rail-example" class="section level2">
 <h2 class="hasAnchor">
@@ -177,14 +181,14 @@
 <p>We have some difficulties to cover: making the ID and time variables behave, accounting for the between-route differences, and figuring out how to compare each price to the cheapo price.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(SPrail)</a>
 <a class="sourceLine" id="cb4-2" title="2"></a>
-<a class="sourceLine" id="cb4-3" title="3">SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-3" title="3">SPrail <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-4" title="4"><span class="st">  </span><span class="co"># We have two ID variables - origin and destination.</span></a>
 <a class="sourceLine" id="cb4-5" title="5"><span class="st">  </span><span class="co"># pmdplyr has no problem with this, but maybe we want to export</span></a>
 <a class="sourceLine" id="cb4-6" title="6"><span class="st">  </span><span class="co"># to something like plm later, which can't handle it.</span></a>
 <a class="sourceLine" id="cb4-7" title="7"><span class="st">  </span><span class="co"># So let's use id_variable to combine them into one</span></a>
 <a class="sourceLine" id="cb4-8" title="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">route_ID =</span> <span class="kw"><a href="reference/id_variable.html">id_variable</a></span>(origin, destination)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-9" title="9"><span class="st">  </span><span class="co"># We have a time variable down to the minute. Too fine-grained!</span></a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="st">  </span><span class="co"># Let's back things up to the daily level, and </span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="st">  </span><span class="co"># Let's back things up to the daily level, and</span></a>
 <a class="sourceLine" id="cb4-11" title="11"><span class="st">  </span><span class="co"># create a nice integer time variable that's easy to use</span></a>
 <a class="sourceLine" id="cb4-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">day =</span> <span class="kw"><a href="reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"day"</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-13" title="13"><span class="st">  </span><span class="co"># Now we can declare a pibble</span></a>
@@ -192,25 +196,27 @@
 <a class="sourceLine" id="cb4-15" title="15"><span class="st">  </span><span class="co"># We want to account for between-route differences in price,</span></a>
 <a class="sourceLine" id="cb4-16" title="16"><span class="st">  </span><span class="co"># so let's isolate the within variation</span></a>
 <a class="sourceLine" id="cb4-17" title="17"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">price_w =</span> <span class="kw"><a href="reference/panel_calculations.html">within_i</a></span>(price)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-18" title="18"><span class="st">  </span><span class="co"># We want to compare to the cheapo option, so let's use </span></a>
+<a class="sourceLine" id="cb4-18" title="18"><span class="st">  </span><span class="co"># We want to compare to the cheapo option, so let's use</span></a>
 <a class="sourceLine" id="cb4-19" title="19"><span class="st">  </span><span class="co"># mutate_subset to get the average price of the cheapo option</span></a>
 <a class="sourceLine" id="cb4-20" title="20"><span class="st">  </span><span class="co"># and propogate that to the other options for comparison</span></a>
-<a class="sourceLine" id="cb4-21" title="21"><span class="st">  </span><span class="kw"><a href="reference/mutate_subset.html">mutate_subset</a></span>(<span class="dt">cheapo_price =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(price, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), </a>
-<a class="sourceLine" id="cb4-22" title="22">                <span class="dt">.filter =</span> train_class <span class="op">==</span><span class="st"> "Turista con enlace"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-23" title="23"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">premium =</span> price <span class="op">-</span><span class="st"> </span>cheapo_price) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-24" title="24"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(train_class <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Preferente"</span>, <span class="st">"Turista"</span>, <span class="st">"Turista Plus"</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-25" title="25"><span class="st">  </span><span class="co"># Now let's compare premia</span></a>
-<a class="sourceLine" id="cb4-26" title="26"><span class="st">  </span><span class="kw">group_by</span>(train_class) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-27" title="27"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">premium =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(premium, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a>
-<a class="sourceLine" id="cb4-28" title="28"></a>
-<a class="sourceLine" id="cb4-29" title="29">SPrail</a>
-<a class="sourceLine" id="cb4-30" title="30"><span class="co">#&gt; # A tibble: 3 x 2</span></a>
-<a class="sourceLine" id="cb4-31" title="31"><span class="co">#&gt;   train_class  premium</span></a>
-<a class="sourceLine" id="cb4-32" title="32"><span class="co">#&gt;   &lt;fct&gt;          &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb4-33" title="33"><span class="co">#&gt; 1 Preferente     29.9 </span></a>
-<a class="sourceLine" id="cb4-34" title="34"><span class="co">#&gt; 2 Turista         8.36</span></a>
-<a class="sourceLine" id="cb4-35" title="35"><span class="co">#&gt; 3 Turista Plus   14.4</span></a></code></pre></div>
-<p>And so there we have it - <code>Preferente</code> will really set you back relative to the cheapo ticket on the same route.</p>
+<a class="sourceLine" id="cb4-21" title="21"><span class="st">  </span><span class="kw"><a href="reference/mutate_subset.html">mutate_subset</a></span>(</a>
+<a class="sourceLine" id="cb4-22" title="22">    <span class="dt">cheapo_price =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(price, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb4-23" title="23">    <span class="dt">.filter =</span> train_class <span class="op">==</span><span class="st"> "Turista con enlace"</span></a>
+<a class="sourceLine" id="cb4-24" title="24">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-25" title="25"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">premium =</span> price <span class="op">-</span><span class="st"> </span>cheapo_price) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-26" title="26"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(train_class <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Preferente"</span>, <span class="st">"Turista"</span>, <span class="st">"Turista Plus"</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-27" title="27"><span class="st">  </span><span class="co"># Now let's compare premia</span></a>
+<a class="sourceLine" id="cb4-28" title="28"><span class="st">  </span><span class="kw">group_by</span>(train_class) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-29" title="29"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">premium =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(premium, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) -&gt;<span class="st"> </span>sprail_compare_premia</a>
+<a class="sourceLine" id="cb4-30" title="30"></a>
+<a class="sourceLine" id="cb4-31" title="31">sprail_compare_premia</a>
+<a class="sourceLine" id="cb4-32" title="32"><span class="co">#&gt; # A tibble: 3 x 2</span></a>
+<a class="sourceLine" id="cb4-33" title="33"><span class="co">#&gt;   train_class  premium</span></a>
+<a class="sourceLine" id="cb4-34" title="34"><span class="co">#&gt;   &lt;fct&gt;          &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb4-35" title="35"><span class="co">#&gt; 1 Preferente     29.9 </span></a>
+<a class="sourceLine" id="cb4-36" title="36"><span class="co">#&gt; 2 Turista         8.36</span></a>
+<a class="sourceLine" id="cb4-37" title="37"><span class="co">#&gt; 3 Turista Plus   14.4</span></a></code></pre></div>
+<p>And so there we have it—<code>Preferente</code> will really set you back relative to the cheapo ticket on the same route.</p>
 </div>
 </div>
   </div>

@@ -212,8 +212,17 @@ bind_cols.tbl_pb <- function(.data, ...) {
 }
 
 ##### BIND_ROWS WHY WON'T YOU CALL BIND_ROWS.tbl_pb???
+#' Set operations
+#'
+#' These functions overwrite the set functions provided in base to make them generic to be used to
+#' join pibbles. See  \link[dplyr]{setops} for details.
+#'
+#' @rdname setops
+#' @inheritParams dplyr::setops
+#' @name setops
+NULL
 
-#' @rdname pibble_methods
+#' @rdname setops
 #' @importFrom dplyr intersect
 #' @method intersect tbl_pb
 #' @export
@@ -244,7 +253,7 @@ greatest_hits <- function() {
   }
 }
 
-#' @rdname pibble_methods
+#' @rdname setops
 #' @importFrom dplyr union
 #' @method union tbl_pb
 #' @export
@@ -260,7 +269,7 @@ union.tbl_pb <- function(x, y, ...) {
   return(build_pibble(dplyr::union(x, y, ...), .i, .t, .d))
 }
 
-#' @rdname pibble_methods
+#' @rdname setops
 #' @importFrom dplyr union_all
 #' @method union_all tbl_pb
 #' @export
@@ -276,7 +285,7 @@ union_all.tbl_pb <- function(x, y, ...) {
   return(build_pibble(dplyr::union_all(x, y, ...), .i, .t, .d))
 }
 
-#' @rdname pibble_methods
+#' @rdname setops
 #' @importFrom dplyr setdiff
 #' @method setdiff tbl_pb
 #' @export
@@ -293,7 +302,16 @@ setdiff.tbl_pb <- function(x, y, ...) {
 }
 
 
-#' @rdname pibble_methods
+#' Join two pibbles together
+#'
+#' These are generic functions that dispatch to individual pibble methods. See  \link[dplyr]{join} for
+#' complete documentation.
+#'
+#' @rdname join
+#' @inheritParams dplyr::join
+#' @name join.tbl_pb
+NULL
+
 #' @importFrom dplyr left_join
 #' @method left_join tbl_pb
 #' @export
@@ -309,7 +327,7 @@ left_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y
   return(build_pibble(dplyr::left_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
-#' @rdname pibble_methods
+#' @rdname join
 #' @importFrom dplyr inner_join
 #' @method inner_join tbl_pb
 #' @export
@@ -325,7 +343,7 @@ inner_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   return(build_pibble(dplyr::inner_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
-#' @rdname pibble_methods
+#' @rdname join
 #' @importFrom dplyr right_join
 #' @method right_join tbl_pb
 #' @export
@@ -341,7 +359,7 @@ right_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   return(build_pibble(dplyr::right_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
-#' @rdname pibble_methods
+#' @rdname join
 #' @importFrom dplyr full_join
 #' @method full_join tbl_pb
 #' @export
@@ -357,7 +375,7 @@ full_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y
   return(build_pibble(dplyr::full_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
-#' @rdname pibble_methods
+#' @rdname join
 #' @importFrom dplyr semi_join
 #' @method semi_join tbl_pb
 #' @export
@@ -373,7 +391,7 @@ semi_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, ...) {
   return(build_pibble(dplyr::semi_join(x, y, by, copy, ...), .i, .t, .d))
 }
 
-#' @rdname pibble_methods
+#' @rdname join
 #' @importFrom dplyr nest_join
 #' @method nest_join tbl_pb
 #' @export
@@ -389,7 +407,7 @@ nest_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name =
   return(build_pibble(dplyr::nest_join(x, y, by, copy, keep, name, ...), .i, .t, .d))
 }
 
-#' @rdname pibble_methods
+#' @rdname join
 #' @importFrom dplyr anti_join
 #' @method anti_join tbl_pb
 #' @export
