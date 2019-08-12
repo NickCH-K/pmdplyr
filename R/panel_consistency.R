@@ -142,11 +142,13 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   if (!is.na(.min)) {
     # vector identifying the early obs that AREN'T already at the min
     earlyobs <- .df %>%
-                   dplyr::mutate_at(inp$t,
-                                    .funs = function(x)
-                                      x == min(x, na.rm = TRUE) &
-                                      x != .min) %>%
-                   dplyr::pull(!!inp$t)
+      dplyr::mutate_at(inp$t,
+        .funs = function(x) {
+          x == min(x, na.rm = TRUE) &
+            x != .min
+        }
+      ) %>%
+      dplyr::pull(!!inp$t)
 
     # Pull out that data and set it to the early period
     earlydat <- .df %>%
@@ -173,8 +175,10 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     # vector identifying the early obs that AREN'T already at the max
     lateobs <- .df %>%
       dplyr::mutate_at(inp$t,
-                       .funs = function(x)
-                         x == max(x, na.rm = TRUE) & x != .max) %>%
+        .funs = function(x) {
+          x == max(x, na.rm = TRUE) & x != .max
+        }
+      ) %>%
       dplyr::pull(!!inp$t)
 
     # Pull out that data and set it to the early period
@@ -556,11 +560,7 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   # If .var is unspecified
   if (length(.varcall) == 0) {
-
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
-
-
-
   }
   .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
   if (length(.withincall) == 0) {
@@ -630,11 +630,7 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   # if .var is unspecified
   if (length(.varcall) == 0) {
-
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
-
-
-
   }
   .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
 
@@ -686,8 +682,9 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
     if (is.character(.flag)) {
       # check if every column matches. If not, flag 'em
       newflag <- rowSums(matrix(Vectorize(isTRUE)(.df == databkup),
-                                nrow = nrow(.df)) +
-                           (is.na(.df) & is.na(databkup))) < ncol(.df)
+        nrow = nrow(.df)
+      ) +
+        (is.na(.df) & is.na(databkup))) < ncol(.df)
       .df <- .df %>%
         dplyr::mutate(!!.flag := !!newflag)
       rm(databkup)

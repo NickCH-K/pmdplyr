@@ -21,7 +21,7 @@ test_that("within_i input failstates", {
 ### ID_VARIABLE
 test_that("id_variable input failstates", {
   expect_error(id_variable(a = 1:3, .method = "foo"))
-  expect_error(id_variable(a = 1:3, .method = c("character","random")))
+  expect_error(id_variable(a = 1:3, .method = c("character", "random")))
   expect_error(id_variable(a = 1:3, .method = "character", .minwidth = 3))
 })
 
@@ -114,11 +114,13 @@ test_that("panel_fill input failstates", {
   expect_error(panel_fill(df, .set_NA = "i"))
 })
 
-inconsistent_df <- pibble(i = c(1, 1, 1, 1),
-                          t = c(1, 1, 2, 2),
-                          x = c(1, 2, 1, NA),
-                          .i = i,
-                          .t = t)
+inconsistent_df <- pibble(
+  i = c(1, 1, 1, 1),
+  t = c(1, 1, 2, 2),
+  x = c(1, 2, 1, NA),
+  .i = i,
+  .t = t
+)
 
 test_that("panel_locf input failstates", {
   expect_error(panel_locf(as.matrix(df$x), df))
@@ -157,18 +159,20 @@ test_that("declare_in_fcn_check input failstates", {
     .noneed = FALSE
   ))
   expect_error(declare_in_fcn_check(df,
-                                    .i = NA,
-                                    .t = NA,
-                                    .d = 1,
-                                    .uniqcheck = TRUE,
-                                    .setpanel = TRUE))
+    .i = NA,
+    .t = NA,
+    .d = 1,
+    .uniqcheck = TRUE,
+    .setpanel = TRUE
+  ))
   expect_error(declare_in_fcn_check(df,
-                                    .i = "i",
-                                    .t = "t",
-                                    .d = 1,
-                                    .uniqcheck = FALSE,
-                                    .setpanel = 2,
-                                    .noneed = FALSE))
+    .i = "i",
+    .t = "t",
+    .d = 1,
+    .uniqcheck = FALSE,
+    .setpanel = 2,
+    .noneed = FALSE
+  ))
   expect_error(declare_in_fcn_check(df,
     .i = NA,
     .t = NA,

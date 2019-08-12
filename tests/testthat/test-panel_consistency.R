@@ -72,13 +72,16 @@ test_that("panel_fill works", {
   expect_equal(panel_fill(df), proper_fill)
   expect_equal(panel_fill(df, .group_i = FALSE), ungroup_fill)
   expect_equal(panel_fill(df,
-                          .i = i,
-                          .t = t,
-                          .set_NA = TRUE,
-                          .flag = "flag",
-                          .setpanel = FALSE), na_fill)
-  expect_equal(panel_fill(df %>% group_by(x), .backwards = TRUE),
-               backwards_fill %>% group_by(x))
+    .i = i,
+    .t = t,
+    .set_NA = TRUE,
+    .flag = "flag",
+    .setpanel = FALSE
+  ), na_fill)
+  expect_equal(
+    panel_fill(df %>% group_by(x), .backwards = TRUE),
+    backwards_fill %>% group_by(x)
+  )
   expect_equal(panel_fill(df, .min = 1, .max = 7), balance_fill)
   expect_equal(panel_fill(nonpib, .i = i, .t = t, .setpanel = FALSE), nonpib_proper_fill)
 })
@@ -110,7 +113,9 @@ test_that("fixed_force works", {
     fixed_force(
       df %>% group_by(x),
       .var = x,
-      .within = i) %@% "groups")[1], "x")
+      .within = i
+    ) %@% "groups"
+  )[1], "x")
 })
 
 
