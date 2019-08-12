@@ -29,7 +29,8 @@ test_that("students' grades over time", {
 
 test_that("is_pibble", {
   expect_message(is_pibble(grades),
-                 regexp = ".i = student_id, module_id; .t = semester; .d = 1.")
+    regexp = ".i = student_id, module_id; .t = semester; .d = 1."
+  )
   expect_true(is_pibble(grades))
   expect_silent(is_pibble(grades, .silent = TRUE))
   expect_error(is_pibble(LETTERS), "Requires data to be a data frame or tibble")
