@@ -51,7 +51,7 @@ tbl_sum.tbl_pb <- function(x) {
   }
 
   if (!is_empty(groups)) {
-    n_grps <- NROW(groups)
+    n_grps <- nrow(groups)
     if (n_grps == 0) n_grps <- "?"
     res <- c(res, "Groups" = paste(group_vars(x), brackets(n_grps)))
   }

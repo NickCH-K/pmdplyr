@@ -25,6 +25,11 @@ test_that("students' grades over time", {
   expect_output(print(df %>% dplyr::group_by(i)),
     regexp = "# Groups:\\s+i "
   )
+  expect_output(print(
+    df %>%
+      group_by(i) %>%
+      filter(FALSE)),
+    regexp = "# Groups:\\s+i \\[\\?\\]")
 })
 
 test_that("is_pibble", {
