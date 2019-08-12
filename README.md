@@ -204,3 +204,9 @@ sprail_compare_premia
 
 And so there we have it—`Preferente` will really set you back relative
 to the cheapo ticket on the same route.
+
+-----
+
+Please note that the ‘pmdplyr’ project is released with a [Contributor
+Code of Conduct](.github/CODE_OF_CONDUCT.md). By contributing to this
+project, you agree to abide by its terms.
