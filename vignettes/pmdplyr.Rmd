@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 library(pmdplyr)
 ```
 
-The `pmdplyr` package is an extension to `dplyr` designed for cleaning and managing panel and hierarchical data. It contains variations on the `dplyr` `mutate` and `join` functions that address common panel data needs, and contains functions for managing and cleaning panel data. 
+The `pmdplyr` package is an extension to `dplyr` designed for cleaning and managing panel and hierarchical data. It contains variations on the `dplyr::mutate()` and `dplyr::join()` functions that address common panel data needs, and contains functions for managing and cleaning panel data. 
 
 Unlike other panel data packages, functions in `pmdplyr` are all designed to work even if there is more than one observation per individual per period. This comes in handy if each individual is observed multiple times per period - for example, multiple classes per student per term; or if you have hierarchical data - for example, multiple companies per country.
 
@@ -45,43 +45,48 @@ Most functions in `pmdplyr` will allow you to declare `.i` and `.t` in the funct
 
 ```{r, eval=FALSE}
 pibble(...,
-       .i = NULL,
-       .t = NULL,
-       .d = 1,
-       .uniqcheck = FALSE)
+  .i = NULL,
+  .t = NULL,
+  .d = 1,
+  .uniqcheck = FALSE
+)
 ```
 
 or by transforming an existing `data.frame`, `list`, or `tbl_df` using `as_pibble()`:
 
 ```{r, eval=FALSE}
 as_pibble(x,
-       .i = NULL,
-       .t = NULL,
-       .d = 1,
-       .uniqcheck = FALSE,
-       ...)
+  .i = NULL,
+  .t = NULL,
+  .d = 1,
+  .uniqcheck = FALSE,
+  ...
+)
 ```
 
-Both functions work exactly as `tibble::tibble` and `tibble::as_tibble` do, except that they also take the arguments `.i`, `.t`, and `.d`, with `.i` and `.t` accepting either unquoted or quoted variable names. If you'd like your `pibble` checked to see if `.i` and `.t` uniquely identify your observations, set `.uniqcheck = TRUE`. It will do this automatically the first time in each R session you create a `pibble`, but if you'd like it to keep doing it, use `uniqcheck`. 
+Both functions work exactly as `tibble::tibble()` and `tibble::as_tibble()` do, except that they also take the arguments `.i`, `.t`, and `.d`, with `.i` and `.t` accepting either unquoted or quoted variable names. If you'd like your `pibble` checked to see if `.i` and `.t` uniquely identify your observations, set `.uniqcheck = TRUE`. It will do this automatically the first time in each R session you create a `pibble`, but if you'd like it to keep doing it, use `uniqcheck`. 
 
 As a side bonus, you can check if the variables `a, b, c` uniquely identify the observations in data set `d` by running `as_pibble(d, .i = c(a, b, c), .uniqcheck = TRUE)`. No warning? It's uniquely identified!
 
 ```{r}
 # .d = 1 by default, so in this data,
 # a = 1, b = 3 comes one period after a = 1, b = 2.
-basic_pibble <- pibble(a = c(1, 1, 1, 2, 2, 2),
-                       b = c(1, 2, 3, 2, 3, 3),
-                       c = 1:6,
-                       .i = a,
-                       .t = b)
+basic_pibble <- pibble(
+  a = c(1, 1, 1, 2, 2, 2),
+  b = c(1, 2, 3, 2, 3, 3),
+  c = 1:6,
+  .i = a,
+  .t = b
+)
 
 data(SPrail)
 # In SPrail, insert_date does not imply regular gaps between
 # time periods, so we set .d = 0
 declared_pibble <- as_pibble(SPrail,
-                             .i = c(origin, destination),
-                             .t = insert_date,
-                             .d = 0)
+  .i = c(origin, destination),
+  .t = insert_date,
+  .d = 0
+)
 ```
 
 ## panel_convert()
@@ -89,9 +94,11 @@ declared_pibble <- as_pibble(SPrail,
 `pmdplyr` also has the function `panel_convert()` which allows you to convert between different popular R panel data objects, including `pibble`. This can come in handy for creating `pibbles`, or exporting your cleaned `pibble` to use with a package that does panel data *analysis* (which `pmdplyr` does not):
 
 ```{r, eval = FALSE}
-panel_convert(data,
-              to,
-              ...)
+panel_convert(
+  data,
+  to,
+  ...
+)
 ```
 
 Where `data` is a panel data object, either `pibble`, `tsibble`, `pdata.frame`, or `panel_data`, and `to` is the type of object you'd like returned, which you can refer to by object name, object class, or package name: get a `pibble` with `"pmdplyr"`, `"pibble"`, or `"tbl_pb"`, a `tsibble` with `"tsibble"` or `"tbl_ts"`, a `pdata.frame` with `"plm"` or `"pdata.frame"`, or a `panel_data` with `"panelr"` or `"panel_data"`. `...` sends additional arguments to the functions used to declare those objects.
@@ -101,15 +108,15 @@ When using `panel_convert`, be aware that any grouping will be lost, and you mus
 All valid objects of the non-`pibble` types can be converted to `pibbles`, but the reverse is not true, since `pibble` does not enforce some strict requirements that other types do:
 
 
-Feature/Requirement |  `pibble`   |  `tsibble` |  `pdata.frame` |  `panel_data` 
----------------------|-----------|----------------|--------------|------------
-ID                    | `.i` | `key`     | `index[1]` | `id` 
-Time                  | `.t` | `index`   | `index[2]` | `wave` 
-Gap control           | `.d` | `regular` | No              | No  
-ID must exist         | No        | No             | Yes             | Yes 
-Time must exist       | No        | Yes            | Yes             | Yes[1] 
-Only one ID variable[2]| No        | No            | Yes             | Yes 
-Unique identification | No        | Yes            | No[3]           | No[3]
+Feature/Requirement    |  `pibble` |  `tsibble`|  `pdata.frame` |  `panel_data` 
+-----------------------|-----------|-----------|----------------|------------
+ID                     | `.i`      | `key`     | `index[1]`     | `id` 
+Time                   | `.t`      | `index`   | `index[2]`     | `wave` 
+Gap control            | `.d`      | `regular` | No             | No  
+ID must exist          | No        | No        | Yes            | Yes 
+Time must exist        | No        | Yes       | Yes            | Yes[1] 
+Only one ID variable[2]| No        | No        | Yes            | Yes 
+Unique identification  | No        | Yes       | No[3]          | No[3]
 
 [1] `pdata.frame` does not require that time be provided, but if not provided will create it based on original ordering of the data. The `pdata.frame` option to set `index` equal to an integer for a balanced panel and have it figure out the rest by itself is not supported.
 
@@ -135,8 +142,9 @@ Many panel data packages, including `pmdplyr`, prefer a time variable that is an
 
 ```{r, eval=FALSE}
 id_variable(...,
-       .method = "number",
-       .minwidth = FALSE)
+  .method = "number",
+  .minwidth = FALSE
+)
 ```
 
 where `...` is the set of identity variables that you want to combine into a single one (or, potentially, a single variable you'd like to encode numerically).
@@ -148,13 +156,21 @@ where `...` is the set of identity variables that you want to combine into a sin
 * `.method = character` preserves all original information and combines the variables together into a string, adding spacing to ensure uniqueness. Set `.minwidth = TRUE` to remove the spacing, although this may lead to non-uniqueness in some cases.
 
 ```{r}
-df <- data.frame(country = c("US", "US", "US", "US", 
-                             "GBR", "GBR", "GBR", "GBR"),
-                 city = c("NYC", "NYC", "Cambridge", "NYC", 
-                          "Cambridge", "London", "Manchester", "Manchester")) %>%
-  mutate(numeric_ID = id_variable(country, city),
-         random_ID = id_variable(country, city, .method = "random"),
-         char_ID = id_variable(country, city, .method = "character"))
+df <- data.frame(
+  country = c(
+    "US", "US", "US", "US",
+    "GBR", "GBR", "GBR", "GBR"
+  ),
+  city = c(
+    "NYC", "NYC", "Cambridge", "NYC",
+    "Cambridge", "London", "Manchester", "Manchester"
+  )
+) %>%
+  mutate(
+    numeric_ID = id_variable(country, city),
+    random_ID = id_variable(country, city, .method = "random"),
+    char_ID = id_variable(country, city, .method = "character")
+  )
 
 df
 ```
@@ -165,25 +181,26 @@ df
 
 ```{r, eval = FALSE}
 time_variable(...,
-              .method = "present",
-              .datepos = NA,
-              .start = 1,
-              .skip = NA,
-              .breaks = NA,
-              .turnover = NA,
-              .turnover_start = NA)
+  .method = "present",
+  .datepos = NA,
+  .start = 1,
+  .skip = NA,
+  .breaks = NA,
+  .turnover = NA,
+  .turnover_start = NA
+)
 ```
 
 Where `...` is the set of variables that you want to combine into a single, `integer`-class time variable. The rest of the options determine how the variable(s) will be read or transformed; the need for each varies depending on the structure of the original data and which `.method` is used.
 
 `.method` can take the values:
 
-* `.method="present"` will assume that, even if each individual may have some missing periods, each period is present in your data *somewhere*, and so simply numbers, in order, all the time periods observed in the data.
-* `.method="year"` can be used with a single `Date`/`POSIX`/etc.-type variable (anything that allows `lubridate::date()`) and will extract the year from it. Or, use it with a character or numeric variable and indicate with `.datepos` the character/digit positions that hold the year in YY or YYYY format.  If combined with `.breaks` or `.skip`, will instead set the earliest year in the data to 1 rather than returning the actual year.
-* `.method="month"` can be used with a single `Date`/`POSIX`/etc.-type variable (anything that allows `lubridate::date()`). It will give the earliest-observed month in the data set a value of `1`, and will increment from there. Or, use it with a character or numeric variable and indicate with `.datepos` the character/digit positions that hold the year and month in YYMM or YYYYMM format (note that if your variable is in MMYYYY format, for example, you can just give a `.datepos` argument like `c(3:6,1:2)`). Months turn over on the `.start` day of the month, which is by default 1.
-* `.method="week"` can be used with a single `Date`/`POSIX`/etc.-type variable (anything that allows `lubridate::date()`). It will give the earliest-observed week in the data set a value of `1`, and will increment from there. Weeks turn over on the `.start` day, which is by default 1 (Monday). Note that this method always starts weeks on the same day of the week, which is different from standard `lubridate` procedure of counting sets of 7 days starting from January 1.
-* `.method="day"` can be used with a single `Date`/`POSIX`/etc.-type variable (anything that allows `lubridate::date()`). It will give the earliest-observed day in the data set a value of `1`, and increment from there. Or, use it with a character or numeric variable and indicate with `.datepos` the character/digit positions that hold the year and month in YYMMDD or YYYYMMDD format. To skip certain days of the week, such as weekends, use the `.skip` option.
-* `.method="turnover"` can be used when you have more than one variable in variable and they are all numeric nonnegative integers. Set the `.turnover` option to indicate the highest value each variable takes before it starts over, and set `.turnover_start` to indicate what value it takes when it starts over. Cannot be combined with `.skip` or `.breaks`. Doesn't work with any variable for which the turnover values change, i.e. it doesn't play well with days-in-month - if you'd like to do something like year-month-day-hour, I recommend running `.method="day"` once with just the year-month-day variable, and then taking the result and combining *that* with hour in `.method="turnover"`.
+* `.method = "present"` will assume that, even if each individual may have some missing periods, each period is present in your data *somewhere*, and so simply numbers, in order, all the time periods observed in the data.
+* `.method = "year"` can be used with a single `Date`/`POSIX`/etc.-type variable (anything that allows `lubridate::date()`) and will extract the year from it. Or, use it with a character or numeric variable and indicate with `.datepos` the character/digit positions that hold the year in YY or YYYY format.  If combined with `.breaks` or `.skip`, will instead set the earliest year in the data to 1 rather than returning the actual year.
+* `.method = "month"` can be used with a single `Date`/`POSIX`/etc.-type variable (anything that allows `lubridate::date()`). It will give the earliest-observed month in the data set a value of `1`, and will increment from there. Or, use it with a character or numeric variable and indicate with `.datepos` the character/digit positions that hold the year and month in YYMM or YYYYMM format (note that if your variable is in MMYYYY format, for example, you can just give a `.datepos` argument like `c(3:6,1:2)`). Months turn over on the `.start` day of the month, which is by default 1.
+* `.method = "week"` can be used with a single `Date`/`POSIX`/etc.-type variable (anything that allows `lubridate::date()`). It will give the earliest-observed week in the data set a value of `1`, and will increment from there. Weeks turn over on the `.start` day, which is by default 1 (Monday). Note that this method always starts weeks on the same day of the week, which is different from standard `lubridate` procedure of counting sets of 7 days starting from January 1.
+* `.method = "day"` can be used with a single `Date`/`POSIX`/etc.-type variable (anything that allows `lubridate::date()`). It will give the earliest-observed day in the data set a value of `1`, and increment from there. Or, use it with a character or numeric variable and indicate with `.datepos` the character/digit positions that hold the year and month in YYMMDD or YYYYMMDD format. To skip certain days of the week, such as weekends, use the `.skip` option.
+* `.method = "turnover"` can be used when you have more than one variable in variable and they are all numeric nonnegative integers. Set the `.turnover` option to indicate the highest value each variable takes before it starts over, and set `.turnover_start` to indicate what value it takes when it starts over. Cannot be combined with `.skip` or `.breaks`. Doesn't work with any variable for which the turnover values change, i.e. it doesn't play well with days-in-month - if you'd like to do something like year-month-day-hour, I recommend running `.method="day"` once with just the year-month-day variable, and then taking the result and combining *that* with hour in `.method = "turnover"`.
 
 ```{r}
 data(SPrail)
@@ -200,7 +217,9 @@ SPrail <- SPrail %>%
   )
 
 # Let's see what we've got
-head(SPrail %>% select(insert_date, ends_with("time_id")))
+SPrail %>% 
+  select(insert_date, ends_with("time_id")) %>% 
+  head()
 
 # Perhaps I'd like quarterly data
 # (although in this case there are only two months, not much variation there)
@@ -210,7 +229,8 @@ SPrail <- SPrail %>%
     .breaks = c(1, 4, 7, 10)
   ))
 # Should line up properly with month
-table(SPrail$month_time_id, SPrail$quarter_time_id, dnn = c('Month', 'Quarter'))
+SPrail %>% 
+  count(month_time_id, quarter_time_id)
 
 # Maybe I'd like Monday to come immediately after Friday!
 SPrail <- SPrail %>%
@@ -254,17 +274,18 @@ You may wish to fill in either of these kinds of missing data using the data you
 
 ```{r, eval = FALSE}
 panel_fill(.df,
-           .set_NA = FALSE,
-           .min = NA,
-           .max = NA,
-           .backwards = FALSE,
-           .group_i = TRUE,
-           .flag = NA,
-           .i = NULL,
-           .t = NULL,
-           .d = 1,
-           .uniqcheck = FALSE,
-           .setpanel = TRUE)
+  .set_NA = FALSE,
+  .min = NA,
+  .max = NA,
+  .backwards = FALSE,
+  .group_i = TRUE,
+  .flag = NA,
+  .i = NULL,
+  .t = NULL,
+  .d = 1,
+  .uniqcheck = FALSE,
+  .setpanel = TRUE
+)
 ```
 
 `panel_fill()` will give us some newly-created observations, and we need to decide what to fill them in with. By default, it will fill in values using what we see in the most recent non-missing observation. But we can set `.backwards = TRUE` to use the *next* non-missing observation instead, or use `.set_NA` to fill the new observations with missing data.
@@ -273,12 +294,14 @@ panel_fill(.df,
 
 ```{r}
 # Note the gap between periods 2 and 4 for person 1.
-df <- pibble(i = c(1, 1, 1, 2, 2, 2),
-             t = c(2, 4, 5, 1, 2, 3),
-             x = 1:6,
-             y = 7:12,
-             .i = i,
-             .t = t)
+df <- pibble(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(2, 4, 5, 1, 2, 3),
+  x = 1:6,
+  y = 7:12,
+  .i = i,
+  .t = t
+)
 
 panel_fill(df, .set_NA = "y", .flag = "new_obs")
 panel_fill(df, .set_NA = "y", .backwards = TRUE)$x
@@ -300,51 +323,59 @@ The rest of the options include `.group_i` (by default, if `.i` can be found, da
 
 ```{r, eval = FALSE}
 panel_locf(.var,
-           .df = get(".", envir = parent.frame()),
-           .fill = NA,
-           .backwards = FALSE,
-           .resolve = "error",
-           .group_i = TRUE,
-           .i = NULL,
-           .t = NULL,
-           .d = 1,
-           .uniqcheck = FALSE)
+  .df = get(".", envir = parent.frame()),
+  .fill = NA,
+  .backwards = FALSE,
+  .resolve = "error",
+  .group_i = TRUE,
+  .i = NULL,
+  .t = NULL,
+  .d = 1,
+  .uniqcheck = FALSE
+)
 ```
 
 where `.var` is the variable to be filled in, and `.df` is the data set that variable lives in. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it.
 
 ```{r}
-df <- pibble(i = c(1, 1, 1, 2, 2, 2),
-             t = c(1, 2, 3, 2, 3, 4),
-             x = c(1, NA, 3, NA, -3, 4),
-             .i = i,
-             .t = t)
+df <- pibble(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(1, 2, 3, 2, 3, 4),
+  x = c(1, NA, 3, NA, -3, 4),
+  .i = i,
+  .t = t
+)
 
 # Notice that the fourth observation doesn't get filled in
 # because it's the first observation for person 2, so nothing to fill in from
-df %>% 
+df %>%
   mutate(x_filled = panel_locf(x))
 ```
 
 You have a fair amount of control over how filling-in works. By default, data will be filled in using the most recent previous observation. But `.backwards = TRUE` will use the *next upcoming* observation instead. Also, by default, only `NA` values will be overwritten. But `.fill` will allow you to specify a vector of values (perhaps including `NA`) to be overwritten. This can be handy if you're working with data that uses missingness indicators other than `NA`.
 
 ```{r}
-df %>% mutate(x_filled = panel_locf(x, .backwards = TRUE),
-              x_no_neg3 = panel_locf(x, .backwards = TRUE, .fill = c(NA, -3)))
+df %>% mutate(
+  x_filled = panel_locf(x, .backwards = TRUE),
+  x_no_neg3 = panel_locf(x, .backwards = TRUE, .fill = c(NA, -3))
+)
 ```
 
 `panel_locf()` will work even if `.i` and `.t` don't uniquely identify the observations. However, this presents a problem! If there are *different values* of `.var` for a given combination of `.i` and `.t`, then which value do we choose to use for the purpose of filling in other observations? `.resolve` makes this choice. By default, there will be an "error" if values of `.var` are inconsistent within `.i` and `.t`. Or, set `.resolve` to a summary function like `.resolve = mean` or `.resolve = function(x) mean(x, na.rm = TRUE)` to resolve inconsistencies before filling in. If you have some `.i`/`.t` combinations with both missing and non-missing values, the missing values will be filled in using the same function.
 
 ```{r}
-inconsistent_df <- pibble(i = c(1, 1, 1, 2, 2, 2),
-                          t = c(1, 1, 2, 1, 2, 3),
-                          x = c(1, 2, NA, 1, 2, 3),
-                          .i = i,
-                          .t = t)
+inconsistent_df <- pibble(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(1, 1, 2, 1, 2, 3),
+  x = c(1, 2, NA, 1, 2, 3),
+  .i = i,
+  .t = t
+)
 
-inconsistent_df %>% mutate(x_filled = 
-                             panel_locf(x, .resolve = mean))
-
+inconsistent_df %>% mutate(
+  x_filled =
+    panel_locf(x, .resolve = mean)
+)
 ```
 
 The rest of the options include `.group_i` (by default, if `.i` can be found, data will be filled within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). `.setpanel` ensures that if you declare the panel structure in the `panel_fill()` function, it will be maintained in the object you get back.
@@ -358,9 +389,11 @@ In panel data, and especially hierarchical data, there are some variables that s
 For example, consider the data set
 
 ```{r}
-df <- data.frame(continent = c("Asia", "Europe", "Europe", "S America", "S America"),
-           country = c("France", "France", "France", "Brazil", "Brazil"),
-           year = c(2000, 2001, 2002, 2000, 2001))
+df <- data.frame(
+  continent = c("Asia", "Europe", "Europe", "S America", "S America"),
+  country = c("France", "France", "France", "Brazil", "Brazil"),
+  year = c(2000, 2001, 2002, 2000, 2001)
+)
 
 df
 ```
@@ -373,8 +406,9 @@ The variable `continent` should never change within values of `country` - a coun
 
 ```{r, eval = FALSE}
 fixed_check(.df,
-            .var = NULL,
-            .within = NULL)
+  .var = NULL,
+  .within = NULL
+)
 ```
 
 You should pick variables for `.var` that are supposed to be constant within combinations of `.within`.
@@ -385,13 +419,15 @@ If your data has problems and is inconsistent, `fixed_check()` will retun a list
 fixed_check(df, .var = continent, .within = country)$continent
 ```
 
-If your data is fine, and all `.var` variables are indeed constant within combinations of `.within`, then `fixed_check()` will return TRUE.
+If your data is fine, and all `.var` variables are indeed constant within combinations of `.within`, then `fixed_check()` will return `TRUE`.
 
 ```{r}
-consistent_df <- data.frame(state = c(1, 1, 1, 2, 2, 2),
-                            year = c(2000, 2001, 2001, 2000, 2000, 2001),
-                            treatment = c(F, T, T, T, T, F),
-                            outcome = c(4.4, 3.2, 3.4, 5.5, 5.6, 8))
+consistent_df <- data.frame(
+  state = c(1, 1, 1, 2, 2, 2),
+  year = c(2000, 2001, 2001, 2000, 2000, 2001),
+  treatment = c(F, T, T, T, T, F),
+  outcome = c(4.4, 3.2, 3.4, 5.5, 5.6, 8)
+)
 
 # Since this policy treatment is administered on the state level,
 # everyone in the same state/year should get the same treatment.
@@ -410,10 +446,11 @@ Some handy `fixed_check()` tips:
 
 ```{r, eval = FALSE}
 fixed_force(..df,
-            .var = NULL,
-            .within = NULL,
-            .resolve = mode_order,
-            .flag = NA)
+  .var = NULL,
+  .within = NULL,
+  .resolve = mode_order,
+  .flag = NA
+)
 ```
 
 The default resolution function is `mode_order()` (see the Additional Calculations section), which calculates the mode, selecting the first-ordered value in the data if there are ties. The mode seems most relevant here, since the most likely (and responsible) use for `fixed_force()` is when you have data that is mostly correct but just has a few odd values that are likely just miscodes. `mode_order()` also is not just limited to numeric variables.
@@ -433,27 +470,35 @@ fixed_force(df, .var = continent, .within = country, .resolve = "drop")
 
 # Joins
 
-`pmdplyr` offers a set of wrappers for the `dplyr::join` functions.
+`pmdplyr` offers a set of wrappers for the `dplyr::join()` functions.
 
-## inexact_join
+## inexact_join()
 
-The set of `inexact_join` functions maps directly onto the set of `dplyr::join` functions: `inexact_inner_join, inexact_left_join, inexact_right_join, inexact_full_join, inexact_semi_join, inexact_nest_join`, and `inexact_anti_join`. 
+The set of `inexact_join()` functions maps directly onto the set of `dplyr::join()` functions: 
 
-Here we will focus specifically on `inexact_left_join`; for the differences between the functions see the descriptions of the original join functions at `help(join, package = "dplyr")`.
+- **Mutating joins**: `inexact_inner_join()`, `inexact_left_join()`, `inexact_right_join()`, `inexact_full_join()`
+- **Filtering joins**: `inexact_semi_join()`, and `inexact_anti_join()`
+- **Nesting joins**: `inexact_nest_join()`
 
-`join` functions take two data sets and join them based on matching values of a set of shared variables.
+Here we will focus specifically on `inexact_left_join()`. For the differences between the functions, see `dplyr::join()`.
+
+`join()` functions take two data sets and join them based on matching values of a set of shared variables.
 
 ```{r}
-left_df <- data.frame(i = c(1, 1, 1, 2, 2, 2),
-                      t = c(1, 2, 3, 1, 2, 3),
-                      v1 = 1:6)
-right_df <- data.frame(i = c(1, 1, 1, 2, 2, 2),
-                       t = c(0, 2, 4, 0, 2, 4),
-                       v2 = 7:12)
+left_df <- data.frame(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(1, 2, 3, 1, 2, 3),
+  v1 = 1:6
+)
+right_df <- data.frame(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(0, 2, 4, 0, 2, 4),
+  v2 = 7:12
+)
 
 # It automatically detects that i and t are the shared variables
 # and finds two combinations of those in left_df that are also
-# in right_df: i = 1, t = 2, and i = 2, t = 2. So it brings the 
+# in right_df: i = 1, t = 2, and i = 2, t = 2. So it brings the
 # v2 values it can match up in to the joined data.
 # Other observations don't find a match
 left_join(left_df, right_df)
@@ -461,21 +506,22 @@ left_join(left_df, right_df)
 
 However, it is common (especially in a panel data context) to want to join two data frames where one of the variables does not line up exactly. For example, maybe we want those `t = 1` values in `left_df` to pick up the `t = 0` values in `right_df`. 
 
-We can do this, in a few different ways with an `inexact_join`:
+We can do this, in a few different ways with an `inexact_join()`:
 
 ```{r, eval = FALSE}
 inexact_left_join(x, y,
-                  by = NULL,
-                  copy = FALSE,
-                  suffix = c(".x", ".y"),
-                  ...,
-                  var = NULL,
-                  jvar = NULL,
-                  method,
-                  exact = TRUE)
+  by = NULL,
+  copy = FALSE,
+  suffix = c(".x", ".y"),
+  ...,
+  var = NULL,
+  jvar = NULL,
+  method,
+  exact = TRUE
+)
 ```
 
-The first arguments: `x, y, by, copy, suffix, ...`, are standard arguments to be passed to `left_join`. `x` and `y` are our left-hand and right-hand data sets, respectively. See `help(left_join, package = "dplyr")` for the rest.
+The first arguments: `x, y, by, copy, suffix, ...`, are standard arguments to be passed to `left_join()`. `x` and `y` are our left-hand and right-hand data sets, respectively. See `dplyr::left_join()` for the rest.
 
 We've added on here `var, jvar, method`, and `exact`.
 
@@ -491,28 +537,31 @@ right_df <- right_df %>%
 * `method = "last"` matches `var` to the closest value of `jvar` that is *lower*, so those `t = 1` observations will get matched to `t_right = 0`, and `t = 3` will get matched to `t_right = 2` (meaning that `t_right = 2` will get matched to both `t = 2` and `t = 3`):
 
 ```{r}
-inexact_left_join(left_df, 
-                  right_df,
-                  var = t, jvar = t_right,
-                  method = "last")
+inexact_left_join(left_df,
+  right_df,
+  var = t, jvar = t_right,
+  method = "last"
+)
 ```
 
 * `method = "next"` matches `var` to the closest value of `jvar` that is *higher*, so now `t = 1` will get matched to `t_right = 2`, and `t = 3` will get matched to `t_right = 4`:
 
 ```{r}
-inexact_left_join(left_df, 
-                  right_df,
-                  var = t, jvar = t_right,
-                  method = "next")
+inexact_left_join(left_df,
+  right_df,
+  var = t, jvar = t_right,
+  method = "next"
+)
 ```
 
 * `method = "closest"` will match `var` to the closest value of `jvar` in either direction. If there's a tie, it will pick the lower value of `jvar`. So now `t = 1` will pick `t_right = 0` (out of a tie between `0` and `2`), and `t = 3` will match to `t = 2`:
 
 ```{r}
-inexact_left_join(left_df, 
-                  right_df,
-                  var = t, jvar = t_right,
-                  method = "closest")
+inexact_left_join(left_df,
+  right_df,
+  var = t, jvar = t_right,
+  method = "closest"
+)
 ```
 
 * Finally, `method = "between"` is for matching `var` to a set of two `jvar`s that define the beginning and end of a *range*. Make sure that the ranges are non-overlapping within the joining variables, or else you will get strange results (specifically, it should join to the earliest-starting range). So now, given the way we define `t_bottom` and `t_top` below, `t = 1` should go in the range `t_bottom = 0, t_top = 2`, and `t = 2` and `t = 3` should both go in the range `t_bottom = 2, t_top = 4`.
@@ -522,32 +571,34 @@ right_df <- right_df %>%
   rename(t_bottom = t_right) %>%
   mutate(t_top = t_bottom + 2)
 
-inexact_left_join(left_df, 
-                  right_df,
-                  var = t, jvar = c(t_bottom, t_top),
-                  method = "between")
+inexact_left_join(left_df,
+  right_df,
+  var = t, jvar = c(t_bottom, t_top),
+  method = "between"
+)
 ```
 
 So that leaves us with `exact`. `exact` determines whether or not an exact match is an acceptable match, and interprets `"last"` as "this value or earlier" and `"next"` as "this value or later". Generally, for joining purposes, you'll want this to be `TRUE`. But perhaps you don't! Maybe you want "earlier" or "later" only to get something like "the most recent previous value" for `method = "last"`. In that case, set this to `FALSE`.
 
-In the case of `method = "between"`, it's especially important to keep track of `exact` because it's common for one range to start at the exact endpoint of another. If the end of one range is the exact start of another, `exact = c(TRUE,FALSE)` or `exact = c(FALSE,TRUE)` is recommended to avoid overlaps. Defaults to `exact = c(TRUE,FALSE)`.
+In the case of `method = "between"`, it's especially important to keep track of `exact` because it's common for one range to start at the exact endpoint of another. If the end of one range is the exact start of another, `exact = c(TRUE, FALSE)` or `exact = c(FALSE, TRUE)` is recommended to avoid overlaps. Defaults to `exact = c(TRUE, FALSE)`.
 
 ## safe_join()
 
 When joining two data sets `x` and `y` on a set of shared variables `by`, there are four ways in which they can be matched: one-to-many (`by` uniquely identifies rows in `x` but not `y`, so each observation in `x` will be matched to several in `y`), many-to-one (`by` uniquely identifies rows in `y` but not `x`, so each observation in `y` will be matched to several in `x`), one-to-one (`by` uniquely identifies rows in both `x` and `y`, so each observation in `x` will be matched to exactly one in `y`), and many-to-many (`by` does not uniquely identify rows in either `x` or `y`).
 
-Unfortunately, when you perform a `join` or `inexact_join`, it doesn't tell you which of those you've just done! This can be especially problematic if you've accidentally done a many-to-many join, since many-to-many join often leads to unexpected results.
+Unfortunately, when you perform a `join()` or `inexact_join()`, it doesn't tell you which of those you've just done! This can be especially problematic if you've accidentally done a many-to-many join, since many-to-many join often leads to unexpected results.
 
-`safe_join()` is a wrapper for all `join` and `inexact_join` functions which tells you whether you are, in fact, doing the join you expect to be doing, and returns an error if you're not.
+`safe_join()` is a wrapper for all `join()` and `inexact_join()` functions which tells you whether you are, in fact, doing the join you expect to be doing, and returns an error if you're not.
 
 ```{r, eval = FALSE}
 safe_join(x, y,
-          expect = NULL,
-          join = NULL,
-          ...)
+  expect = NULL,
+  join = NULL,
+  ...
+)
 ```
 
-`x`, `y`, and `...` are the standard `join`/`inexact_join` arguments that you would normally use. See `help(join, package = "dplyr")` or the `inexact_join` section above to see what arguments might go in `...` to pass through to those functions, such as `suffix` or `var`.
+`x`, `y`, and `...` are the standard `join()`/`inexact_join()` arguments that you would normally use. See `help(join, package = "dplyr")` or the `inexact_join` section above to see what arguments might go in `...` to pass through to those functions, such as `suffix` or `var`.
 
 `expect` is a character variable where you specify the type of join you *think* you're about to do. You can specify this either as one-to-many / many-to-one / one-to-one directly, or you can specify which of the two data sets (`x` or `y`) you think should be uniquely identified by the joining variables.
 
@@ -557,13 +608,13 @@ safe_join(x, y,
 * `expect = "no m:m"` indicates that you don't care whether you're one-to-one, one-to-many, or many-to-one, as long as you're not many-to-many.
 * There is no `expect` option that allows you to run a many-to-many join.
 
-`safe_join` will return an error if your data do not match your `expect` selection.
+`safe_join()` will return an error if your data do not match your `expect` selection.
 
 If your data *does* match your `expect` option, then it will look to your `join`. `join` is the function for the `join` or `inexact_join` you'd like to run, for example `join = inexact_left_join`.
 
 If run without a `join` specified, `safe_join()` will return `TRUE` if you're good to go. If run with a `join` specified, then instead `safe_join()` will pass your data on to the function and actually run the join for you.
 
-There is little reason to run any `join` or `inexact_join` without going through `safe_join()`. It will help you avoid some nasty surprises!
+There is little reason to run any `join()` or `inexact_join()` without going through `safe_join()`. It will help you avoid some nasty surprises!
 
 ```{r}
 # left is panel data and i does not uniquely identify observations
@@ -612,14 +663,15 @@ Another common use is to make specific comparisons within groups. If I want to k
 
 ```{r, eval = FALSE}
 mutate_subset(.df,
-              ...,
-              .filter,
-              .group_i = TRUE,
-              .i = NULL,
-              .t = NULL,
-              .d = NA,
-              .uniqcheck = FALSE,
-              .setpanel = TRUE)
+  ...,
+  .filter,
+  .group_i = TRUE,
+  .i = NULL,
+  .t = NULL,
+  .d = NA,
+  .uniqcheck = FALSE,
+  .setpanel = TRUE
+)
 ```
 
 where `.df` is the data set being mutated and `...` is a set of name-value pairs of expressions in the style of `dplyr::mutate`. Note that, since the idea here is to get a summary measure from a filtered group, expressions should be written such that they would be valid arguments in `dplyr::summarize()`.
@@ -629,10 +681,12 @@ where `.df` is the data set being mutated and `...` is a set of name-value pairs
 Let's perform the analysis we described above, comparing an individual's earnings to the average earnings of college graduates in their state:
 
 ```{r}
-df <- pibble(state = c("CA", "CA", "CA", "NV", "NV", "NV"),
-             college = c(TRUE, TRUE, FALSE, TRUE, FALSE, FALSE),
-             earn = c(1, 2, 3, 2, 3, 2),
-             .i = state)
+df <- pibble(
+  state = c("CA", "CA", "CA", "NV", "NV", "NV"),
+  college = c(TRUE, TRUE, FALSE, TRUE, FALSE, FALSE),
+  earn = c(1, 2, 3, 2, 3, 2),
+  .i = state
+)
 
 df %>%
   # Calculate average earnings of college grads
@@ -653,15 +707,16 @@ As of this writing `mutate_cascade()` is pretty darn slow (after all, if you hav
 
 ```{r, eval = FALSE}
 mutate_cascade(.df,
-               ...,
-               .skip = TRUE,
-               .backwards = FALSE,
-               .group_i = TRUE,
-               .i = NULL,
-               .t = NULL,
-               .d = NA,
-               .uniqcheck = FALSE,
-               .setpanel = TRUE)
+  ...,
+  .skip = TRUE,
+  .backwards = FALSE,
+  .group_i = TRUE,
+  .i = NULL,
+  .t = NULL,
+  .d = NA,
+  .uniqcheck = FALSE,
+  .setpanel = TRUE
+)
 ```
 
 where `.df` is the data set being mutated, and `...` is the list of expressions to be passed to `dplyr::mutate()`.
@@ -673,11 +728,13 @@ where `.df` is the data set being mutated, and `...` is the list of expressions 
 Let's do a very simple example and use `mutate_cascade()` to build a present discounted value. We have an asset with a `payout` each period, and we have a discount factor `.95`. We can build a present discounted value `PDV` by taking the `PDV` in the next period, multiplying it by `.95`, and adding on the current `payout`. But we need to calculate `PDV` one period at a time, so that we can use each period's calculation to calculate the previous one.
 
 ```{r}
-df <- pibble(t = c(1, 2, 3, 4, 5),
-             payout = c(3, 4, 2, 2, 4),
-             .t = t) %>%
+df <- pibble(
+  t = c(1, 2, 3, 4, 5),
+  payout = c(3, 4, 2, 2, 4),
+  .t = t
+) %>%
   mutate(PDV = payout) %>%
-  mutate_cascade(PDV = payout + .95*tlag(PDV, .n = -1), .backwards = TRUE)
+  mutate_cascade(PDV = payout + .95 * tlag(PDV, .n = -1), .backwards = TRUE)
 ```
 
 As expected, the `PDV` in period `5` is just the payout: `4`. In period `4` it's `2 + .95*4 = 5.8`. Then in period `3` it's `2 + .95*5.8 = 7.51`, and so on.
@@ -692,16 +749,17 @@ The rest of the options include `.group_i` (by default, if `.i` can be found, an
 
 ```{r, eval = FALSE}
 tlag(.var,
-     .df = get(".", envir = parent.frame()),
-     .n = 1,
-     .default = NA,
-     .quick = FALSE,
-     .resolve = "error",
-     .group_i = TRUE,
-     .i = NULL,
-     .t = NULL,
-     .d = NA,
-     .uniqcheck = FALSE)
+  .df = get(".", envir = parent.frame()),
+  .n = 1,
+  .default = NA,
+  .quick = FALSE,
+  .resolve = "error",
+  .group_i = TRUE,
+  .i = NULL,
+  .t = NULL,
+  .d = NA,
+  .uniqcheck = FALSE
+)
 ```
 
 where `.var` is the variable being lagged, , and `.df` is the data set that variable lives in. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it.
@@ -713,17 +771,21 @@ where `.var` is the variable being lagged, , and `.df` is the data set that vari
 `.quick` is a setting you can use if your data is very nicely structured, with rows uniquely identified by `.i`/`.t` and there are either no gaps between time periods or `.d = 0`. `tlag()` will run more quickly with `.quick = TRUE`, but will produce incorrect results if these conditions are not met.
 
 ```{r}
-df <- pibble(i = c(1, 1, 1, 2, 2, 2),
-             t = c(1, 2, 3, 1, 2, 3),
-             x = 1:6,
-             .i = i,
-             .t = t) %>%
+df <- pibble(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(1, 2, 3, 1, 2, 3),
+  x = 1:6,
+  .i = i,
+  .t = t
+) %>%
   # A lag and a lead, filling in the lead with 0 instead of NA
-  mutate(x_lag = tlag(x),
-         x_lead = tlag(x, .n = -1, .default = 0),
-         # Our data satisfies the .quick conditions so we can 
-         # do that for a little extra speed
-         x_quicklag = tlag(x, .quick = TRUE))
+  mutate(
+    x_lag = tlag(x),
+    x_lead = tlag(x, .n = -1, .default = 0),
+    # Our data satisfies the .quick conditions so we can
+    # do that for a little extra speed
+    x_quicklag = tlag(x, .quick = TRUE)
+  )
 
 df
 ```
@@ -731,11 +793,13 @@ df
 If `.var` is not constant within combinations of `.i` and `.t` we have a problem! Which value do we choose to use for the purpose of filling in other observations? `.resolve` makes this choice. By default, there will be an "error" if values of `.var` are inconsistent within `.i` and `.t`. Or, set `.resolve` to a summary function like `.resolve = mean` or `.resolve = function(x) mean(x, na.rm = TRUE)` to resolve inconsistencies before filling in.
 
 ```{r}
-df <- pibble(i = c(1, 1, 1, 2, 2, 2),
-             t = c(1, 1, 2, 1, 1, 2),
-             x = 1:6,
-             .i = i,
-             .t = t) %>%
+df <- pibble(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(1, 1, 2, 1, 1, 2),
+  x = 1:6,
+  .i = i,
+  .t = t
+) %>%
   mutate(x_lag = tlag(x, .resolve = mean))
 
 df
@@ -762,15 +826,16 @@ where $\bar{x}_i$ is the mean of `x` within the `.i` groups, and $\bar{x}$ is th
 
 Be aware that this is different from `plm::between()`, which returns $\bar{x}_i$ and does not subtract out $\bar{x}$.
 
-The syntax for `between_i` is:
+The syntax for `between_i()` is:
 
 ```{r, eval = FALSE}
 between_i(.var,
-          .df = get(".", envir = parent.frame()),
-          .fcn = function(x) mean(x, na.rm = TRUE),
-          .i = NULL,
-          .t = NULL,
-          uniqcheck = FALSE)
+  .df = get(".", envir = parent.frame()),
+  .fcn = function(x) mean(x, na.rm = TRUE),
+  .i = NULL,
+  .t = NULL,
+  uniqcheck = FALSE
+)
 ```
 
 Where `.var` is the variable on which the transformation is performed, and `.df` is the data set. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it. `.fcn` is the function applied to calculate the group and grand values, i.e. $.fcn(x) = \bar{x}$. The standard definition of the between transformation is for this to be the mean, but it has been left flexible.
@@ -780,9 +845,11 @@ The rest of the options include standard arguments related to declaring the pane
 An example of the between transformation follows:
 
 ```{r}
-df <- pibble(i = c(1, 1, 2, 2), 
-             x = 1:4, 
-             .i = i) %>%
+df <- pibble(
+  i = c(1, 1, 2, 2),
+  x = 1:4,
+  .i = i
+) %>%
   mutate(between_x = between_i(x))
 
 # Notice that the grand mean is...
@@ -792,7 +859,7 @@ df %>%
   group_by(i) %>%
   summarize(x = mean(x))
 
-# So the between calculation should be 
+# So the between calculation should be
 # 1.5 - 2.5 = -1 and 3.5 - 2.5 = 1 for the different groups:
 df$between_x
 ```
@@ -811,11 +878,12 @@ The syntax for `within_i` is:
 
 ```{r, eval = FALSE}
 within_i(.var,
-          .df = get(".", envir = parent.frame()),
-          .fcn = function(x) mean(x, na.rm = TRUE),
-          .i = NULL,
-          .t = NULL,
-          uniqcheck = FALSE)
+  .df = get(".", envir = parent.frame()),
+  .fcn = function(x) mean(x, na.rm = TRUE),
+  .i = NULL,
+  .t = NULL,
+  uniqcheck = FALSE
+)
 ```
 
 Where `.var` is the variable on which the transformation is performed, and `.df` is the data set. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it. `.fcn` is the function applied to calculate the group values, i.e. $.fcn(x) = \bar{x}$. The standard definition of the within transformation is for this to be the mean, but it has been left flexible.
@@ -825,9 +893,11 @@ The rest of the options include standard arguments related to declaring the pane
 An example of the between transformation follows:
 
 ```{r}
-df <- pibble(i = c(1, 1, 2, 2), 
-             x = 1:4, 
-             .i = i) %>%
+df <- pibble(
+  i = c(1, 1, 2, 2),
+  x = 1:4,
+  .i = i
+) %>%
   mutate(within_x = within_i(x))
 
 # Notice that the mean within groups is...
@@ -835,7 +905,7 @@ df %>%
   group_by(i) %>%
   summarize(x = mean(x))
 
-# So the between calculation should be 
+# So the between calculation should be
 # 1 - 1.5 = -.5 and 2 - 1.5 = .5 for individual 1
 # and 3 - 3.5 = -.5 and 4 - 3.5 = .5 individual 2:
 df$within_x
