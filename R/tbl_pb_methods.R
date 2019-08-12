@@ -12,7 +12,7 @@
 #'
 #' If a function is not on the above list or elsewhere in this help file, then you may need to re-\code{as_pibble} your object after using the function.
 #' @param .data,x,.tbl These functions take a \code{tbl_pb} (i.e. \code{pibble}) object as input
-#' @param .add,by,.cols,copy,.drop,.funs,keep,.keep_all,name,.predicate,suffix,.vars,y,... Other parameters to be passed to the relevant functions
+#' @param .add,.cols,.drop,.funs,.keep_all,.predicate,.vars,... Other parameters to be passed to the relevant functions
 #' @name pibble_methods
 NULL
 
@@ -312,6 +312,7 @@ setdiff.tbl_pb <- function(x, y, ...) {
 #' @name join.tbl_pb
 NULL
 
+#' @rdname join
 #' @importFrom dplyr left_join
 #' @method left_join tbl_pb
 #' @export

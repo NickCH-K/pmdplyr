@@ -106,7 +106,7 @@
 \arguments{
 \item{.data, x, .tbl}{These functions take a \code{tbl_pb} (i.e. \code{pibble}) object as input}
 
-\item{.add, by, .cols, copy, .drop, .funs, keep, .keep_all, name, .predicate, suffix, .vars, y, ...}{Other parameters to be passed to the relevant functions}
+\item{.add, .cols, .drop, .funs, .keep_all, .predicate, .vars, ...}{Other parameters to be passed to the relevant functions}
 }
 \description{
 These are variants of existing functions that are designed to retain the \code{pibble} status of the object, as well as its \code{.i}, \code{.t}, and \code{.d} attributes.

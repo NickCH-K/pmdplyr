@@ -2,6 +2,7 @@
 % Please edit documentation in R/tbl_pb_methods.R
 \name{join.tbl_pb}
 \alias{join.tbl_pb}
+\alias{left_join.tbl_pb}
 \alias{inner_join.tbl_pb}
 \alias{right_join.tbl_pb}
 \alias{full_join.tbl_pb}
@@ -10,6 +11,9 @@
 \alias{anti_join.tbl_pb}
 \title{Join two pibbles together}
 \usage{
+\method{left_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
+  suffix = c(".x", ".y"), ...)
+
 \method{inner_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
   suffix = c(".x", ".y"), ...)
 
