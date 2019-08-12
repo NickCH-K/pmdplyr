@@ -556,11 +556,11 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   # If .var is unspecified
   if (length(.varcall) == 0) {
-
+<<<<<<< HEAD
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
-
-
-
+=======
+    stop(".var must be specified as variable(s) in .df.")
+>>>>>>> 1ad6e6c4ab22cc8d80db84baf3ef905030a20994
   }
   .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
   if (length(.withincall) == 0) {
@@ -630,11 +630,11 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   # if .var is unspecified
   if (length(.varcall) == 0) {
-
+<<<<<<< HEAD
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
-
-
-
+=======
+    stop(".var must be specified as variable(s) in .df.")
+>>>>>>> 1ad6e6c4ab22cc8d80db84baf3ef905030a20994
   }
   .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
 

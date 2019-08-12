@@ -15,7 +15,7 @@ coverage](https://codecov.io/gh/nickch-k/pmdplyr/branch/master/graph/badge.svg)]
 
 The `pmdplyr` package is an extension to `dplyr` designed for cleaning
 and managing panel and hierarchical data. It contains variations on the
-`dplyr` `mutate` and `join` functions that address common panel data
+`dplyr` `mutate` and `_join` functions that address common panel data
 needs, and contains functions for managing and cleaning panel data. The
 goal is to get you a nice tidy `pibble` panel data object, which you can
 `panel_convert()` for use in one of the many packages that help you
@@ -45,10 +45,10 @@ devtools::install_github("NickCH-K/pmdplyr")
 
 ## College Scorecard Example
 
-Let’s start with the fairly straightforward `Scorecard` data, which is
-uniquely identified by college ID `unitid` and year `year`, and which
+Let’s start with the fairly straightforward `Scorecard` data, which
 describes how well students who attended that college are doing years
-after attendance.
+after attendance. `Scorecard` observations are uniquely identified by
+college ID `unitid` and year `year`.
 
 ``` r
 # Note that pmdplyr automatically loads dplyr as well
@@ -72,17 +72,19 @@ I am interested in measuring the differences in ex-student earnings
 can do that we need to clean the data.
 
 ``` r
-Scorecard <- Scorecard %>%
+Scorecard %>%
   # We want pred_degree_awarded_ipeds to be consistent within college. No changers!
   # So let's drop them by using fixed_check with .resolve = "drop" to lose inconsistencies
-  fixed_force(.var = pred_degree_awarded_ipeds,
-              .within = unitid,
-              .resolve = "drop") %>%
+  fixed_force(
+    .var = pred_degree_awarded_ipeds,
+    .within = unitid,
+    .resolve = "drop"
+  ) %>%
   # Then, get rid of pred_degree_awarded_ipeds == 1
   # And simplify our terms
-  filter(pred_degree_awarded_ipeds %in% c(2,3)) %>%
+  filter(pred_degree_awarded_ipeds %in% c(2, 3)) %>%
   mutate(FourYear = pred_degree_awarded_ipeds == 3) %>%
-  # earnings_med has some missing values - let's fill them in with 
+  # earnings_med has some missing values - let's fill them in with
   # the most recent nonmissing observations we have
   # - panel_locf respects the panel structure declared above with as_pibble()
   mutate(earnings_med = panel_locf(earnings_med)) %>%
@@ -97,23 +99,25 @@ Scorecard <- Scorecard %>%
   # But that's okay! We just pick a .resolve function to handle disagreements.
   # (We could also do this straight in the regression model itself)
   mutate(lag_state_earnings = tlag(earnings_med,
-                                      .i = state_abbr,
-                                      .t = year,
-                                      .resolve = mean))
+    .i = state_abbr,
+    .t = year,
+    .resolve = mean
+  )) -> scorecard_clean
 
-# Now we can run a basic regression. 
+# Now we can run a basic regression.
 
-summary(lm(
-  earnings_med ~ 
-    FourYear +
-    unemp + 
+lm(
+  earnings_med ~
+  FourYear +
+    unemp +
     lag_state_earnings,
-  data = Scorecard
-))
+  data = scorecard_clean
+) %>% 
+  summary()
 #> 
 #> Call:
 #> lm(formula = earnings_med ~ FourYear + unemp + lag_state_earnings, 
-#>     data = Scorecard)
+#>     data = scorecard_clean)
 #> 
 #> Residuals:
 #>    Min     1Q Median     3Q    Max 
@@ -134,10 +138,10 @@ summary(lm(
 #> F-statistic: 430.6 on 3 and 2474 DF,  p-value: < 2.2e-16
 ```
 
-We could even improve that code - why not run the `anti_join` and
-`inexact_left_join` using `safe_join`? When we do the
-`inexact_left_join`, for example, we’re assuming that `unemp_data` is
-uniquely identified by `unemp_year` - is it really? `safe_join` would
+We could even improve that code - why not run the `anti_join()` and
+`inexact_left_join()` using `safe_join()`? When we do the
+`inexact_left_join()`, for example, we’re assuming that `unemp_data` is
+uniquely identified by `unemp_year`—is it really? `safe_join()` would
 check for us and minimize error.
 
 ## Spanish Rail Example
@@ -161,14 +165,14 @@ how to compare each price to the cheapo price.
 ``` r
 data(SPrail)
 
-SPrail <- SPrail %>%
+SPrail %>%
   # We have two ID variables - origin and destination.
   # pmdplyr has no problem with this, but maybe we want to export
   # to something like plm later, which can't handle it.
   # So let's use id_variable to combine them into one
   mutate(route_ID = id_variable(origin, destination)) %>%
   # We have a time variable down to the minute. Too fine-grained!
-  # Let's back things up to the daily level, and 
+  # Let's back things up to the daily level, and
   # create a nice integer time variable that's easy to use
   mutate(day = time_variable(insert_date, .method = "day")) %>%
   # Now we can declare a pibble
@@ -176,18 +180,20 @@ SPrail <- SPrail %>%
   # We want to account for between-route differences in price,
   # so let's isolate the within variation
   mutate(price_w = within_i(price)) %>%
-  # We want to compare to the cheapo option, so let's use 
+  # We want to compare to the cheapo option, so let's use
   # mutate_subset to get the average price of the cheapo option
   # and propogate that to the other options for comparison
-  mutate_subset(cheapo_price = mean(price, na.rm = TRUE), 
-                .filter = train_class == "Turista con enlace") %>%
+  mutate_subset(
+    cheapo_price = mean(price, na.rm = TRUE),
+    .filter = train_class == "Turista con enlace"
+  ) %>%
   mutate(premium = price - cheapo_price) %>%
   filter(train_class %in% c("Preferente", "Turista", "Turista Plus")) %>%
   # Now let's compare premia
   group_by(train_class) %>%
-  summarize(premium = mean(premium, na.rm = TRUE))
+  summarize(premium = mean(premium, na.rm = TRUE)) -> sprail_compare_premia
 
-SPrail
+sprail_compare_premia
 #> # A tibble: 3 x 2
 #>   train_class  premium
 #>   <fct>          <dbl>
@@ -196,5 +202,5 @@ SPrail
 #> 3 Turista Plus   14.4
 ```
 
-And so there we have it - `Preferente` will really set you back relative
+And so there we have it—`Preferente` will really set you back relative
 to the cheapo ticket on the same route.

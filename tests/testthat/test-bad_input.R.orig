@@ -157,6 +157,7 @@ test_that("declare_in_fcn_check input failstates", {
     .noneed = FALSE
   ))
   expect_error(declare_in_fcn_check(df,
+
                                     .i = NA,
                                     .t = NA,
                                     .d = 1,
@@ -169,6 +170,15 @@ test_that("declare_in_fcn_check input failstates", {
                                     .uniqcheck = FALSE,
                                     .setpanel = 2,
                                     .noneed = FALSE))
+
+    .i = "i",
+    .t = "t",
+    .d = 1,
+    .uniqcheck = FALSE,
+    .setpanel = 2,
+    .noneed = FALSE
+  ))
+>>>>>>> 1ad6e6c4ab22cc8d80db84baf3ef905030a20994
   expect_error(declare_in_fcn_check(df,
     .i = NA,
     .t = NA,

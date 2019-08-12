@@ -13,17 +13,6 @@
 \alias{group_by_if.tbl_pb}
 \alias{ungroup.tbl_pb}
 \alias{bind_cols.tbl_pb}
-\alias{intersect.tbl_pb}
-\alias{union.tbl_pb}
-\alias{union_all.tbl_pb}
-\alias{setdiff.tbl_pb}
-\alias{left_join.tbl_pb}
-\alias{inner_join.tbl_pb}
-\alias{right_join.tbl_pb}
-\alias{full_join.tbl_pb}
-\alias{semi_join.tbl_pb}
-\alias{nest_join.tbl_pb}
-\alias{anti_join.tbl_pb}
 \alias{select.tbl_pb}
 \alias{select_all.tbl_pb}
 \alias{select_at.tbl_pb}
@@ -74,33 +63,6 @@
 
 \method{bind_cols}{tbl_pb}(.data, ...)
 
-\method{intersect}{tbl_pb}(x, y, ...)
-
-\method{union}{tbl_pb}(x, y, ...)
-
-\method{union_all}{tbl_pb}(x, y, ...)
-
-\method{setdiff}{tbl_pb}(x, y, ...)
-
-\method{left_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
-
-\method{inner_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
-
-\method{right_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
-
-\method{full_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
-
-\method{semi_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, ...)
-
-\method{nest_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  keep = FALSE, name = NULL, ...)
-
-\method{anti_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, ...)
-
 \method{select}{tbl_pb}(.data, ...)
 
 \method{select_all}{tbl_pb}(.tbl, .funs = list(), ...)
@@ -144,7 +106,7 @@
 \arguments{
 \item{.data, x, .tbl}{These functions take a \code{tbl_pb} (i.e. \code{pibble}) object as input}
 
-\item{.add, by, .cols, copy, .drop, .funs, keep, .keep_all, name, .predicate, suffix, .vars, y, ...}{Other parameters to be passed to the relevant functions}
+\item{.add, .cols, .drop, .funs, .keep_all, .predicate, .vars, ...}{Other parameters to be passed to the relevant functions}
 }
 \description{
 These are variants of existing functions that are designed to retain the \code{pibble} status of the object, as well as its \code{.i}, \code{.t}, and \code{.d} attributes.
