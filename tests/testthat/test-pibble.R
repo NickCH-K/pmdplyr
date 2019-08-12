@@ -7,9 +7,19 @@ grades <- pibble(
   .t = semester
 )
 
+df <- pibble(i = 1:3,
+                 t = 1:3,
+             .i = i,
+             .t = t)
+
 test_that("students' grades over time", {
   expect_s3_class(grades, "tbl_pb")
   expect_identical(attr(grades, ".i") %>% unname(), c("student_id", "module_id"))
   expect_identical(attr(grades, ".t") %>% unname(), "semester")
   expect_output(print(grades), regexp = "# A pibble:\\s+5 ")
+  expect_output(print(grades), regexp = "identifiers ")
+  expect_output(print(df), regexp = "identifier ")
+  expect_identical(type_sum(df), "pibble")
+  expect_output(print(df %>% dplyr::group_by(i)),
+                regexp = "# Groups:\\s+i ")
 })

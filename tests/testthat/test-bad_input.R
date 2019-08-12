@@ -19,7 +19,7 @@ test_that("within_i input failstates", {
 ### ID_VARIABLE
 test_that("id_variable input failstates", {
   expect_error(id_variable(a = 1:3, .method = "foo"))
-  expect_error(id_variable(a = 1:3, .method = 3))
+  expect_error(id_variable(a = 1:3, .method = c("character","random")))
   expect_error(id_variable(a = 1:3, .method = "character", .minwidth = 3))
 })
 
@@ -110,18 +110,24 @@ test_that("panel_fill input failstates", {
   expect_error(panel_fill(df, .set_NA = "i"))
 })
 
+inconsistent_df <- pibble(i = c(1, 1, 1, 1),
+                          t = c(1, 1, 2, 2),
+                          x = c(1, 2, 1, NA),
+                          .i = i,
+                          .t = t)
+
 test_that("panel_locf input failstates", {
   expect_error(panel_locf(as.matrix(df$x), df))
   expect_error(panel_locf(df$x, df, .resolve = 2))
   expect_error(panel_locf(df$x, df, .group_i = 2))
   expect_error(panel_locf(df$x, df, .backwards = 2))
   expect_error(panel_locf(df$x, df %>% as_pibble(.i = i)))
+  expect_error(panel_locf(inconsistent_df$x, inconsistent_df))
 })
 
 test_that("fixed_check input failstates", {
   expect_error(fixed_check(as.matrix(df), .var = x, .within = i))
   expect_error(fixed_check(df, .var = x))
-  expect_error(fixed_check(df, .within = i))
 })
 
 test_that("fixed_force input failstates", {
@@ -129,7 +135,6 @@ test_that("fixed_force input failstates", {
   expect_error(fixed_force(df, .var = x, .within = i, .resolve = 2))
   expect_error(fixed_force(df, .var = x, .within = i, .flag = 2))
   expect_error(fixed_force(df, .var = x))
-  expect_error(fixed_force(df, .within = i))
 })
 
 ### UNEXPORTED_SHARED_FUNCTIONS
@@ -144,6 +149,12 @@ test_that("declare_in_fcn_check input failstates", {
                                     .uniqcheck = 2,
                                     .setpanel = TRUE,
                                     .noneed = FALSE))
+  expect_error(declare_in_fcn_check(df,
+                                    .i = NA,
+                                    .t = NA,
+                                    .d = 1,
+                                    .uniqcheck = TRUE,
+                                    .setpanel = TRUE))
   expect_error(declare_in_fcn_check(df,
                                     .i = "i",
                                     .t = "t",

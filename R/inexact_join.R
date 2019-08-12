@@ -45,13 +45,13 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
     stop("expect must be specified as a character.")
   }
 
-  if (max(expect == "1:m") == 1) {
+  if ("1:m" %in% expect) {
     expect <- "x"
   }
-  if (max(expect == "m:1") == 1) {
+  if ("m:1" %in% expect) {
     expect <- "y"
   }
-  if (max(expect == "1:1") == 1 | max(expect == "xy") == 1) {
+  if ("1:1" %in% expect | "xy" %in% expect) {
     expect <- c("x", "y")
   }
 

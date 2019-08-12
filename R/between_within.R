@@ -28,7 +28,7 @@ within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = functi
   if (!is.vector(.var)) {
     stop(".var must be a vector.")
   }
-  if (!is.character(.fcn) & !is.function(.fcn)) {
+  if (!is.function(.fcn)) {
     stop(".fcn must be a function.")
   }
 
@@ -79,7 +79,7 @@ within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = functi
     dplyr::group_by_at(inp$i) %>%
     dplyr::mutate(!!varname := .data[[varname]] - .fcn(.data[[varname]])) %>%
     dplyr::ungroup() %>%
-    dplyr::pull(varname))
+    dplyr::pull(!!varname))
 }
 
 #' @rdname panel_calculations
@@ -88,7 +88,7 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
   if (!is.vector(.var)) {
     stop(".var must be a vector.")
   }
-  if (!is.character(.fcn) & !is.function(.fcn)) {
+  if (!is.function(.fcn)) {
     stop(".fcn must be a function.")
   }
 
@@ -141,5 +141,5 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
     dplyr::group_by_at(inp$i) %>%
     dplyr::mutate(!!varname := .fcn(.data[[varname]] - .data[[gm]])) %>%
     dplyr::ungroup() %>%
-    dplyr::pull(varname))
+    dplyr::pull(!!varname))
 }

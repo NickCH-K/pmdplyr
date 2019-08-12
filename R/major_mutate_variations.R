@@ -74,14 +74,14 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   }
 
   # Panel-declare data if any changes have been made.
-  if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
+  if (!anyNA(.icall) | !is.na(.tcall) | !is.na(.d)) {
     .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
     inp$d <- .df %@% ".d"
   }
 
-  if (.group_i == TRUE & (min(is.na(inp$i)) == 0)) {
+  if (.group_i == TRUE & !anyNA(inp$i)) {
     .df <- .df %>%
       dplyr::group_by_at(inp$i)
   }
@@ -217,7 +217,7 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
   inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel, .noneed = TRUE)
 
   # Panel-declare data if any changes have been made.
-  if (min(is.na(.icall)) == 0 | !is.na(.tcall) | !is.na(.d)) {
+  if (!anyNA(.icall) | !is.na(.tcall) | !is.na(.d)) {
     .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
@@ -231,7 +231,7 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
     origgroups <- utils::head(origgroups, -1)
   }
 
-  if (.group_i == TRUE & (min(is.na(inp$i)) == 0)) {
+  if (.group_i == TRUE & !anyNA(inp$i)) {
     .df <- .df %>%
       dplyr::group_by_at(inp$i)
   }

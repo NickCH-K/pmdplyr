@@ -133,7 +133,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   arrnames <- arrnames[!is.na(arrnames)]
 
   # see if we can skip this because we're already grouped by inp$i
-  if (.group_i == TRUE & (min(is.na(inp$i)) == 0) & !setequal(origgroups, inp$i)) {
+  if (.group_i == TRUE & !anyNA(inp$i) & !setequal(origgroups, inp$i)) {
     .df <- .df %>%
       dplyr::group_by_at(inp$i)
   }
@@ -141,7 +141,12 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   # If max and/or min are specified, create anchor observations so they will be filled in
   if (!is.na(.min)) {
     # vector identifying the early obs that AREN'T already at the min
-    earlyobs <- (.df %>% dplyr::mutate_at(inp$t, .funs = function(x) x == min(x, na.rm = TRUE) & x != .min))[[inp$t]]
+    earlyobs <- .df %>%
+                   dplyr::mutate_at(inp$t,
+                                    .funs = function(x)
+                                      x == min(x, na.rm = TRUE) &
+                                      x != .min) %>%
+                   dplyr::pull(!!inp$t)
 
     # Pull out that data and set it to the early period
     earlydat <- .df %>%
@@ -166,7 +171,11 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   }
   if (!is.na(.max)) {
     # vector identifying the early obs that AREN'T already at the max
-    lateobs <- (.df %>% dplyr::mutate_at(inp$t, .funs = function(x) x == max(x, na.rm = TRUE) & x != .max))[[inp$t]]
+    lateobs <- .df %>%
+      dplyr::mutate_at(inp$t,
+                       .funs = function(x)
+                         x == max(x, na.rm = TRUE) & x != .max) %>%
+      dplyr::pull(!!inp$t)
 
     # Pull out that data and set it to the early period
     latedat <- .df %>%
@@ -195,15 +204,16 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   .df <- .df %>%
     dplyr::arrange_at(inp$t)
   if (.backwards == TRUE) {
-    .df <- .df[nrow(.df):1, ]
+    .df <- .df %>%
+      dplyr::arrange(nrow(.):1)
   }
 
   # get number of gaps FOLLOWING (for regular, or leading, if .fill is different)
   # since this is how many copies of each obs will be in the final data
   #-1 for the original copy. Make it IN the data b/c I'll need group structure in a sec
-  .df[, ncol(.df) + 1] <- .df[[inp$t]]
-  copyname <- names(.df)[ncol(.df)]
+  copyname <- uniqname(.df)
   .df <- .df %>%
+    dplyr::mutate(!!copyname := .data[[inp$t]]) %>%
     dplyr::mutate_at(copyname,
       .funs =
         function(x) abs(x - dplyr::lead(x)) / inp$d - 1
@@ -230,10 +240,10 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     dplyr::mutate_at(copyname, .funs = max, na.rm = TRUE)
 
   # Which vars will actually be copied
-  if (min(.set_NA == TRUE) == 1) {
+  if (identical(.set_NA, TRUE)) {
     selnames <- c(inp$i, inp$t, copyname)
     selnames <- selnames[!is.na(selnames)]
-  } else if (min(.set_NA == FALSE) == 1) {
+  } else if (identical(.set_NA, FALSE)) {
     selnames <- names(.df)
   } else {
     selnames <- names(.df)[!(names(.df) %in% .set_NA)]
@@ -244,20 +254,19 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     dplyr::select_at(selnames))
   # now's the time to flag new obs
   if (!is.na(.flag)) {
-    .df[[.flag]] <- FALSE
-    tocopy[[.flag]] <- TRUE
+    .df <- .df %>%
+      dplyr::mutate(!!.flag := FALSE)
+    tocopy <- tocopy %>%
+      dplyr::mutate(!!.flag := TRUE)
   }
   # Find an id name that isn't already in the data
-  newidname <- "newidname"
-  while (newidname %in% names(tocopy)) {
-    newidname <- paste(newidname, ".", sep = "")
-  }
+  newidname <- uniqname(tocopy)
   # Perform the copying. Extract the copynum variable to avoid spending time copying it
   # and becuase tidyr doesn't like it in there if I'm referring by string
   # Make it a data frame in case the variable 'copynum' is in the data
   copynum <- data.frame(c = tocopy[[copyname]])
-  tocopy[[copyname]] <- NULL
   tocopy <- tocopy %>%
+    dplyr::select(-!!copyname) %>%
     dplyr::ungroup() %>%
     tidyr::uncount(copynum$c, .remove = FALSE, .id = newidname)
   # Increment the time to fill in, using .id
@@ -270,13 +279,13 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       else {
         tocopy[[inp$t]] - tocopy[[newidname]] * inp$d
       }
-    })
-  tocopy[, newidname] <- NULL
+    }) %>%
+    dplyr::select(-!!newidname)
 
   # plop everything back together, arrange, restore the original grouping, and return
   .df <- dplyr::bind_rows(.df, tocopy) %>%
-    dplyr::arrange_at(arrnames)
-  .df[[copyname]] <- NULL
+    dplyr::arrange_at(arrnames) %>%
+    dplyr::select(-!!copyname)
   # Check if grouping has changed and there WAS an original grouping
   if (!setequal(c(origgroups, ".rows"), .df %@% "groups")) {
     if (max(is.na(origgroups)) == 1) {
@@ -439,11 +448,12 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
   # Check if there's uniformity, if .resolve = 'error'
   if (is.character(.resolve) & dfmult > 0) {
-    if (max((dfmult %>%
+    if (max(.df %>%
       dplyr::mutate_at(
         worknames[1],
-        function(x) dplyr::first(x) != x
-      ))[[worknames[1]]]) == 1) {
+        function(x) !(x %in% dplyr::first(x))
+      ) %>%
+      dplyr::pull(worknames[1])) == 1) {
       stop("Values are not consistent within (.i, if specified, and) .t. See .resolve option.")
     }
     .resolve <- dplyr::first
@@ -544,17 +554,13 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
 
   # Pull out variable names
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
+  # If .var is unspecified
   if (length(.varcall) == 0) {
-    stop('.var must be specified as variable(s) in .df.')
+    .varcall <- names(.df)[!(names(.df) %in% .withincall)]
   }
   .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
   if (length(.withincall) == 0) {
     stop('.within must be specified as variable(s) in df.')
-  }
-
-  # if .var is unspecified
-  if (max(is.na(.varcall) == 1)) {
-    .varcall <- names(.df)[!(names(.df) %in% .withincall)]
   }
 
   # apply grouping for within
@@ -618,18 +624,14 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
 
   # Pull out variable names
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
+  # if .var is unspecified
   if (length(.varcall) == 0) {
-    stop('.var must be specified as variable(s) in .df.')
+    .varcall <- names(.df)[!(names(.df) %in% .withincall)]
   }
   .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
 
   if (length(.withincall) == 0) {
     stop('.within must be specified as variable(s) in .df.')
-  }
-
-  # if .var is unspecified
-  if (max(is.na(.varcall)) == 1) {
-    .varcall <- names(.df)[!(names(.df) %in% .withincall)]
   }
 
   if (!is.character(.resolve) & !is.function(.resolve)) {
@@ -664,8 +666,7 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
     # Rearrange in original order and drop origorder
     .df <- .df %>% dplyr::arrange_at(origorder)
     .df[[origorder]] <- NULL
-  }
-  else {
+  } else {
     # otherwise, use .resolve to, uh, resolve inconsistencies
     if (is.character(.flag)) {
       databkup <- .df
@@ -676,7 +677,11 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
 
     if (is.character(.flag)) {
       # check if every column matches. If not, flag 'em
-      .df[, .flag] <- rowSums(databkup == .df) < ncol(.df)
+      newflag <- rowSums(matrix(Vectorize(isTRUE)(.df == databkup),
+                                nrow = nrow(.df)) +
+                           (is.na(.df) & is.na(databkup))) < ncol(.df)
+      .df <- .df %>%
+        dplyr::mutate(!!.flag := !!newflag)
       rm(databkup)
     }
   }

@@ -53,7 +53,7 @@ id_variable <- function(..., .method = "number", .minwidth = FALSE) {
       # Put back in order
       dplyr::arrange_at(origordername) %>%
       # And get the result
-      dplyr::pull(secondname)
+      dplyr::pull(!!secondname)
   }
   else if (.method == "random") {
     idvar <- idf %>%
@@ -68,7 +68,7 @@ id_variable <- function(..., .method = "number", .minwidth = FALSE) {
       # Put back in order
       dplyr::arrange_at(origordername) %>%
       # And get the result
-      dplyr::pull(secondname)
+      dplyr::pull(!!secondname)
   }
   else if (.method == "character") {
     # Figure out the lengths we'll need to fill in

@@ -27,10 +27,10 @@ tbl_sum.tbl_pb <- function(x) {
   groups <- x %@% "groups"
 
   if (!rlang::is_empty(i)) {
-    if (max(!is.na(i)) == 1) {
+    if (!identical(i, NA)) {
       n_distinct_i <- x %>%
         dplyr::distinct(!!!syms(i)) %>%
-        NROW()
+        nrow()
       if (length(i) > 1) {
         i <- paste(i, collapse = ", ")
         res <- c(res, "Individual-level identifiers (.i)" = paste(i, brackets(n_distinct_i)))
