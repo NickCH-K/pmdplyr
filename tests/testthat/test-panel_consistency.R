@@ -87,11 +87,11 @@ test_that("panel_fill works", {
     .setpanel = FALSE
   ), na_fill)
   expect_equal(panel_fill(df,
-                          .i = i,
-                          .t = t,
-                          .set_NA = "x",
-                          .flag = "flag",
-                          .setpanel = FALSE
+    .i = i,
+    .t = t,
+    .set_NA = "x",
+    .flag = "flag",
+    .setpanel = FALSE
   ), na_fill)
   expect_equal(
     panel_fill(df %>% group_by(x), .backwards = TRUE),
@@ -106,9 +106,10 @@ test_that("panel_locf works", {
   expect_equal(panel_locf(df$x, df), c(1, 2, 2, 4, 4, 4, 7))
   expect_equal(panel_locf(df$x, df, .backwards = TRUE), c(1, 2, NA, 4, 7, 7, 7))
   expect_equal(panel_locf(df$x,
-                          df %>%
-                            dplyr::mutate(t = as.character(t)),
-                          .backwards = TRUE), c(1, 2, NA, 4, 7, 7, 7))
+    df %>%
+      dplyr::mutate(t = as.character(t)),
+    .backwards = TRUE
+  ), c(1, 2, NA, 4, 7, 7, 7))
   expect_equal(panel_locf(df$x, df, .group_i = FALSE), c(1, 2, 2, 4, 2, 2, 7))
 })
 

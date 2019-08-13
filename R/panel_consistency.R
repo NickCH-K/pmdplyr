@@ -156,7 +156,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       dplyr::filter(earlyobs) %>%
       dplyr::mutate_at(inp$t, .funs = function(x) .min)
     # Whatever is being set to missing, drop it
-    if (identical(.set_NA,TRUE)) {
+    if (identical(.set_NA, TRUE)) {
       earlydat <- earlydat %>% dplyr::select_at(arrnames)
     } else if (is.character(.set_NA)) {
       earlydat <- earlydat %>%
@@ -287,9 +287,11 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     dplyr::select(-!!newidname)
 
   # plop everything back together, arrange, restore the original grouping, and return
-  .df <- dplyr::bind_rows(.df %>%
-                            dplyr::select(-!!copyname),
-                          tocopy) %>%
+  .df <- dplyr::bind_rows(
+    .df %>%
+      dplyr::select(-!!copyname),
+    tocopy
+  ) %>%
     dplyr::arrange_at(arrnames)
   # Check if grouping has changed and there WAS an original grouping
   if (!setequal(c(origgroups, ".rows"), .df %@% "groups")) {
@@ -407,7 +409,7 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
   # original grouping structure
   origgroups <- names(.df %@% "groups")
-  origgroups <- utils::head(origgroups,-1)
+  origgroups <- utils::head(origgroups, -1)
   if (is.null(origgroups)) {
     origgroups <- NA
   }
@@ -437,12 +439,14 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
   # then add that cleaned-up vector in
   worknames <- uniqname(.df)
-  worknames[2] <- paste(worknames[1],".1",sep="")
+  worknames[2] <- paste(worknames[1], ".1", sep = "")
 
   .df <- .df %>%
-    dplyr::mutate(!!worknames[1] := !!.var,
-                  # And the original order
-                  !!worknames[2] := 1:nrow(.)) %>%
+    dplyr::mutate(
+      !!worknames[1] := !!.var,
+      # And the original order
+      !!worknames[2] := 1:nrow(.)
+    ) %>%
     dplyr::ungroup()
 
   # If we're backwards, go backwards!
@@ -482,7 +486,8 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
       dplyr::mutate_at(worknames[1], .funs = .resolve) %>%
       # If there aren't comparison values, can often resolve to NAN causing problems
       dplyr::mutate(!!worknames[1] := ifelse(
-        is.nan(.data[[worknames[1]]]), NA, .data[[worknames[1]]]))
+        is.nan(.data[[worknames[1]]]), NA, .data[[worknames[1]]]
+      ))
   }
 
   # If we're grouping by i, do that
@@ -505,7 +510,7 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   # and then uncount() to recover our .var
   # So check() doesn't complain
   lengthname <- uniqname(.df)
-  valuename <- paste(lengthname,".1",sep="")
+  valuename <- paste(lengthname, ".1", sep = "")
 
   # So check doesn't complain
   values <- NULL
@@ -517,12 +522,14 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
         lengths = rle_na(.data[[worknames[1]]])$lengths,
         values = rle_na(.data[[worknames[1]]])$values
       ) %>%
-      dplyr::rename(!!lengthname := lengths,
-                    !!valuename := values)
-      ) %>%
-      tidyr::uncount(.data[[lengthname]],
-                     .remove = FALSE
-      ) %>%
+        dplyr::rename(
+          !!lengthname := lengths,
+          !!valuename := values
+        )
+    ) %>%
+    tidyr::uncount(.data[[lengthname]],
+      .remove = FALSE
+    ) %>%
     dplyr::pull(!!valuename)
 
 
