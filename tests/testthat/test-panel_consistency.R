@@ -59,6 +59,14 @@ balance_fill <- pibble(
   .t = t
 )
 
+balance_fill_na <- pibble(
+  i = c(1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2),
+  t = as.numeric(rep(1:7, 2)),
+  x = c(1, NA, 2, NA, NA, NA, NA, NA, 4, NA, NA, NA, NA, 7),
+  .i = i,
+  .t = t
+)
+
 non_fixed <- pibble(
   i = c(1, 1, 2, 2, 1, 2, 2),
   t = c(1, 3, 2, 7, 4, 4, 6),
@@ -90,6 +98,7 @@ test_that("panel_fill works", {
     backwards_fill %>% group_by(x)
   )
   expect_equal(panel_fill(df, .min = 1, .max = 7), balance_fill)
+  expect_equal(panel_fill(df, .min = 1, .max = 7, .set_NA = TRUE), balance_fill_na)
   expect_equal(panel_fill(nonpib, .i = i, .t = t, .setpanel = FALSE), nonpib_proper_fill)
 })
 

@@ -188,11 +188,11 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       dplyr::mutate_at(inp$t, .funs = function(x) .max)
     # Whatever is being set to missing, drop it
     if (.set_NA == TRUE) {
-      datedat <- datedat %>% dplyr::select_at(arrnames)
+      latedat <- latedat %>% dplyr::select_at(arrnames)
     }
     else if (is.character(.set_NA)) {
-      datedat <- datedat %>%
-        dplyr::select(which(!(names(datedat) %in% .set_NA)))
+      latedat <- latedat %>%
+        dplyr::select(which(!(names(latedat) %in% .set_NA)))
     }
 
     .df <- dplyr::bind_rows(
@@ -270,9 +270,9 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   # Make it a data frame in case the variable 'copynum' is in the data
   copynum <- data.frame(c = tocopy[[copyname]])
   tocopy <- tocopy %>%
-    dplyr::select(-!!copyname) %>%
     dplyr::ungroup() %>%
-    tidyr::uncount(copynum$c, .remove = FALSE, .id = newidname)
+    tidyr::uncount(copynum$c, .remove = FALSE, .id = newidname) %>%
+    dplyr::select(-!!copyname)
   # Increment the time to fill in, using .id
   # Which goes up or down depending on whether it's backwards or forwards
   tocopy <- tocopy %>%
@@ -287,9 +287,10 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     dplyr::select(-!!newidname)
 
   # plop everything back together, arrange, restore the original grouping, and return
-  .df <- dplyr::bind_rows(.df, tocopy) %>%
-    dplyr::arrange_at(arrnames) %>%
-    dplyr::select(-!!copyname)
+  .df <- dplyr::bind_rows(.df %>%
+                            dplyr::select(-!!copyname),
+                          tocopy) %>%
+    dplyr::arrange_at(arrnames)
   # Check if grouping has changed and there WAS an original grouping
   if (!setequal(c(origgroups, ".rows"), .df %@% "groups")) {
     if (max(is.na(origgroups)) == 1) {
