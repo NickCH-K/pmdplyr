@@ -361,16 +361,6 @@ inexact_anti_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jv
   }
 }
 
-# This is just the function used to find out which observation in y each obs in x goes to
-find_matching_list <- function(z, yidname, i, jvar, range) {
-  suppressWarnings(
-    max(
-      z[z[[yidname]] == i & range, ][[jvar[1]]],
-      na.rm = TRUE
-    )
-  )
-}
-
 # This is the shared preprocessing shared by all join functions
 inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), var, jvar, method, exact = TRUE) {
   if (!is.character(var)) {

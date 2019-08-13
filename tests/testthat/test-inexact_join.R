@@ -169,4 +169,48 @@ test_that("Different inexact joins work", {
       pibble(b = 2)
     )
   )
+  expect_equal(
+    inexact_right_join(left, right,
+                       var = t, jvar = t2, method = "last"
+    ),
+    last_join
+  )
+  expect_equal(
+    inexact_inner_join(left, right,
+                       var = t, jvar = t2, method = "last"
+    ),
+    last_join
+  )
+  expect_equal(
+    inexact_full_join(left, right,
+                      var = t, jvar = t2, method = "last"
+    ),
+    last_join
+  )
+  expect_equal(
+    inexact_semi_join(left, right,
+                      var = t, jvar = t2, method = "last"
+    ),
+    last_join %>%
+      dplyr::select(-b)
+  )
+  expect_equal(
+    inexact_anti_join(left, right,
+                      var = t, jvar = t2, method = "last"
+    ),
+    last_join %>%
+      dplyr::select(-b) %>%
+      dplyr::filter(FALSE)
+  )
+  expect_equal(
+    inexact_nest_join(left, right,
+                      var = t, jvar = t2, method = "last"
+    )[["y"]],
+    list(
+      pibble(b = 1),
+      pibble(b = 1),
+      pibble(b = 2),
+      pibble(b = 2)
+    )
+  )
 })

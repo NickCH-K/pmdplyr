@@ -258,7 +258,7 @@ check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
   if (!(is.numeric(.d)) & !(is.na(.d))) {
     stop(".d must be numeric.")
   }
-  if (min(is.na(.i)) == 0 & min(.i %in% names(.df)) == 0) {
+  if (!anyNA(.i) & min(.i %in% names(.df)) == 0) {
     stop("Elements of .i must be variables present in the data.")
   }
   if (!is.na(.t) & min(.t %in% names(.df)) == 0) {
@@ -278,7 +278,9 @@ check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
     # Check for uniqueness
     groupvec <- c(.i, .t)
     groupvec <- groupvec[!is.na(groupvec)]
-    if (anyDuplicated(.df[, groupvec]) > 0) {
+    if (suppressWarnings(.df %>%
+        dplyr::select(!!groupvec) %>%
+        anyDuplicated() > 0)) {
       message("Note that the selected .i and .t do not uniquely identify observations in the data.
 This message will be displayed only once per session unless the .uniqcheck option is set to TRUE.")
       options("pibble.warning4.0" = FALSE)
