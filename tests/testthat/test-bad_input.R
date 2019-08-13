@@ -10,12 +10,16 @@ df <- pibble(
 
 test_that("between_i input failstates", {
   expect_error(df %>% dplyr::mutate(y = between_i(.)))
-  expect_error(pibble(a = 1, .t = a) %>% dplyr::mutate(y = between_i(x)))
+  expect_error(pibble(a = 1, .t = a) %>% dplyr::mutate(y = between_i(a)))
+  expect_error(df %>% dplyr::mutate(y = between_i(x, .fcn = 2)))
+  expect_error(df %>% dplyr::mutate(y = between_i(1:2)))
 })
 
 test_that("within_i input failstates", {
   expect_error(df %>% dplyr::mutate(y = within_i(.)))
-  expect_error(pibble(a = 1, .t = a) %>% dplyr::mutate(y = within_i(x)))
+  expect_error(pibble(a = 1, .t = a) %>% dplyr::mutate(y = within_i(a)))
+  expect_error(df %>% dplyr::mutate(y = within_i(x, .fcn = 2)))
+  expect_error(df %>% dplyr::mutate(y = within_i(1:2)))
 })
 
 ### ID_VARIABLE

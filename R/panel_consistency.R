@@ -100,7 +100,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 
   # original grouping structure
   origgroups <- names(.df %@% "groups")
-  origgroups <- origgroups[1:(length(origgroups) - 1)]
+  origgroups <- utils::head(origgroups, -1)
   if (is.null(origgroups)) {
     origgroups <- NA
   }
@@ -156,7 +156,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       dplyr::filter(earlyobs) %>%
       dplyr::mutate_at(inp$t, .funs = function(x) .min)
     # Whatever is being set to missing, drop it
-    if (.set_NA == TRUE) {
+    if (identical(.set_NA,TRUE)) {
       earlydat <- earlydat %>% dplyr::select_at(arrnames)
     } else if (is.character(.set_NA)) {
       earlydat <- earlydat %>%
@@ -406,7 +406,7 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
   # original grouping structure
   origgroups <- names(.df %@% "groups")
-  origgroups <- origgroups[1:(length(origgroups) - 1)]
+  origgroups <- utils::head(origgroups,-1)
   if (is.null(origgroups)) {
     origgroups <- NA
   }
@@ -424,9 +424,9 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   arrnames <- arrnames[!is.na(arrnames)]
 
   # We only need these
-  .df <- .df %>%
+  .df <- suppressWarnings(.df %>%
     dplyr::ungroup() %>%
-    dplyr::select_at(arrnames)
+    dplyr::select_at(arrnames))
 
   # Get rid of our undesirable values
   .var <- ifelse(.var %in% .fill, NA, .var)
@@ -435,12 +435,24 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   orig_var <- .var
 
   # then add that cleaned-up vector in
-  .df[, ncol(.df) + 1] <- .var
-  # and the original order
-  .df[, ncol(.df) + 1] <- 1:nrow(.df)
+  worknames <- uniqname(.df)
+  worknames[2] <- paste(worknames[1],".1",sep="")
 
-  # get the names of our variables
-  worknames <- names(.df)[(ncol(.df) - 1):ncol(.df)]
+  .df <- .df %>%
+    dplyr::mutate(!!worknames[1] := !!.var,
+                  # And the original order
+                  !!worknames[2] := 1:nrow(.)) %>%
+    dplyr::ungroup()
+
+  # If we're backwards, go backwards!
+  if (.backwards == TRUE) {
+    if (is.character(.df[[inp$t]])) {
+      .df <- .df %>%
+        dplyr::mutate(!!inp$t := as.numeric(as.factor(.data[[inp$t]])))
+    }
+    .df <- .df %>%
+      dplyr::mutate(!!inp$t := -.data[[inp$t]])
+  }
 
   # and group as appropriate
   .df <- .df %>% dplyr::group_by_at(arrnames)
@@ -463,20 +475,13 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
     .resolve <- dplyr::first
   }
 
-  # If we're backwards, go backwards!
-  if (.backwards == TRUE) {
-    if (is.character(.df[[inp$t]])) {
-      .df[[inp$t]] <- as.numeric(as.factor(.df[[inp$t]]))
-    }
-    .df[[inp$t]] <- -.df[[inp$t]]
-  }
-
   if (dfmult > 0) {
     .df <- .df %>%
       # implement the .resolve function
-      dplyr::mutate_at(worknames[1], .funs = .resolve)
-    # If there aren't comparison values, can often resolve to NAN causing problems
-    .df[[worknames[1]]] <- ifelse(is.nan(.df[[worknames[1]]]), NA, .df[[worknames[1]]])
+      dplyr::mutate_at(worknames[1], .funs = .resolve) %>%
+      # If there aren't comparison values, can often resolve to NAN causing problems
+      dplyr::mutate(!!worknames[1] := ifelse(
+        is.nan(.data[[worknames[1]]]), NA, .data[[worknames[1]]]))
   }
 
   # If we're grouping by i, do that
@@ -498,27 +503,35 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   # Within groups, get number of each value in a row, fill in NAs with a dplyr::lag,
   # and then uncount() to recover our .var
   # So check() doesn't complain
-  panel_consistency_length_measure_191817 <- NULL
-  panel_consistency_values_measure_277616 <- NULL
+  lengthname <- uniqname(.df)
+  valuename <- paste(lengthname,".1",sep="")
 
-  .df[[worknames[1]]] <- (.df %>%
+  # So check doesn't complain
+  values <- NULL
+  lengths <- NULL
+
+  getvalues <- .df %>%
     dplyr::do(
       data.frame(
-        panel_consistency_length_measure_191817 = rle_na(.data[[worknames[1]]])$lengths,
-        panel_consistency_values_measure_277616 = rle_na(.data[[worknames[1]]])$values
-      )
-    ) %>%
-    tidyr::uncount(panel_consistency_length_measure_191817,
-      .remove = FALSE
-    ))$panel_consistency_values_measure_277616
+        lengths = rle_na(.data[[worknames[1]]])$lengths,
+        values = rle_na(.data[[worknames[1]]])$values
+      ) %>%
+      dplyr::rename(!!lengthname := lengths,
+                    !!valuename := values)
+      ) %>%
+      tidyr::uncount(.data[[lengthname]],
+                     .remove = FALSE
+      ) %>%
+    dplyr::pull(!!valuename)
 
-  # Reorder back how it was and pull the variable out
+
+  # Put in the result, reorder back how it was and pull the variable out
   .var <- .df %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(!!worknames[1] := !!getvalues) %>%
     dplyr::arrange_at(worknames[2]) %>%
-    dplyr::pull(-2)
+    dplyr::pull(!!worknames[1])
 
-  # Fill in anything that was missing
-  # .var <- ifelse(is.na(.var), .df[[worknames[1]]], .var)
   # Failure to lookup (NaN) is really a NA for us
   .var <- ifelse(is.nan(.var), NA, .var)
 
@@ -557,14 +570,14 @@ fixed_check <- function(.df, .var = NULL, .within = NULL) {
   }
 
   # Pull out variable names
+  .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
+  if (length(.withincall) == 0) {
+    stop(".within must be specified as variable(s) in df.")
+  }
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   # If .var is unspecified
   if (length(.varcall) == 0) {
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
-  }
-  .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
-  if (length(.withincall) == 0) {
-    stop(".within must be specified as variable(s) in df.")
   }
 
   # apply grouping for within
@@ -627,15 +640,14 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
   }
 
   # Pull out variable names
+  .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
+  if (length(.withincall) == 0) {
+    stop(".within must be specified as variable(s) in .df.")
+  }
   .varcall <- tidyselect::vars_select(names(.df), {{ .var }})
   # if .var is unspecified
   if (length(.varcall) == 0) {
     .varcall <- names(.df)[!(names(.df) %in% .withincall)]
-  }
-  .withincall <- tidyselect::vars_select(names(.df), {{ .within }})
-
-  if (length(.withincall) == 0) {
-    stop(".within must be specified as variable(s) in .df.")
   }
 
   if (!is.character(.resolve) & !is.function(.resolve)) {
@@ -647,19 +659,19 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
 
   # original grouping structure
   origgroups <- names(.df %@% "groups")
-  origgroups <- origgroups[1:(length(origgroups) - 1)]
+  origgroups <- utils::head(origgroups, -1)
   if (is.null(origgroups)) {
     origgroups <- NA
   }
 
+  origorder <- uniqname(.df)
   .df <- .df %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(!!origorder := 1:nrow(.)) %>%
     dplyr::group_by_at(.withincall)
 
   # If .resolve is a string, drop all inconsistencies
   if (is.character(.resolve)) {
-    .df[, ncol(.df) + 1] <- 1:nrow(.df)
-    origorder <- names(.df)[ncol(.df)]
-
     # for each element of .var, drop inconsistent obs
     for (v in .varcall) {
       .df <- .df %>%
@@ -669,7 +681,6 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
 
     # Rearrange in original order and drop origorder
     .df <- .df %>% dplyr::arrange_at(origorder)
-    .df[[origorder]] <- NULL
   } else {
     # otherwise, use .resolve to, uh, resolve inconsistencies
     if (is.character(.flag)) {
@@ -690,6 +701,9 @@ fixed_force <- function(.df, .var = NULL, .within = NULL, .resolve = mode_order,
       rm(databkup)
     }
   }
+
+  .df <- .df %>%
+    dplyr::select(-!!origorder)
 
   # Restore grouping, if present
   if (!is.na(origgroups)) {

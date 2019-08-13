@@ -78,6 +78,13 @@ test_that("panel_fill works", {
     .flag = "flag",
     .setpanel = FALSE
   ), na_fill)
+  expect_equal(panel_fill(df,
+                          .i = i,
+                          .t = t,
+                          .set_NA = "x",
+                          .flag = "flag",
+                          .setpanel = FALSE
+  ), na_fill)
   expect_equal(
     panel_fill(df %>% group_by(x), .backwards = TRUE),
     backwards_fill %>% group_by(x)
@@ -89,12 +96,17 @@ test_that("panel_fill works", {
 test_that("panel_locf works", {
   expect_equal(panel_locf(df$x, df), c(1, 2, 2, 4, 4, 4, 7))
   expect_equal(panel_locf(df$x, df, .backwards = TRUE), c(1, 2, NA, 4, 7, 7, 7))
+  expect_equal(panel_locf(df$x,
+                          df %>%
+                            dplyr::mutate(t = as.character(t)),
+                          .backwards = TRUE), c(1, 2, NA, 4, 7, 7, 7))
   expect_equal(panel_locf(df$x, df, .group_i = FALSE), c(1, 2, 2, 4, 2, 2, 7))
 })
 
 test_that("fixed_check works", {
   expect_equal(fixed_check(df, .var = x, .within = i)[["x"]], non_fixed)
   expect_equal(fixed_check(df, .var = x, .within = c(i, t)), TRUE)
+  expect_equal(fixed_check(df, .within = c(i, t)), TRUE)
 })
 
 test_that("fixed_force works", {
@@ -109,6 +121,9 @@ test_that("fixed_force works", {
   expect_equal(nrow(
     fixed_force(df, .var = x, .within = i, .resolve = "drop")
   ), 0)
+  expect_equal(nrow(
+    fixed_force(df, .within = c(i, t), .resolve = "drop")
+  ), 4)
   expect_identical(names(
     fixed_force(
       df %>% group_by(x),

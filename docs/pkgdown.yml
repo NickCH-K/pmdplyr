@@ -1,6 +1,8 @@
-pandoc: 2.7.2
+pandoc: '2.6'
 pkgdown: 1.3.0.9100
 pkgdown_sha: 1829398a4e97056fe7fb332d0e8b952784b49321
 articles:
+  dplyr_variants: dplyr_variants.html
+  panel_tools: panel_tools.html
   pmdplyr: pmdplyr.html
 

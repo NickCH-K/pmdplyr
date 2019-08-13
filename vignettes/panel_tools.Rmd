@@ -1,0 +1,363 @@
+---
+title: "pmdplyr: Panel Tools"
+author: "Nick Huntington-Klein, Philip Khor"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+<!-- output: rmarkdown::html_vignette. pdf_document -->
+vignette: >
+  %\VignetteIndexEntry{pmdplyr: Panel Tools}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pmdplyr)
+```
+
+The `pmdplyr` package is an extension to `dplyr` designed for cleaning and managing panel and hierarchical data. It contains variations on the `dplyr::mutate()` and `dplyr::join()` functions that address common panel data needs, and contains functions for managing and cleaning panel data. 
+
+Unlike other panel data packages, functions in `pmdplyr` are all designed to work even if there is more than one observation per individual per period. This comes in handy if each individual is observed multiple times per period - for example, multiple classes per student per term; or if you have hierarchical data - for example, multiple companies per country.
+
+There are three vignettes in total describing the contents of `pmdplyr`: 
+
+1. "pmdplyr"/"Get Started", which describes the `pibble` panel data object type, and the `pmdplyr` tools for creating well-behaved ID and time variables `id_variable()` and `time_variable()`.
+
+2. "dplyr variants", which that describes `pmdplyr` variations on `dplyr` functions `mutate()` (`mutate_cascade()` and `mutate_subset()`), `_join` (`inexact_join` and `safe_join()`), and `lag` (`tlag()`).
+
+3. **CURRENT VIGNETTE** "Panel Tools", which describes novel tools that `pmdplyr` provides for cleaning andd manipulating panel data (`panel_fill()`, `panel_locf()`, `fixed_check()`, `fixed_force()`, `between_i()`, `within_i()`, `mode_order()`).
+
+----- 
+
+# Filling in Data
+
+In a panel data context, missing data can be categorized into two kinds: explicit missing values for certain observations (`NA`s), or observations that are missing entirely - for example if person `1` has observations in period `1` and period `3`, but not period `2`.
+
+You may wish to fill in either of these kinds of missing data using the data you do have.
+
+## panel_fill()
+
+`panel_fill()` will fill in gaps between time periods for individuals. For example, if person `1` has observations in period `1` and period `3`, but not period `2`, then `panel_fill()` will add an observation to the data for person `1` in time period `2`. If there is more than one observation for person `1` in period `1`, then all of them will be copied for period `2`.
+
+```{r, eval = FALSE}
+panel_fill(.df,
+  .set_NA = FALSE,
+  .min = NA,
+  .max = NA,
+  .backwards = FALSE,
+  .group_i = TRUE,
+  .flag = NA,
+  .i = NULL,
+  .t = NULL,
+  .d = 1,
+  .uniqcheck = FALSE,
+  .setpanel = TRUE
+)
+```
+
+`panel_fill()` will give us some newly-created observations, and we need to decide what to fill them in with. By default, it will fill in values using what we see in the most recent non-missing observation. But we can set `.backwards = TRUE` to use the *next* non-missing observation instead, or use `.set_NA` to fill the new observations with missing data.
+
+`.set_NA` is a character vector of variable names that should be set to `NA` for newly-created observations, or set to `TRUE` to set everything except `.i` and `.t` to `NA`. You can also create a new variable indicating which observations are newly-created with `.flag`.
+
+```{r}
+# Note the gap between periods 2 and 4 for person 1.
+df <- pibble(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(2, 4, 5, 1, 2, 3),
+  x = 1:6,
+  y = 7:12,
+  .i = i,
+  .t = t
+)
+
+panel_fill(df, .set_NA = "y", .flag = "new_obs")
+panel_fill(df, .set_NA = "y", .backwards = TRUE)$x
+```
+
+By default, `panel_fill()` will only fill in gaps between existing observations. However, commonly we might want to create new observations outside of the existing range, perhaps to create a fully balanced panel for ourselves. `.min` and `.max` will ensure that each individual has observations at least as far back as `.min`, and at least as far out as `.max`. Set `.min = min(t)` and `.max = max(t)` (where `t` is your time variable) to ensure a fully balanced panel.
+
+Data for the outside-the-observed-range values will be taken from the closest observed value.
+
+```{r}
+panel_fill(df, .min = min(df$t), .max = max(df$t))
+```
+
+The rest of the options include `.group_i` (by default, if `.i` can be found, data will be filled within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). `.setpanel` ensures that if you declare the panel structure in the `panel_fill()` function, it will be maintained in the object you get back.
+
+## panel_locf()
+
+`panel_locf()` ("last observation carried forward") will fill in explicit `NA` values using recently available data. It is very similar to `zoo::na.locf()` except that it respects panel structure and is more flexible.
+
+```{r, eval = FALSE}
+panel_locf(.var,
+  .df = get(".", envir = parent.frame()),
+  .fill = NA,
+  .backwards = FALSE,
+  .resolve = "error",
+  .group_i = TRUE,
+  .i = NULL,
+  .t = NULL,
+  .d = 1,
+  .uniqcheck = FALSE
+)
+```
+
+where `.var` is the variable to be filled in, and `.df` is the data set that variable lives in. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it.
+
+```{r}
+df <- pibble(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(1, 2, 3, 2, 3, 4),
+  x = c(1, NA, 3, NA, -3, 4),
+  .i = i,
+  .t = t
+)
+
+# Notice that the fourth observation doesn't get filled in
+# because it's the first observation for person 2, so nothing to fill in from
+df %>%
+  mutate(x_filled = panel_locf(x))
+```
+
+You have a fair amount of control over how filling-in works. By default, data will be filled in using the most recent previous observation. But `.backwards = TRUE` will use the *next upcoming* observation instead. Also, by default, only `NA` values will be overwritten. But `.fill` will allow you to specify a vector of values (perhaps including `NA`) to be overwritten. This can be handy if you're working with data that uses missingness indicators other than `NA`.
+
+```{r}
+df %>% mutate(
+  x_filled = panel_locf(x, .backwards = TRUE),
+  x_no_neg3 = panel_locf(x, .backwards = TRUE, .fill = c(NA, -3))
+)
+```
+
+`panel_locf()` will work even if `.i` and `.t` don't uniquely identify the observations. However, this presents a problem! If there are *different values* of `.var` for a given combination of `.i` and `.t`, then which value do we choose to use for the purpose of filling in other observations? `.resolve` makes this choice. By default, there will be an "error" if values of `.var` are inconsistent within `.i` and `.t`. Or, set `.resolve` to a summary function like `.resolve = mean` or `.resolve = function(x) mean(x, na.rm = TRUE)` to resolve inconsistencies before filling in. If you have some `.i`/`.t` combinations with both missing and non-missing values, the missing values will be filled in using the same function.
+
+```{r}
+inconsistent_df <- pibble(
+  i = c(1, 1, 1, 2, 2, 2),
+  t = c(1, 1, 2, 1, 2, 3),
+  x = c(1, 2, NA, 1, 2, 3),
+  .i = i,
+  .t = t
+)
+
+inconsistent_df %>% mutate(
+  x_filled =
+    panel_locf(x, .resolve = mean)
+)
+```
+
+The rest of the options include `.group_i` (by default, if `.i` can be found, data will be filled within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). `.setpanel` ensures that if you declare the panel structure in the `panel_fill()` function, it will be maintained in the object you get back.
+
+----- 
+
+# Panel Consistency
+
+In panel data, and especially hierarchical data, there are some variables that should be *fixed* within values of other variables. And if they're not, you have a problem!
+
+For example, consider the data set
+
+```{r}
+df <- data.frame(
+  continent = c("Asia", "Europe", "Europe", "S America", "S America"),
+  country = c("France", "France", "France", "Brazil", "Brazil"),
+  year = c(2000, 2001, 2002, 2000, 2001)
+)
+
+df
+```
+
+The variable `continent` should never change within values of `country` - a country can't change the continent it's on! The fact that France changes continents from year to year in this data should be regarded as very fishy. It will be handy to spot these sorts of potential errors in your data set, and fix them if you think you know how.
+
+## fixed_check()
+
+`fixed_check()` will look in your data `.df` for inconsistencies in the value of some variables `.var` within values of other variables `.within`.
+
+```{r, eval = FALSE}
+fixed_check(.df,
+  .var = NULL,
+  .within = NULL
+)
+```
+
+You should pick variables for `.var` that are supposed to be constant within combinations of `.within`.
+
+If your data has problems and is inconsistent, `fixed_check()` will retun a list of data sets, one for each `.var` variable, containing the subset of the data that gives you problems. For our `df` with the France problem, that's all of the France observations!
+
+```{r}
+fixed_check(df, .var = continent, .within = country)$continent
+```
+
+If your data is fine, and all `.var` variables are indeed constant within combinations of `.within`, then `fixed_check()` will return `TRUE`.
+
+```{r}
+consistent_df <- data.frame(
+  state = c(1, 1, 1, 2, 2, 2),
+  year = c(2000, 2001, 2001, 2000, 2000, 2001),
+  treatment = c(F, T, T, T, T, F),
+  outcome = c(4.4, 3.2, 3.4, 5.5, 5.6, 8)
+)
+
+# Since this policy treatment is administered on the state level,
+# everyone in the same state/year should get the same treatment.
+# And they do!
+fixed_check(consistent_df, .var = treatment, .within = c(state, year))
+```
+                            
+Some handy `fixed_check()` tips:
+
+1. `fixed_check()` returns either a `logical` or a `list` depending on the outcome. If you want to just get `FALSE` instead of a list of data sets, do `is.logical(fixed_check())` instead of `fixed_check()`.
+2. If you do have problems and want a consistent data set, you can fix things by hand as you like, or you can use `fixed_force()` (see below) to change the observations to be consistent, or to drop all inconsistent observations with `fixed_force(.resolve = "drop")`.
+
+## fixed_force()
+
+`fixed_force()` will take a data set `.df`, find any inconsistencies in the variables `.var` within combinations of the variables `.within`, and will "fix" those inconsistencies, using the function `.resolve` to select the correct values. It will flag any changed values with a new variable named `.flag`.
+
+```{r, eval = FALSE}
+fixed_force(..df,
+  .var = NULL,
+  .within = NULL,
+  .resolve = mode_order,
+  .flag = NA
+)
+```
+
+The default resolution function is `mode_order()` (see the Additional Calculations section), which calculates the mode, selecting the first-ordered value in the data if there are ties. The mode seems most relevant here, since the most likely (and responsible) use for `fixed_force()` is when you have data that is mostly correct but just has a few odd values that are likely just miscodes. `mode_order()` also is not just limited to numeric variables.
+
+Continuing with our France-in-Asia data set,
+
+```{r}
+fixed_force(df, .var = continent, .within = country, .flag = "altered")
+```
+
+Another option for `.resolve` is to set `.resolve = "drop"` (or any other character, really), and it will drop the inconsistent observations.
+```{r}
+fixed_force(df, .var = continent, .within = country, .resolve = "drop")
+```
+
+-----
+
+# Additional Calculations
+
+`pmdplyr` contains several additional functions that produce calculations of interest.
+
+## between_i()
+
+`between_i()` performs the *between transformation*. In particular, it isolates the variation between `.i` groups in a variable `.var`, throwing out all variation within `.i` groups. The result is identical within combinations of `.i`.
+
+The specific calculation that is performed is
+
+$$between.i(x) = \bar{x}_i - \bar{x}$$
+
+where $\bar{x}_i$ is the mean of `x` within the `.i` groups, and $\bar{x}$ is the grand mean of `x` over all observations. 
+
+
+Be aware that this is different from `plm::between()`, which returns $\bar{x}_i$ and does not subtract out $\bar{x}$.
+
+The syntax for `between_i()` is:
+
+```{r, eval = FALSE}
+between_i(.var,
+  .df = get(".", envir = parent.frame()),
+  .fcn = function(x) mean(x, na.rm = TRUE),
+  .i = NULL,
+  .t = NULL,
+  uniqcheck = FALSE
+)
+```
+
+Where `.var` is the variable on which the transformation is performed, and `.df` is the data set. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it. `.fcn` is the function applied to calculate the group and grand values, i.e. $.fcn(x) = \bar{x}$. The standard definition of the between transformation is for this to be the mean, but it has been left flexible.
+
+The rest of the options include standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.uniqcheck`, see the "pibble" section above). `.d` is omitted because it is irrelevant to the calculation.
+
+An example of the between transformation follows:
+
+```{r}
+df <- pibble(
+  i = c(1, 1, 2, 2),
+  x = 1:4,
+  .i = i
+) %>%
+  mutate(between_x = between_i(x))
+
+# Notice that the grand mean is...
+mean(df$x)
+# And the mean within groups is...
+df %>%
+  group_by(i) %>%
+  summarize(x = mean(x))
+
+# So the between calculation should be
+# 1.5 - 2.5 = -1 and 3.5 - 2.5 = 1 for the different groups:
+df$between_x
+```
+
+## within_i()
+
+`within_i()` performs the *within transformation*. In particular, it isolates the variation within `.i` groups in a variable `.var`, throwing out all variation between `.i` groups. The result averages out to `0` within combinations of `.i`.
+
+The specific calculation that is performed is
+
+$$within.i(x) = x_i - \bar{x}_i$$
+
+where $\bar{x}_i$ is the mean of `x` within the `.i` groups. 
+
+The syntax for `within_i` is:
+
+```{r, eval = FALSE}
+within_i(.var,
+  .df = get(".", envir = parent.frame()),
+  .fcn = function(x) mean(x, na.rm = TRUE),
+  .i = NULL,
+  .t = NULL,
+  uniqcheck = FALSE
+)
+```
+
+Where `.var` is the variable on which the transformation is performed, and `.df` is the data set. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it. `.fcn` is the function applied to calculate the group values, i.e. $.fcn(x) = \bar{x}$. The standard definition of the within transformation is for this to be the mean, but it has been left flexible.
+
+The rest of the options include standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.uniqcheck`, see the "pibble" section above). `.d` is omitted because it is irrelevant to the calculation.
+
+An example of the between transformation follows:
+
+```{r}
+df <- pibble(
+  i = c(1, 1, 2, 2),
+  x = 1:4,
+  .i = i
+) %>%
+  mutate(within_x = within_i(x))
+
+# Notice that the mean within groups is...
+df %>%
+  group_by(i) %>%
+  summarize(x = mean(x))
+
+# So the between calculation should be
+# 1 - 1.5 = -.5 and 2 - 1.5 = .5 for individual 1
+# and 3 - 3.5 = -.5 and 4 - 3.5 = .5 individual 2:
+df$within_x
+```
+
+## mode_order()
+
+R does not have a base function for calculating the mode of a vector. But `fixed_force()` wanted one, and so here we are. This function has been exported for general use in case it comes in handy elsewhere.
+
+In particular, `mode_order()` calculates the mode of a vector and, if there are ties between two different values, selects the one that comes earlier in the original vector order.
+
+```{r}
+# 2 appears twice while everything else appears once; 2 is the mode.
+x <- c(1, 2, 2, NA, 5, 3, 4)
+mode_order(x)
+
+# 1 or 2 could be the mode.
+# Ties are broken by order in the vector.
+x <- c(2, 2, 1, 1)
+mode_order(x)
+```
