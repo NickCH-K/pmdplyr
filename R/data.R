@@ -46,5 +46,5 @@
 #'   \item{fare}{Type of ticket fare.}
 #' }
 #' @encoding UTF-8
-#' @source \url{https://www.kaggle.com/thegurus/spanish-high-speed-rail-system-ticket-pricing}
+#' @source \url{https://www.kaggle.com/thegurusteam/spanish-high-speed-rail-system-ticket-pricing}
 "SPrail"
