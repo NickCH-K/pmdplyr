@@ -186,3 +186,42 @@ test_that("declare_in_fcn_check input failstates", {
     .noneed = FALSE
   ))
 })
+
+### TIME_VARIABLE
+
+td <- data.frame(
+  year = 2008:2006,
+  month = 1:3,
+  date = lubridate::ymd(c("100101", "100302", "100604"))
+)
+
+td_multiyear <- data.frame(
+  date = lubridate::ymd(c("100101", "110201", "120301", "130401"))
+)
+
+test_that("time_variable input failstates", {
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(date,.method = "nothing")))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(year, .method = "year")))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(date, .method = "year",
+                                                 .breaks = 2.5)))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(date, .method = "year",
+                                                 .skip = 2.5)))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(date, .method = "month",
+                                                 .skip = 2.5)))
+  expect_error(td_multiyear %>% dplyr::mutate(t = time_variable(date,
+                                                                .method = "month",
+                                                                .breaks = c(2, 5),
+                                                                .skip = 1)))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(date, .method = "month",
+                                                 .breaks = 2.5)))
+  expect_error(td_multiyear %>%
+                 dplyr::mutate(t = time_variable(date, .method = "year",
+                                                 .breaks = 2012,
+                                                 .skip = 2010)))
+})

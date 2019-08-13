@@ -27,7 +27,7 @@
 #' @param .method The approach that will be taken to create your variable. See below for the options. By default, this is \code{.method = "present"}.
 #' @param .datepos A numeric vector containing the character/digit positions, in order, of the YY or YYYY year (or year/month in YYMM or YYYYMM format, or year/month/day in YYMMDD or YYYYMMDD) for the \code{.method="year"}, \code{.method="month"}, or \code{.method="day"} options, respectively. Give it only the data it needs - if you give \code{.method="year"} YYMM information, it will assume you're giving it YYYY and mess up. For example, if dates are stored as a character variable in the format '2013-07-21' and you want the year and month, you might specify \code{.datepos=c(1:4,6:7)}. If two-digit year is given, \code{.datepos} uses the \code{lubridate} package to determine century.
 #' @param .start A numeric variable indicating the day of the week/month that begins a new week/month, if \code{.method="week"} or \code{.method="month"} is used. By default, 1, where for \code{.method=week} 1 is Monday, 7 Sunday. If used with \code{.method="month"}, the time data should include day as well.
-#' @param .skip A numeric vector containing the values of year, month, or day-of-week (where Monday = 1, Sunday = 7, no matter what value \code{.start} takes) you'd like to skip over (for \code{.method="year","month","week","day"}, respectively). For example, with \code{.method="month"} and \code{.skip=12}, an observation in January would be determined to come one period after November. Commonly this might be \code{.skip=c(6,7)} with \code{.method="day"} to skip weekends so that Monday immediately follows Friday. If \code{.breaks} is also specified, select the values of \code{.breaks} you would like to skip.
+#' @param .skip A numeric vector containing the values of year, month, or day-of-week (where Monday = 1, Sunday = 7, no matter what value \code{.start} takes) you'd like to skip over (for \code{.method="year","month","week","day"}, respectively). For example, with \code{.method="month"} and \code{.skip=12}, an observation in January would be determined to come one period after November. Commonly this might be \code{.skip=c(6,7)} with \code{.method="day"} to skip weekends so that Monday immediately follows Friday. If \code{.breaks} is also specified, select the values of \code{.breaks} you would like to skip, but do be aware that combining \code{.skip} and \code{.breaks} can be tricky.
 #' @param .breaks A numeric vector containing the starting breakpoints of year or month you'd like to clump together (for \code{.method="year','month"}, respectively). Commonly, this might be \code{.breaks=c(1,4,7,10)} with \code{.method="month"} to go by quarter-year. The first element of \code{.breaks} should usually be 1.
 #' @param .turnover A numeric vector the same length as the number of variables included indicating the maximum value that the corresponding variable in the list of variables takes, where NA indicates no maximum value, for use with \code{.method="turnover"} and required for that method. For example, if the variable list is \code{year,month} then you might have \code{.turnover=c(NA,12)}. Or if the variable list is \code{days-since-jan1-1970,hour,minute,second} you might have \code{.turnover=c(NA,23,59,59)}. Defaults to the maximum observed value of each variable if not specified, and NA for the first variable. Note that in almost all cases, the first element of \code{.turnover} should be \code{NA}, and all others should be non-NA.
 #' @param .turnover_start A numeric vector the same length as the number of variables included indicating the minimum value that the corresponding variable in the list of variables takes, where NA indicates no minimum value, for use with \code{method="turnover"}. For example, if the variable list is \code{year,month} then you might have \code{.turnover=c(NA,1)}. Or if the variable list is \code{days-since-jan1-1970,hour,minute,second} you might have \code{.turnover=c(NA,0,0,0)}. By default this is a vector of 1s the same length as the number of variables, except for the first element, which is NA. Note that in almost all cases, the first element of \code{.turnover_start} should be \code{NA}, and all others should be non-NA.
@@ -113,7 +113,7 @@ time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .
 
   # R seems to think these are global variables because they are created by dplyr
   # avoid notes
-  newdate.1.1.1 <- NA
+  rawdate <- NA
   timevarM <- NA
   wksb4 <- NA
 
@@ -121,42 +121,37 @@ time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .
   if (!(.method %in% c("present", "year", "month", "week", "day", "turnover"))) {
     stop("Unrecognized time_variable .method.")
   }
-  if (!is.character(.method) | length(.method) > 1) {
-    stop(".method must be a character variable.")
-  }
 
-  data <- data.frame(...)
+  data <- tibble::tibble(...)
   var <- names(data)
 
   ########################################## METHOD = PRESENT
   if (.method == "present") {
     timevar <- data
-    timevar[, ncol(timevar) + 1] <- 1:nrow(timevar)
-    origordername <- names(timevar)[ncol(timevar)]
+    origordername <- uniqname(timevar)
     timevar <- timevar %>%
+      dplyr::mutate(!!origordername := 1:nrow(.)) %>%
       dplyr::arrange_at(var) %>%
       # Identify new dates
       dplyr::mutate_at(var, function(x) x != dplyr::lag(x) | is.na(x) & is.na(dplyr::lag(x)) | dplyr::row_number() == 1)
 
-    if ("newdate.1.1.1" %in% names(data)) {
-      stop("Data cannot contain any variables named 'newdate.1.1.1'")
-    }
+    newdate <- uniqname(timevar)
 
     if (length(var) == 1) {
       timevar <- timevar %>%
-        dplyr::rename_at(var, function(x) "newdate.1.1.1") %>%
-        dplyr::select_at(c(origordername, "newdate.1.1.1"))
+        dplyr::select_at(c(origordername, var)) %>%
+        dplyr::rename_at(2, function(x) newdate)
     }
     else {
       timevar <- timevar %>%
         # Any new date on any var
-        dplyr::mutate(newdate.1.1.1 = rowSums(timevar[, var]) > 0) %>%
-        dplyr::select_at(c(origordername, "newdate.1.1.1"))
+        dplyr::mutate(!!newdate := rowSums(timevar %>% dplyr::select(!!var)) > 0) %>%
+        dplyr::select_at(c(origordername, newdate))
     }
 
     timevar <- timevar %>%
       # and count up how many there have been
-      dplyr::mutate(timevar = cumsum(newdate.1.1.1)) %>%
+      dplyr::mutate(timevar = cumsum(.[[newdate]])) %>%
       dplyr::arrange_at(origordername)
 
     timevar <- timevar$timevar
@@ -168,7 +163,7 @@ time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .
 
     # extract the year and place it in a data frame.
     # Before any options are implemented, timevar is just the year
-    td <- data.frame(
+    td <- tibble::tibble(
       rawyear = lubridate::year(timevar),
       timevar = lubridate::year(timevar)
     )
@@ -176,7 +171,7 @@ time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .
     # Now implement all the options!!
     # For year we only have .skip and .breaks to contend with
     # Now do .breaks
-    if (min(is.na(.breaks)) == 0) {
+    if (!anyNA(.breaks)) {
 
       # Check that .breaks are integers
       if (min(as.integer(.breaks) == .breaks) == 0) {
@@ -184,7 +179,7 @@ time_variable <- function(..., .method = "present", .datepos = NA, .start = 1, .
       }
 
       # first, check if you're starting your .breaks after the beginning of years in the data and issue a warning
-      if (min(td$timevar, na.rm = TRUE) < min(.breaks, na.rm = TRUE)) {
+      if (min(td$timevar, na.rm = TRUE) < min(.breaks)) {
         warning("The first break in .breaks is after the first year in the data.
 Years earlier than the first break will be given a missing time value.")
         td <- td %>%
@@ -207,7 +202,7 @@ Years earlier than the first break will be given a missing time value.")
         dplyr::left_join(breakstb, by = ".breaks")
     }
     # Do .skip afterwards so that it can integrate break-.skips.
-    if (min(is.na(.skip)) == 0) {
+    if (!anyNA(.skip)) {
 
       # Check that .skips are integers
       if (min(as.integer(.skip) == .skip) == 0) {
@@ -215,11 +210,14 @@ Years earlier than the first break will be given a missing time value.")
       }
 
       # First, if .breaks has already been run, convert the .skips vector into the current numbering
-      if (min(is.na(.breaks)) == 0) {
-        .skip <- (data.frame(.breaks = .skip) %>%
-          dplyr::left_join(breakstb, by = ".breaks"))$timevar
-        if (max(is.na(.skip)) == 1) {
+      if (!anyNA(.breaks)) {
+        .skip <- data.frame(rawyear = .skip) %>%
+          dplyr::left_join(td, by = "rawyear") %>%
+          dplyr::pull(timevar)
+        if (anyNA(.skip)) {
           stop("Use of the .breaks option means you're trying to .skip years that are no longer there. Check specification.")
+        } else {
+          warning("Combining .breaks with .skip will skip the whole break.")
         }
       }
 
@@ -271,8 +269,7 @@ Observations in these years will be given a missing time value.")
     # Now implement all the options!!
 
     # Now do .breaks
-    if (min(is.na(.breaks)) == 0) {
-
+    if (!anyNA(.breaks)) {
       # Check that .breaks are numbers 1 to 12
       if (min(.breaks %in% 1:12) == 0) {
         stop("All elements of .breaks must be integers 1 to 12. These numbers represent months.")
@@ -312,7 +309,7 @@ Note that when .method='month', the first element of .breaks should usually be 1
     }
 
     # Do .skip afterwards so that it can integrate break-.skips.
-    if (min(is.na(.skip)) == 0) {
+    if (!anyNA(.skip)) {
 
       # Check that .skips are numbers 1 to 12
       if (min(.skip %in% 1:12) == 0) {
@@ -320,11 +317,17 @@ Note that when .method='month', the first element of .breaks should usually be 1
       }
 
       # First, if .breaks has already been run, convert the .skips vector into the current numbering
-      if (min(is.na(.breaks)) == 0) {
-        .skip <- (data.frame(.breaks = .skip) %>%
-          dplyr::left_join(breakstb, by = ".breaks"))$timevarM
-        if (max(is.na(.skip)) == 1) {
+      if (!anyNA(.breaks)) {
+
+        .skip <- data.frame(rawM = .skip) %>%
+          dplyr::left_join(td %>%
+                             dplyr::mutate(rawM = lubridate::month(rawdate)),
+                           by = "rawM") %>%
+          dplyr::pull(timevarM)
+        if (anyNA(.skip)) {
           stop("Use of the .breaks option means you're trying to .skip months that are no longer there. Check specification.")
+        } else {
+          warning("Combining .breaks with .skip will skip the whole break.")
         }
       }
 
