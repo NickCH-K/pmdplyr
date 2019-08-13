@@ -11,9 +11,10 @@ Authors@R: c(
 Description: Using the dplyr package as a base, adds a family of functions designed to make manipulating panel data easier. Allows the addition of indexing variables to a tibble, and the manipulation of data based on those indexing variables.
 License: MIT + file LICENSE
 URL: https://github.com/NickCH-K/pmdplyr
+BugReports: https://github.com/NickCH-K/pmdplyr/issues
 Encoding: UTF-8
 Depends: 
-    R (>= 3.2),
+    R (>= 3.4),
     dplyr (>= 0.7.0)
 Imports:
     lubridate,
