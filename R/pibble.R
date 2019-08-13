@@ -279,9 +279,9 @@ check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
     groupvec <- c(.i, .t)
     groupvec <- groupvec[!is.na(groupvec)]
     if (.df %>%
-        dplyr::as_tibble() %>%
-        dplyr::select(!!groupvec) %>%
-        anyDuplicated() > 0) {
+      dplyr::as_tibble() %>%
+      dplyr::select(!!groupvec) %>%
+      anyDuplicated() > 0) {
       message("Note that the selected .i and .t do not uniquely identify observations in the data.
 This message will be displayed only once per session unless the .uniqcheck option is set to TRUE.")
       options("pibble.warning4.0" = FALSE)

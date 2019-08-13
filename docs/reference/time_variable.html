@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9002</span>
       </span>
     </div>
 
@@ -156,7 +156,7 @@
     </tr>
     <tr>
       <th>.skip</th>
-      <td><p>A numeric vector containing the values of year, month, or day-of-week (where Monday = 1, Sunday = 7, no matter what value <code>.start</code> takes) you'd like to skip over (for <code>.method="year","month","week","day"</code>, respectively). For example, with <code>.method="month"</code> and <code>.skip=12</code>, an observation in January would be determined to come one period after November. Commonly this might be <code>.skip=c(6,7)</code> with <code>.method="day"</code> to skip weekends so that Monday immediately follows Friday. If <code>.breaks</code> is also specified, select the values of <code>.breaks</code> you would like to skip.</p></td>
+      <td><p>A numeric vector containing the values of year, month, or day-of-week (where Monday = 1, Sunday = 7, no matter what value <code>.start</code> takes) you'd like to skip over (for <code>.method="year","month","week","day"</code>, respectively). For example, with <code>.method="month"</code> and <code>.skip=12</code>, an observation in January would be determined to come one period after November. Commonly this might be <code>.skip=c(6,7)</code> with <code>.method="day"</code> to skip weekends so that Monday immediately follows Friday. If <code>.breaks</code> is also specified, select the values of <code>.breaks</code> you would like to skip, but do be aware that combining <code>.skip</code> and <code>.breaks</code> can be tricky.</p></td>
     </tr>
     <tr>
       <th>.breaks</th>

@@ -201,27 +201,38 @@ td_multiyear <- data.frame(
 
 test_that("time_variable input failstates", {
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date,.method = "nothing")))
+    dplyr::mutate(t = time_variable(date, .method = "nothing")))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(year, .method = "year")))
+    dplyr::mutate(t = time_variable(year, .method = "year")))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date, .method = "year",
-                                                 .breaks = 2.5)))
+    dplyr::mutate(t = time_variable(date,
+      .method = "year",
+      .breaks = 2.5
+    )))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date, .method = "year",
-                                                 .skip = 2.5)))
+    dplyr::mutate(t = time_variable(date,
+      .method = "year",
+      .skip = 2.5
+    )))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date, .method = "month",
-                                                 .skip = 2.5)))
+    dplyr::mutate(t = time_variable(date,
+      .method = "month",
+      .skip = 2.5
+    )))
   expect_error(td_multiyear %>% dplyr::mutate(t = time_variable(date,
-                                                                .method = "month",
-                                                                .breaks = c(2, 5),
-                                                                .skip = 1)))
+    .method = "month",
+    .breaks = c(2, 5),
+    .skip = 1
+  )))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date, .method = "month",
-                                                 .breaks = 2.5)))
+    dplyr::mutate(t = time_variable(date,
+      .method = "month",
+      .breaks = 2.5
+    )))
   expect_error(td_multiyear %>%
-                 dplyr::mutate(t = time_variable(date, .method = "year",
-                                                 .breaks = 2012,
-                                                 .skip = 2010)))
+    dplyr::mutate(t = time_variable(date,
+      .method = "year",
+      .breaks = 2012,
+      .skip = 2010
+    )))
 })

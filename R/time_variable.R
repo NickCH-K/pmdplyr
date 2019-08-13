@@ -318,11 +318,11 @@ Note that when .method='month', the first element of .breaks should usually be 1
 
       # First, if .breaks has already been run, convert the .skips vector into the current numbering
       if (!anyNA(.breaks)) {
-
         .skip <- data.frame(rawM = .skip) %>%
           dplyr::left_join(td %>%
-                             dplyr::mutate(rawM = lubridate::month(rawdate)),
-                           by = "rawM") %>%
+            dplyr::mutate(rawM = lubridate::month(rawdate)),
+          by = "rawM"
+          ) %>%
           dplyr::pull(timevarM)
         if (anyNA(.skip)) {
           stop("Use of the .breaks option means you're trying to .skip months that are no longer there. Check specification.")

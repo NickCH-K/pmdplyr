@@ -375,8 +375,10 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
 #' sum(is.na(Scorecard$earnings_med))
 #' Scorecard <- Scorecard %>%
 #'   # Let's speed this up by just doing four-year colleges in Colorado
-#'   dplyr::filter(pred_degree_awarded_ipeds == 3,
-#'                 state_abbr == "CO") %>%
+#'   dplyr::filter(
+#'     pred_degree_awarded_ipeds == 3,
+#'     state_abbr == "CO"
+#'   ) %>%
 #'   # Now let's fill in NAs and also in case there are any erroneous 0s
 #'   dplyr::mutate(earnings_med = panel_locf(earnings_med,
 #'     .fill = c(NA, 0),

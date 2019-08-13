@@ -41,38 +41,45 @@ test_that("time_variable works", {
   expect_equal(year_t, rep(2010L, 3))
   expect_equal(month_t, c(1L, 3L, 6L))
   expect_equal(td %>%
-                 dplyr::mutate(t = time_variable(date,
-                                                 .method = "week",
-                                                 .breaks = 1
-                 )) %>%
-                 dplyr::pull(t), c(1L, 10L, 23L))
-  expect_equal(td %>%
-                 dplyr::mutate(t = time_variable(date,
-                                                 .method = "day",
-                                                 .breaks = 2
-                 )) %>%
-                 dplyr::pull(t),
-               c(1L, 61L, 155L))
+    dplyr::mutate(t = time_variable(date,
+      .method = "week",
+      .breaks = 1
+    )) %>%
+    dplyr::pull(t), c(1L, 10L, 23L))
+  expect_equal(
+    td %>%
+      dplyr::mutate(t = time_variable(date,
+        .method = "day",
+        .breaks = 2
+      )) %>%
+      dplyr::pull(t),
+    c(1L, 61L, 155L)
+  )
   expect_equal(turnover_t, c(23L, 12L, 1L))
   expect_equal(td %>%
-                 dplyr::mutate(t = time_variable(year,
-                                                 .method = "present")) %>%
-                 dplyr::pull(t), c(3L, 2L, 1L))
+    dplyr::mutate(t = time_variable(year,
+      .method = "present"
+    )) %>%
+    dplyr::pull(t), c(3L, 2L, 1L))
   expect_equal(td_multiyear %>% dplyr::mutate(t = time_variable(date,
-                                                      .method = "year",
-                                                      .breaks = c(2011, 2013))) %>%
-                 dplyr::pull(t), c(NA, 1L, 1L, 2L))
+    .method = "year",
+    .breaks = c(2011, 2013)
+  )) %>%
+    dplyr::pull(t), c(NA, 1L, 1L, 2L))
   expect_equal(td_multiyear %>% dplyr::mutate(t = time_variable(date,
-                                                                .method = "month",
-                                                                .breaks = c(2, 5))) %>%
-                 dplyr::pull(t), c(NA, 1L, 3L, 5L))
+    .method = "month",
+    .breaks = c(2, 5)
+  )) %>%
+    dplyr::pull(t), c(NA, 1L, 3L, 5L))
   expect_equal(td_multiyear %>% dplyr::mutate(t = time_variable(date,
-                                                                .method = "year",
-                                                                .skip = 2012)) %>%
-                 dplyr::pull(t), c(1L, 2L, NA, 3L))
+    .method = "year",
+    .skip = 2012
+  )) %>%
+    dplyr::pull(t), c(1L, 2L, NA, 3L))
   expect_equal(td_multiyear %>% dplyr::mutate(t = time_variable(date,
-                                                                .method = "year",
-                                                                .breaks = c(2010, 2013),
-                                                                .skip = 2012)) %>%
-                 dplyr::pull(t), c(NA, NA, NA, 1L))
+    .method = "year",
+    .breaks = c(2010, 2013),
+    .skip = 2012
+  )) %>%
+    dplyr::pull(t), c(NA, NA, NA, 1L))
 })

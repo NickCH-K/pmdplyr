@@ -54,9 +54,10 @@ test_that("safe_join works", {
   expect = "1:m", by = "i", join = dplyr::left_join
   ))
   expect_error(safe_join(right %>%
-                           dplyr::rename(t = t2) %>%
-                           as_pibble(.i = i, .t = t), left,
-                         expect = "m:1", by = "i", join = dplyr::left_join))
+    dplyr::rename(t = t2) %>%
+    as_pibble(.i = i, .t = t), left,
+  expect = "m:1", by = "i", join = dplyr::left_join
+  ))
   expect_equal(
     safe_join(left, right %>%
       dplyr::select(-t2),
@@ -70,12 +71,16 @@ test_that("safe_join works", {
     as_pibble(.i = i, .t = t),
   expect = "no m:m"
   ), TRUE)
-  expect_equal(safe_join(left, right,
-                         var = "t", jvar = "t2",
-                         expect = "1:1", method = "last",
-                         join = inexact_left_join),
-               inexact_left_join(left, right,
-                                 var = t, jvar = t2, method = "last"))
+  expect_equal(
+    safe_join(left, right,
+      var = "t", jvar = "t2",
+      expect = "1:1", method = "last",
+      join = inexact_left_join
+    ),
+    inexact_left_join(left, right,
+      var = t, jvar = t2, method = "last"
+    )
+  )
   expect_error(safe_join(left, left, by = "i", expect = "no m:m"))
 })
 
@@ -116,11 +121,14 @@ test_that("inexact join methods work", {
       ) %>%
       dplyr::select(i, t, a, t0, t2, b)
   )
-  expect_equal(inexact_left_join(
-    data.frame(t = c(2, 3, 4)),
-    data.frame(t2 = c(3, 4, 5)),
-    var = t, jvar = t2, method = "next", exact = FALSE),
-    data.frame(t = c(2, 3, 4), t2 = c(3, 4, 5)))
+  expect_equal(
+    inexact_left_join(
+      data.frame(t = c(2, 3, 4)),
+      data.frame(t2 = c(3, 4, 5)),
+      var = t, jvar = t2, method = "next", exact = FALSE
+    ),
+    data.frame(t = c(2, 3, 4), t2 = c(3, 4, 5))
+  )
 })
 
 # Left is already well-covered
@@ -171,32 +179,32 @@ test_that("Different inexact joins work", {
   )
   expect_equal(
     inexact_right_join(left, right,
-                       var = t, jvar = t2, method = "last"
+      var = t, jvar = t2, method = "last"
     ),
     last_join
   )
   expect_equal(
     inexact_inner_join(left, right,
-                       var = t, jvar = t2, method = "last"
+      var = t, jvar = t2, method = "last"
     ),
     last_join
   )
   expect_equal(
     inexact_full_join(left, right,
-                      var = t, jvar = t2, method = "last"
+      var = t, jvar = t2, method = "last"
     ),
     last_join
   )
   expect_equal(
     inexact_semi_join(left, right,
-                      var = t, jvar = t2, method = "last"
+      var = t, jvar = t2, method = "last"
     ),
     last_join %>%
       dplyr::select(-b)
   )
   expect_equal(
     inexact_anti_join(left, right,
-                      var = t, jvar = t2, method = "last"
+      var = t, jvar = t2, method = "last"
     ),
     last_join %>%
       dplyr::select(-b) %>%
@@ -204,7 +212,7 @@ test_that("Different inexact joins work", {
   )
   expect_equal(
     inexact_nest_join(left, right,
-                      var = t, jvar = t2, method = "last"
+      var = t, jvar = t2, method = "last"
     )[["y"]],
     list(
       pibble(b = 1),
