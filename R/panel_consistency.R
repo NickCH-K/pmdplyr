@@ -112,7 +112,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   }
 
   # Panel-declare data if any changes have been made.
-  if (min(is.na(.icall)) == 0 | !is.na(.tcall)) {
+  if (!anyNA(.icall) | !is.na(.tcall)) {
     .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d, .uniqcheck = .uniqcheck)
 
     # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
@@ -153,21 +153,23 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     # Pull out that data and set it to the early period
     earlydat <- .df %>%
       dplyr::ungroup() %>%
-      dplyr::filter(earlyobs) %>%
-      dplyr::mutate_at(inp$t, .funs = function(x) .min)
+      dplyr::filter(!!earlyobs) %>%
+      dplyr::mutate(!!inp$t := .min)
     # Whatever is being set to missing, drop it
     if (identical(.set_NA, TRUE)) {
       earlydat <- earlydat %>% dplyr::select_at(arrnames)
     } else if (is.character(.set_NA)) {
       earlydat <- earlydat %>%
-        dplyr::select(which(!(names(earlydat) %in% .set_NA)))
+        dplyr::select(-!!.set_NA)
     }
 
     .df <- dplyr::bind_rows(
       .df,
       # Make you a new obs if your earliest obs isn't the minimum
       earlydat
-    )
+    ) %>%
+      # Because bind_rows.tbl_pb doesn't work
+      as_pibble(.i = inp$i, .t = inp$t, .d = inp$d)
 
     rm(earlyobs, earlydat)
   }
@@ -184,22 +186,24 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     # Pull out that data and set it to the early period
     latedat <- .df %>%
       dplyr::ungroup() %>%
-      dplyr::filter(lateobs) %>%
-      dplyr::mutate_at(inp$t, .funs = function(x) .max)
+      dplyr::filter(!!lateobs) %>%
+      dplyr::mutate(!!inp$t := .max)
+
     # Whatever is being set to missing, drop it
     if (.set_NA == TRUE) {
       latedat <- latedat %>% dplyr::select_at(arrnames)
-    }
-    else if (is.character(.set_NA)) {
+    } else if (is.character(.set_NA)) {
       latedat <- latedat %>%
-        dplyr::select(which(!(names(latedat) %in% .set_NA)))
+        dplyr::select(-!!.set_NA)
     }
 
     .df <- dplyr::bind_rows(
       .df,
       # Make you a new obs if your latest obs isn't the maximum
       latedat
-    )
+    ) %>%
+      # Because bind_rows.tbl_pb doesn't work
+      as_pibble(.i = inp$i, .t = inp$t, .d = inp$d)
 
     rm(latedat, lateobs)
   }
@@ -292,7 +296,9 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       dplyr::select(-!!copyname),
     tocopy
   ) %>%
-    dplyr::arrange_at(arrnames)
+    dplyr::arrange_at(arrnames) %>%
+    # Because bind_rows.tbl_pb doesn't work
+    as_pibble(.i = inp$i, .t = inp$t, .d = inp$d)
   # Check if grouping has changed and there WAS an original grouping
   if (!setequal(c(origgroups, ".rows"), .df %@% "groups")) {
     if (max(is.na(origgroups)) == 1) {

@@ -40,8 +40,8 @@ test_that("safe_join input failstates", {
 })
 
 test_that("inexact_join input failstates", {
-  expect_error(pmdplyr:::inexact_join_prep(left, right, var = x, jvar = y, method = "last"))
-  expect_error(pmdplyr:::inexact_join_prep(left, right, var = "x", jvar = y, method = "last"))
+  expect_error(pmdplyr:::inexact_join_prep(left, right, var = left$x, jvar = y, method = "last"))
+  expect_error(pmdplyr:::inexact_join_prep(left, right, var = "x", jvar = right$y, method = "last"))
   expect_error(inexact_left_join(left, right, var = x, jvar = c(y, z, a), method = "last"))
   expect_error(inexact_left_join(left, right, var = x, jvar = y, method = 2))
   expect_error(inexact_left_join(left, right, var = x, jvar = y, method = "last", exact = 2))

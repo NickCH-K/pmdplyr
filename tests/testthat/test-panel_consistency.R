@@ -78,6 +78,9 @@ non_fixed <- pibble(
 
 test_that("panel_fill works", {
   expect_equal(panel_fill(df), proper_fill)
+  expect_equal(panel_fill(df %>% as_pibble(.i = NULL, .t = NULL),
+                          .i = i, .t = t),
+               proper_fill %>% as_pibble(.i = NULL, .t = NULL))
   expect_equal(panel_fill(df, .group_i = FALSE), ungroup_fill)
   expect_equal(panel_fill(df,
     .i = i,
@@ -99,6 +102,7 @@ test_that("panel_fill works", {
   )
   expect_equal(panel_fill(df, .min = 1, .max = 7), balance_fill)
   expect_equal(panel_fill(df, .min = 1, .max = 7, .set_NA = TRUE), balance_fill_na)
+  expect_equal(panel_fill(df, .min = 1, .max = 7, .set_NA = "x"), balance_fill_na)
   expect_equal(panel_fill(nonpib, .i = i, .t = t, .setpanel = FALSE), nonpib_proper_fill)
 })
 

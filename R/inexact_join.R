@@ -218,13 +218,7 @@ NULL
 inexact_inner_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
   jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
-  if (length(jvarcall) == 0) {
-    jvarcall <- NA_character_
-  }
   varcall <- tidyselect::vars_select(names(x), {{ var }})
-  if (length(varcall) == 0) {
-    varcall <- NA_character_
-  }
 
   # Get the proper matching variable in x
   x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = varcall, jvar = jvarcall, method = method, exact = exact)
@@ -245,13 +239,7 @@ inexact_inner_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", "
 inexact_left_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
   jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
-  if (length(jvarcall) == 0) {
-    jvarcall <- NA_character_
-  }
   varcall <- tidyselect::vars_select(names(x), {{ var }})
-  if (length(varcall) == 0) {
-    varcall <- NA_character_
-  }
 
   # Get the proper matching variable in x
   x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = varcall, jvar = jvarcall, method = method, exact = exact)
@@ -272,14 +260,7 @@ inexact_left_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 inexact_right_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
   jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
-  if (length(jvarcall) == 0) {
-    jvarcall <- NA_character_
-  }
   varcall <- tidyselect::vars_select(names(x), {{ var }})
-  if (length(varcall) == 0) {
-    varcall <- NA_character_
-  }
-
 
   # Get the proper matching variable in x
   x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = varcall, jvar = jvarcall, method = method, exact = exact)
@@ -300,13 +281,7 @@ inexact_right_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", "
 inexact_full_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
   jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
-  if (length(jvarcall) == 0) {
-    jvarcall <- NA_character_
-  }
   varcall <- tidyselect::vars_select(names(x), {{ var }})
-  if (length(varcall) == 0) {
-    varcall <- NA_character_
-  }
 
   # Get the proper matching variable in x
   x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = suffix, var = varcall, jvar = jvarcall, method = method, exact = exact)
@@ -327,13 +302,7 @@ inexact_full_join <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 inexact_semi_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
   jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
-  if (length(jvarcall) == 0) {
-    jvarcall <- NA_character_
-  }
   varcall <- tidyselect::vars_select(names(x), {{ var }})
-  if (length(varcall) == 0) {
-    varcall <- NA_character_
-  }
 
   # Get the proper matching variable in x
   x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = varcall, jvar = jvarcall, method = method, exact = exact)
@@ -355,13 +324,7 @@ inexact_semi_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jv
 inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name = NULL, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
   jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
-  if (length(jvarcall) == 0) {
-    jvarcall <- NA_character_
-  }
   varcall <- tidyselect::vars_select(names(x), {{ var }})
-  if (length(varcall) == 0) {
-    varcall <- NA_character_
-  }
 
   # Get the proper matching variable in x
   x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = varcall, jvar = jvarcall, method = method, exact = exact)
@@ -382,13 +345,7 @@ inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name 
 inexact_anti_join <- function(x, y, by = NULL, copy = FALSE, ..., var = NULL, jvar = NULL, method, exact = TRUE) {
   # Pull out variable names
   jvarcall <- tidyselect::vars_select(names(y), {{ jvar }})
-  if (length(jvarcall) == 0) {
-    jvarcall <- NA_character_
-  }
   varcall <- tidyselect::vars_select(names(x), {{ var }})
-  if (length(varcall) == 0) {
-    varcall <- NA_character_
-  }
 
   # Get the proper matching variable in x
   x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = varcall, jvar = jvarcall, method = method, exact = exact)
