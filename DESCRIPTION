@@ -12,8 +12,9 @@ Description: Using the dplyr package as a base, adds a family of functions desig
 License: MIT + file LICENSE
 URL: https://github.com/NickCH-K/pmdplyr
 Encoding: UTF-8
-Depends: R (>= 2.15.1),
-        dplyr (>= 0.7.0)
+Depends: 
+    R (>= 3.2),
+    dplyr (>= 0.7.0)
 Imports:
     lubridate,
     magrittr,
