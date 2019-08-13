@@ -4,15 +4,17 @@
 #'
 #' Some functions that already preserve \code{pibble} status and so don't need special methods include:
 #'
-#' \code{dplyr::filter, dplyr::filter_all, dplyr::filter_at, dplyr::filter_if, dplyr::arrange, dplyr::arrange_all, dplyr::arrange_at, dplyr::arrange_if, dplyr::sample_frac, dplyr::slice, dplyr::sample_n, dplyr::top_n, dplyr::add_row, tibble:add_column}
+#' \code{dplyr::add_row(), tibble:add_column(), dplyr::arrange(), dplyr::bind_cols(), dplyr::filter(), dplyr::sample_frac(), dplyr::sample_n(), dplyr::slice(), dplyr::top_n}
 #'
-#' \code{dplyr::bind_rows} is currently not supported.
+#' as well as all scoped variants (\code{_all}, \code{_if}, \code{_at}) of \code{dplyr} functions.
+#'
+#' \code{dplyr::bind_rows()} is currently not supported. If you use \code{dplyr::bind_rows()} you should pipe it to \code{as_pibble()}.
 #'
 #' Any function that takes two data frames/tibbles as inputs will retain the panel structure of the \emph{first} argument.
 #'
 #' If a function is not on the above list or elsewhere in this help file, then you may need to re-\code{as_pibble} your object after using the function.
-#' @param .data,x,.tbl These functions take a \code{tbl_pb} (i.e. \code{pibble}) object as input
-#' @param .add,.cols,.drop,.funs,.keep_all,.predicate,.vars,... Other parameters to be passed to the relevant functions
+#' @param .data,x These functions take a \code{tbl_pb} (i.e. \code{pibble}) object as input
+#' @param .keep_all,... Other parameters to be passed to the relevant functions
 #' @name pibble_methods
 NULL
 
@@ -32,54 +34,6 @@ mutate.tbl_pb <- function(.data, ...) {
   class(.data) <- class(.data)[!(class(.data) %in% "tbl_pb")]
 
   return(build_pibble(dplyr::mutate(.data, ...), .i, .t, .d))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr mutate_all
-#' @method mutate_all tbl_pb
-#' @export
-#' @export mutate_all.tbl_pb
-mutate_all.tbl_pb <- function(.tbl, .funs, ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(build_pibble(dplyr::mutate_all(.tbl, .funs, ...), .i, .t, .d))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr mutate_at
-#' @method mutate_at tbl_pb
-#' @export
-#' @export mutate_at.tbl_pb
-mutate_at.tbl_pb <- function(.tbl, .vars, .funs, ..., .cols = NULL) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(build_pibble(dplyr::mutate_at(.tbl, .vars, .funs, ..., .cols), .i, .t, .d))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr mutate_if
-#' @method mutate_if tbl_pb
-#' @export
-#' @export mutate_if.tbl_pb
-mutate_if.tbl_pb <- function(.tbl, .predicate, .funs, ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(build_pibble(dplyr::mutate_if(.tbl, .predicate, .funs, ...), .i, .t, .d))
 }
 
 #' @rdname pibble_methods
@@ -115,71 +69,6 @@ group_by.tbl_pb <- function(.data, ...) {
 }
 
 #' @rdname pibble_methods
-#' @importFrom dplyr group_by_all
-#' @method group_by_all tbl_pb
-#' @export
-#' @export group_by_all.tbl_pb
-group_by_all.tbl_pb <- function(.tbl, .funs = list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(build_pibble(dplyr::group_by(.tbl, .funs, ..., .add, .drop), .i, .t, .d))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr group_by_all
-#' @method group_by_all tbl_pb
-#' @export
-#' @export group_by_all.tbl_pb
-group_by_all.tbl_pb <- function(.tbl, .funs = list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(build_pibble(dplyr::group_by_all(.tbl, .funs, ..., .add, .drop), .i, .t, .d))
-}
-
-
-#' @rdname pibble_methods
-#' @importFrom dplyr group_by_at
-#' @method group_by_at tbl_pb
-#' @export
-#' @export group_by_at.tbl_pb
-group_by_at.tbl_pb <- function(.tbl, .vars, .funs = list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(build_pibble(dplyr::group_by_at(.tbl, .vars, .funs, ..., .add, .drop), .i, .t, .d))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr group_by_if
-#' @method group_by_if tbl_pb
-#' @export
-#' @export group_by_if.tbl_pb
-group_by_if.tbl_pb <- function(.tbl, .predicate, .funs = list(), ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl)) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(build_pibble(dplyr::group_by_if(.tbl, .predicate, .funs, ..., .add, .drop), .i, .t, .d))
-}
-
-#' @rdname pibble_methods
 #' @importFrom dplyr ungroup
 #' @method ungroup tbl_pb
 #' @export
@@ -195,23 +84,6 @@ ungroup.tbl_pb <- function(x, ...) {
   return(build_pibble(dplyr::ungroup(x, ...), .i, .t, .d))
 }
 
-#' @rdname pibble_methods
-#' @importFrom dplyr bind_cols
-#' @method bind_cols tbl_pb
-#' @export
-#' @export bind_cols.tbl_pb
-bind_cols.tbl_pb <- function(.data, ...) {
-  .i <- .data %@% ".i"
-  .t <- .data %@% ".t"
-  .d <- .data %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.data) <- class(.data)[!(class(.data) %in% "tbl_pb")]
-
-  return(build_pibble(dplyr::bind_cols(.data, ...), .i, .t, .d))
-}
-
-##### BIND_ROWS WHY WON'T YOU CALL BIND_ROWS.tbl_pb???
 #' Set operations
 #'
 #' These functions overwrite the set functions provided in base to make them generic to be used to
@@ -442,54 +314,6 @@ select.tbl_pb <- function(.data, ...) {
 }
 
 #' @rdname pibble_methods
-#' @importFrom dplyr select_all
-#' @method select_all tbl_pb
-#' @export
-#' @export select_all.tbl_pb
-select_all.tbl_pb <- function(.tbl, .funs = list(), ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::select_all(.tbl, .funs, ...), .i, .t, .d, "select_all"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr select_at
-#' @method select_at tbl_pb
-#' @export
-#' @export select_at.tbl_pb
-select_at.tbl_pb <- function(.tbl, .vars, .funs = list(), ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::select_at(.tbl, .vars, .funs, ...), .i, .t, .d, "select_at"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr select_if
-#' @method select_if tbl_pb
-#' @export
-#' @export select_if.tbl_pb
-select_if.tbl_pb <- function(.tbl, .predicate, .funs = list(), ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::select_if(.tbl, .predicate, .funs, ...), .i, .t, .d, "select_if"))
-}
-
-#' @rdname pibble_methods
 #' @importFrom dplyr rename
 #' @method rename tbl_pb
 #' @export
@@ -503,54 +327,6 @@ rename.tbl_pb <- function(.data, ...) {
   class(.data) <- class(.data)[!(class(.data) %in% "tbl_pb")]
 
   return(dropchecker(dplyr::rename(.data, ...), .i, .t, .d, "rename"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr rename_all
-#' @method rename_all tbl_pb
-#' @export
-#' @export rename_all.tbl_pb
-rename_all.tbl_pb <- function(.tbl, .funs = list(), ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::rename_all(.tbl, .funs, ...), .i, .t, .d, "rename_all"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr rename_at
-#' @method rename_at tbl_pb
-#' @export
-#' @export rename_at.tbl_pb
-rename_at.tbl_pb <- function(.tbl, .vars, .funs = list(), ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::rename_at(.tbl, .vars, .funs, ...), .i, .t, .d, "rename_at"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr rename_if
-#' @method rename_if tbl_pb
-#' @export
-#' @export rename_if.tbl_pb
-rename_if.tbl_pb <- function(.tbl, .predicate, .funs = list(), ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::rename_if(.tbl, .predicate, .funs, ...), .i, .t, .d, "rename_if"))
 }
 
 #' @rdname pibble_methods
@@ -570,81 +346,11 @@ summarize.tbl_pb <- function(.data, ...) {
 }
 
 #' @rdname pibble_methods
-#' @importFrom dplyr summarize_all
-#' @method summarize_all tbl_pb
-#' @export
-#' @export summarize_all.tbl_pb
-summarize_all.tbl_pb <- function(.tbl, .funs, ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::summarize(.tbl, .funs, ...), .i, .t, .d, "summarize_all"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr summarize_at
-#' @method summarize_at tbl_pb
-#' @export
-#' @export summarize_at.tbl_pb
-summarize_at.tbl_pb <- function(.tbl, .vars, .funs, ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::summarize_at(.tbl, .vars, .funs, ...), .i, .t, .d, "summarize_at"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr summarize_if
-#' @method summarize_if tbl_pb
-#' @export
-#' @export summarize_if.tbl_pb
-summarize_if.tbl_pb <- function(.tbl, .predicate, .funs, ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::summarize_if(.tbl, .predicate, .funs, ...), .i, .t, .d, "summarize_if"))
-}
-
-#' @rdname pibble_methods
 #' @importFrom dplyr summarise
 #' @method summarise tbl_pb
 #' @export
 #' @export summarise.tbl_pb
 summarise.tbl_pb <- summarize.tbl_pb
-
-#' @rdname pibble_methods
-#' @importFrom dplyr summarise_all
-#' @method summarise_all tbl_pb
-#' @export
-#' @export summarise_all.tbl_pb
-summarise_all.tbl_pb <- summarize_all.tbl_pb
-
-#' @rdname pibble_methods
-#' @importFrom dplyr summarise_at
-#' @method summarise_at tbl_pb
-#' @export
-#' @export summarise_at.tbl_pb
-summarise_at.tbl_pb <- summarize_at.tbl_pb
-
-#' @rdname pibble_methods
-#' @importFrom dplyr summarise_if
-#' @method summarise_if tbl_pb
-#' @export
-#' @export summarise_if.tbl_pb
-summarise_if.tbl_pb <- summarize_if.tbl_pb
-
 
 #' @rdname pibble_methods
 #' @importFrom dplyr transmute
@@ -660,54 +366,6 @@ transmute.tbl_pb <- function(.data, ...) {
   class(.data) <- class(.data)[!(class(.data) %in% "tbl_pb")]
 
   return(dropchecker(dplyr::transmute(.data, ...), .i, .t, .d, "transmute"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr transmute_all
-#' @method transmute_all tbl_pb
-#' @export
-#' @export transmute_all.tbl_pb
-transmute_all.tbl_pb <- function(.tbl, .funs, ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::transmute_all(.tbl, .funs, ...), .i, .t, .d, "transmute_all"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr transmute_at
-#' @method transmute_at tbl_pb
-#' @export
-#' @export transmute_at.tbl_pb
-transmute_at.tbl_pb <- function(.tbl, .vars, .funs, ..., .cols = NULL) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::transmute_at(.tbl, .vars, .funs, ..., .cols), .i, .t, .d, "transmute_at"))
-}
-
-#' @rdname pibble_methods
-#' @importFrom dplyr transmute_if
-#' @method transmute_if tbl_pb
-#' @export
-#' @export transmute_if.tbl_pb
-transmute_if.tbl_pb <- function(.tbl, .predicate, .funs, ...) {
-  .i <- .tbl %@% ".i"
-  .t <- .tbl %@% ".t"
-  .d <- .tbl %@% ".d"
-
-  # remove tbl_pb status so regular version is run
-  class(.tbl) <- class(.tbl)[!(class(.tbl) %in% "tbl_pb")]
-
-  return(dropchecker(dplyr::transmute_if(.tbl, .predicate, .funs, ...), .i, .t, .d, "transmute_if"))
 }
 
 

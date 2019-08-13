@@ -3,110 +3,38 @@
 \name{pibble_methods}
 \alias{pibble_methods}
 \alias{mutate.tbl_pb}
-\alias{mutate_all.tbl_pb}
-\alias{mutate_at.tbl_pb}
-\alias{mutate_if.tbl_pb}
 \alias{distinct.tbl_pb}
 \alias{group_by.tbl_pb}
-\alias{group_by_all.tbl_pb}
-\alias{group_by_at.tbl_pb}
-\alias{group_by_if.tbl_pb}
 \alias{ungroup.tbl_pb}
-\alias{bind_cols.tbl_pb}
 \alias{select.tbl_pb}
-\alias{select_all.tbl_pb}
-\alias{select_at.tbl_pb}
-\alias{select_if.tbl_pb}
 \alias{rename.tbl_pb}
-\alias{rename_all.tbl_pb}
-\alias{rename_at.tbl_pb}
-\alias{rename_if.tbl_pb}
 \alias{summarize.tbl_pb}
-\alias{summarize_all.tbl_pb}
-\alias{summarize_at.tbl_pb}
-\alias{summarize_if.tbl_pb}
 \alias{summarise.tbl_pb}
-\alias{summarise_all.tbl_pb}
-\alias{summarise_at.tbl_pb}
-\alias{summarise_if.tbl_pb}
 \alias{transmute.tbl_pb}
-\alias{transmute_all.tbl_pb}
-\alias{transmute_at.tbl_pb}
-\alias{transmute_if.tbl_pb}
 \title{pibble methods}
 \usage{
 \method{mutate}{tbl_pb}(.data, ...)
-
-\method{mutate_all}{tbl_pb}(.tbl, .funs, ...)
-
-\method{mutate_at}{tbl_pb}(.tbl, .vars, .funs, ..., .cols = NULL)
-
-\method{mutate_if}{tbl_pb}(.tbl, .predicate, .funs, ...)
 
 \method{distinct}{tbl_pb}(.data, ..., .keep_all = FALSE)
 
 \method{group_by}{tbl_pb}(.data, ...)
 
-\method{group_by_all}{tbl_pb}(.tbl, .funs = list(), ..., .add = FALSE,
-  .drop = dplyr::group_by_drop_default(.tbl))
-
-\method{group_by_all}{tbl_pb}(.tbl, .funs = list(), ..., .add = FALSE,
-  .drop = dplyr::group_by_drop_default(.tbl))
-
-\method{group_by_at}{tbl_pb}(.tbl, .vars, .funs = list(), ...,
-  .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl))
-
-\method{group_by_if}{tbl_pb}(.tbl, .predicate, .funs = list(), ...,
-  .add = FALSE, .drop = dplyr::group_by_drop_default(.tbl))
-
 \method{ungroup}{tbl_pb}(x, ...)
-
-\method{bind_cols}{tbl_pb}(.data, ...)
 
 \method{select}{tbl_pb}(.data, ...)
 
-\method{select_all}{tbl_pb}(.tbl, .funs = list(), ...)
-
-\method{select_at}{tbl_pb}(.tbl, .vars, .funs = list(), ...)
-
-\method{select_if}{tbl_pb}(.tbl, .predicate, .funs = list(), ...)
-
 \method{rename}{tbl_pb}(.data, ...)
-
-\method{rename_all}{tbl_pb}(.tbl, .funs = list(), ...)
-
-\method{rename_at}{tbl_pb}(.tbl, .vars, .funs = list(), ...)
-
-\method{rename_if}{tbl_pb}(.tbl, .predicate, .funs = list(), ...)
 
 \method{summarize}{tbl_pb}(.data, ...)
 
-\method{summarize_all}{tbl_pb}(.tbl, .funs, ...)
-
-\method{summarize_at}{tbl_pb}(.tbl, .vars, .funs, ...)
-
-\method{summarize_if}{tbl_pb}(.tbl, .predicate, .funs, ...)
-
 \method{summarise}{tbl_pb}(.data, ...)
 
-\method{summarise_all}{tbl_pb}(.tbl, .funs, ...)
-
-\method{summarise_at}{tbl_pb}(.tbl, .vars, .funs, ...)
-
-\method{summarise_if}{tbl_pb}(.tbl, .predicate, .funs, ...)
-
 \method{transmute}{tbl_pb}(.data, ...)
-
-\method{transmute_all}{tbl_pb}(.tbl, .funs, ...)
-
-\method{transmute_at}{tbl_pb}(.tbl, .vars, .funs, ..., .cols = NULL)
-
-\method{transmute_if}{tbl_pb}(.tbl, .predicate, .funs, ...)
 }
 \arguments{
-\item{.data, x, .tbl}{These functions take a \code{tbl_pb} (i.e. \code{pibble}) object as input}
+\item{.data, x}{These functions take a \code{tbl_pb} (i.e. \code{pibble}) object as input}
 
-\item{.add, .cols, .drop, .funs, .keep_all, .predicate, .vars, ...}{Other parameters to be passed to the relevant functions}
+\item{.keep_all, ...}{Other parameters to be passed to the relevant functions}
 }
 \description{
 These are variants of existing functions that are designed to retain the \code{pibble} status of the object, as well as its \code{.i}, \code{.t}, and \code{.d} attributes.
@@ -114,9 +42,11 @@ These are variants of existing functions that are designed to retain the \code{p
 \details{
 Some functions that already preserve \code{pibble} status and so don't need special methods include:
 
-\code{dplyr::filter, dplyr::filter_all, dplyr::filter_at, dplyr::filter_if, dplyr::arrange, dplyr::arrange_all, dplyr::arrange_at, dplyr::arrange_if, dplyr::sample_frac, dplyr::slice, dplyr::sample_n, dplyr::top_n, dplyr::add_row, tibble:add_column}
+\code{dplyr::add_row(), tibble:add_column(), dplyr::arrange(), dplyr::bind_cols(), dplyr::filter(), dplyr::sample_frac(), dplyr::sample_n(), dplyr::slice(), dplyr::top_n}
 
-\code{dplyr::bind_rows} is currently not supported.
+as well as all scoped variants (\code{_all}, \code{_if}, \code{_at}) of \code{dplyr} functions.
+
+\code{dplyr::bind_rows()} is currently not supported. If you use \code{dplyr::bind_rows()} you should pipe it to \code{as_pibble()}.
 
 Any function that takes two data frames/tibbles as inputs will retain the panel structure of the \emph{first} argument.
 

@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9001</span>
       </span>
     </div>
 
@@ -211,8 +211,9 @@
 <span class='co'># so .resolve isn't needed.</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Scorecard</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Scorecard</span>$<span class='no'>earnings_med</span>))</div><div class='output co'>#&gt; [1] 15706</div><div class='input'><span class='no'>Scorecard</span> <span class='kw'>&lt;-</span> <span class='no'>Scorecard</span> <span class='kw'>%&gt;%</span>
-  <span class='co'># Let's speed this up by just doing four-year colleges</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>pred_degree_awarded_ipeds</span> <span class='kw'>==</span> <span class='fl'>3</span>) <span class='kw'>%&gt;%</span>
+  <span class='co'># Let's speed this up by just doing four-year colleges in Colorado</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>pred_degree_awarded_ipeds</span> <span class='kw'>==</span> <span class='fl'>3</span>,
+                <span class='no'>state_abbr</span> <span class='kw'>==</span> <span class='st'>"CO"</span>) <span class='kw'>%&gt;%</span>
   <span class='co'># Now let's fill in NAs and also in case there are any erroneous 0s</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>earnings_med</span> <span class='kw'>=</span> <span class='fu'>panel_locf</span>(<span class='no'>earnings_med</span>,
     <span class='kw'>.fill</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, <span class='fl'>0</span>),
@@ -220,7 +221,7 @@
   ))
 <span class='co'># Note that there are still some missings - these are missings that come before the first</span>
 <span class='co'># non-missing value in that unitid, so there's nothing to pull from.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Scorecard</span>$<span class='no'>earnings_med</span>))</div><div class='output co'>#&gt; [1] 958</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>Scorecard</span>$<span class='no'>earnings_med</span>))</div><div class='output co'>#&gt; [1] 17</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

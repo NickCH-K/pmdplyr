@@ -5,6 +5,7 @@ df <- pibble(
 )
 
 # Here, run all methods to ensure they hold on to tbl_pb status
+# Also run scoped variants just to make sure they don't mess anything up
 test_that("tbl_pb methods maintain tbl_pb", {
   expect_s3_class(df %>% dplyr::mutate(y = 1), "tbl_pb")
   expect_s3_class(df %>% dplyr::mutate_all(.funs = mean), "tbl_pb")
