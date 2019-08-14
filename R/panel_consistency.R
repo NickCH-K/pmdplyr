@@ -111,12 +111,9 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     stop("panel_fill() requires that .t be declared either in the function or by as_pibble().")
   }
 
-  # Panel-declare data if any changes have been made.
-  if (!anyNA(.icall) | !is.na(.tcall)) {
-    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d, .uniqcheck = .uniqcheck)
-
-    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
-    inp$d <- .df %@% ".d"
+  # Fill in default if set to NA from above
+  if (is.na(inp$d)) {
+    inp$d <- 1
   }
 
   # we need a positive numeric .d, and a .t
@@ -153,6 +150,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     # Pull out that data and set it to the early period
     earlydat <- .df %>%
       dplyr::ungroup() %>%
+      dplyr::as_tibble() %>%
       dplyr::filter(!!earlyobs) %>%
       dplyr::mutate(!!inp$t := .min)
     # Whatever is being set to missing, drop it
@@ -167,9 +165,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       .df,
       # Make you a new obs if your earliest obs isn't the minimum
       earlydat
-    ) %>%
-      # Because bind_rows.tbl_pb doesn't work
-      as_pibble(.i = inp$i, .t = inp$t, .d = inp$d)
+    )
 
     rm(earlyobs, earlydat)
   }
@@ -186,6 +182,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     # Pull out that data and set it to the early period
     latedat <- .df %>%
       dplyr::ungroup() %>%
+      dplyr::as_tibble() %>%
       dplyr::filter(!!lateobs) %>%
       dplyr::mutate(!!inp$t := .max)
 
@@ -201,9 +198,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       .df,
       # Make you a new obs if your latest obs isn't the maximum
       latedat
-    ) %>%
-      # Because bind_rows.tbl_pb doesn't work
-      as_pibble(.i = inp$i, .t = inp$t, .d = inp$d)
+    )
 
     rm(latedat, lateobs)
   }
@@ -257,9 +252,10 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     selnames <- names(.df)[!(names(.df) %in% .set_NA)]
   }
 
-  suppressWarnings(tocopy <- .df %>%
+  tocopy <- .df %>%
+    dplyr::as_tibble() %>%
     dplyr::filter_at(copyname, dplyr::any_vars(. > 0)) %>%
-    dplyr::select_at(selnames))
+    dplyr::select_at(selnames)
   # now's the time to flag new obs
   if (!is.na(.flag)) {
     .df <- .df %>%
@@ -290,15 +286,17 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
     }) %>%
     dplyr::select(-!!newidname)
 
-  # plop everything back together, arrange, restore the original grouping, and return
+  # plop everything back together, arrange, restore the original grouping,
+  # and return a pibble
   .df <- dplyr::bind_rows(
     .df %>%
+      dplyr::as_tibble() %>%
       dplyr::select(-!!copyname),
     tocopy
   ) %>%
     dplyr::arrange_at(arrnames) %>%
-    # Because bind_rows.tbl_pb doesn't work
     as_pibble(.i = inp$i, .t = inp$t, .d = inp$d)
+
   # Check if grouping has changed and there WAS an original grouping
   if (!setequal(c(origgroups, ".rows"), .df %@% "groups")) {
     if (max(is.na(origgroups)) == 1) {
