@@ -79,9 +79,6 @@
 #'   ))
 #' @export
 
-# WHEN CHANGING THIS ONE BE SURE TO CHANGE THE MUTATE_CASCADE EXAMPLE WHICH
-# INCLUDES IT
-
 tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default = NA, .quick = FALSE, .resolve = "error", .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE) {
   if (!is.numeric(.n) | length(.n) > 1) {
     stop(".n must be a single integer.")
@@ -149,7 +146,7 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
     names(.df) <- arrnames
 
     if (length(.var) != nrow(.df)) {
-      stop("Length of variable does not match length of full data set or group-subsample.")
+      stop("Length of variable does not match length of full data set or group-subsample. Try passing in a variable name from the dataset.")
     }
   } else {
     # If we're not working with grouped data, we're good.
@@ -173,11 +170,19 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
     dat[, ncol(dat) + 1] <- 1:nrow(dat)
     origorder <- names(dat)[ncol(dat)]
 
-    dat <- dat %>%
-      dplyr::arrange_at(arrnames) %>%
-      dplyr::mutate_at(varname, .funs = function(x) dplyr::lag(x, n = .n, default = .default)) %>%
-      dplyr::arrange_at(origorder) %>%
-      dplyr::pull(!!varname)
+    if (.n > 0) {
+      dat <- dat %>%
+        dplyr::arrange_at(arrnames) %>%
+        dplyr::mutate_at(varname, .funs = function(x) dplyr::lag(x, n = .n, default = .default)) %>%
+        dplyr::arrange_at(origorder) %>%
+        dplyr::pull(!!varname)
+    } else {
+      dat <- dat %>%
+        dplyr::arrange_at(arrnames) %>%
+        dplyr::mutate_at(varname, .funs = function(x) dplyr::lead(x, n = -.n, default = .default)) %>%
+        dplyr::arrange_at(origorder) %>%
+        dplyr::pull(!!varname)
+    }
 
     return(dat)
   }

@@ -47,3 +47,8 @@ test_that("is_pibble", {
 test_that("as_pibble", {
   expect_error(as_pibble(NULL), "A pibble must not be NULL")
 })
+
+test_that("unexported pibble fcns", {
+  expect_s3_class(pmdplyr:::new_pibble(df), "tbl_pb")
+  expect_equal(pmdplyr:::vec_restore.tbl_pb(df, df), df)
+})

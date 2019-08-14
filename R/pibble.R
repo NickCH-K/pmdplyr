@@ -246,14 +246,14 @@ check_panel_inputs <- function(.df, .i, .t, .d, .uniqcheck) {
     warning("data.tables and lists will be coerced to pibble.")
     .df <- as.data.frame(.df)
   }
-  if (!(max(is.character(.i))) & min(is.na(.i)) == 0) {
+  if (length(.t) > 1) {
+    stop("Only one time variable allowed.")
+  }
+  if (!(max(is.character(.i))) & !anyNA(.i)) {
     stop("Internal issue: .i should have been converted to a character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
   }
   if (!(is.character(.t)) & !is.na(.t)) {
     stop("Internal issue: .t should have been converted to character variable with variable names by this point. Please report errors on https://github.com/NickCH-K/pmdplyr")
-  }
-  if (length(.t) > 1) {
-    stop("Only one time variable allowed.")
   }
   if (!(is.numeric(.d)) & !(is.na(.d))) {
     stop(".d must be numeric.")

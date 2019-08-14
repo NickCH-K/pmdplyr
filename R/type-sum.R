@@ -27,7 +27,7 @@ tbl_sum.tbl_pb <- function(x) {
   groups <- x %@% "groups"
 
   if (!rlang::is_empty(i)) {
-    if (!identical(i, NA)) {
+    if (!identical(i, NA_character_)) {
       n_distinct_i <- x %>%
         dplyr::distinct(!!!syms(i)) %>%
         nrow()

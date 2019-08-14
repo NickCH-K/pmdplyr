@@ -227,7 +227,7 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
   # Get original grouping
   origgroups <- names(.df %@% "groups")
   # Last element is .rows
-  if (!is.null(groups)) {
+  if (!is.null(origgroups)) {
     origgroups <- utils::head(origgroups, -1)
   }
 
@@ -237,9 +237,9 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
   }
 
   # Perform the summary on the subset
-  summ <- .df %>%
+  summ <- suppressWarnings(.df %>%
     dplyr::filter({{ .filter }}) %>%
-    dplyr::summarize(...)
+    dplyr::summarize(...))
   # See what variables were created not counting the groupings
   # First, get the grouping variables
   groups <- names(.df %@% "groups")
