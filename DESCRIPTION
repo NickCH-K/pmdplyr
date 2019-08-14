@@ -1,14 +1,14 @@
 Package: pmdplyr
 Type: Package
 Title: 'dplyr' Extension for Common Panel Data Maneuvers
-Version: 0.2.1.9002
+Version: 0.2.1.9003
 Authors@R: c(
     person(given = "Nick", family = "Huntington-Klein", role = c("aut","cre"), 
            email = "nhuntington-klein@fullerton.edu", 
            comment = c(ORCID = "0000-0002-7352-3991")), 
     person("Philip", "Khor", role = "aut", email = "pk.qa@outlook.com", 
            comment = c(ORCID = "0000-0002-8333-1256")))
-Description: Using the 'dplyr' package as a base, adds a family of functions designed to make manipulating panel data easier. Allows the addition of indexing variables to a tibble, and the manipulation of data based on those indexing variables.
+Description: Using the 'dplyr' package as a base, adds a family of functions designed to make manipulating panel data easier. Allows the addition of indexing variables to a tibble to create a pibble, and the manipulation of data based on those indexing variables.
 License: MIT + file LICENSE
 URL: https://nickch-k.github.io/pmdplyr, https://github.com/NickCH-K/pmdplyr
 BugReports: https://github.com/NickCH-K/pmdplyr/issues

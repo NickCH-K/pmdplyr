@@ -87,7 +87,7 @@ panel_convert <- function(data, to, ...) {
     panel_convert_time <- data %@% ".t"
     gap <- data %@% ".d"
 
-    if (is.na(panel_convert_id)) {
+    if (anyNA(panel_convert_id)) {
       panel_convert_id <- NULL
     }
     if (is.na(panel_convert_time)) {
@@ -122,7 +122,7 @@ panel_convert <- function(data, to, ...) {
     panel_convert_id <- panel_convert_id[1:(length(panel_convert_id) - 1)]
     panel_convert_time <- (data %@% "index")[1]
 
-    if (panel_convert_id == ".rows") {
+    if (identical(panel_convert_id,".rows")) {
       panel_convert_id <- NULL
     }
 

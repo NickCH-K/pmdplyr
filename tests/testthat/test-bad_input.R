@@ -30,8 +30,8 @@ test_that("id_variable input failstates", {
 })
 
 ### INEXACT_JOIN
-left <- data.frame(i = 1:2, x = 1:2)
-right <- data.frame(i = 1:2, y = 3:4, z = 5:6, a = 7:8)
+left <- tibble::tibble(i = 1:2, x = 1:2)
+right <- tibble::tibble(i = 1:2, y = 3:4, z = 5:6, a = 7:8)
 
 test_that("safe_join input failstates", {
   expect_error(safe_join(left, right, expect = 2))
@@ -96,6 +96,40 @@ test_that("mutate_subset input failstates", {
   )
 })
 
+### PANEL_CONVERT
+
+df <- pibble(
+  i = c(1, 1, 1, 2, 2, 2, 2),
+  t = c(1, 3, 4, 2, 4, 6, 7),
+  x = c(1, 2, NA, 4, NA, NA, 7),
+  .i = i,
+  .t = t
+)
+
+test_that("panel_convert input failstates", {
+  expect_error(panel_convert(df, to = 2))
+  expect_error(panel_convert(df, to = "wrong"))
+  expect_error(panel_convert(df, to = "pibble"))
+  expect_error(panel_convert(df %>% as_pibble(), to = "pdata.frame"))
+  expect_warning(panel_convert(df %>% as_pibble(.i = i, .t = t, .d = 2), to = "plm"))
+  expect_error(df %>% panel_convert(to = "pdata.frame") %>% panel_convert(to = "plm"))
+  expect_error(df %>% panel_convert(to = "tsibble") %>% panel_convert(to = "tsibble"))
+  expect_error(df %>% panel_convert(to = "panelr") %>% panel_convert(to = "panelr"))
+  expect_error(df %>%
+                 as_pibble(.i = c(i, x), .t = t) %>%
+                 panel_convert("plm"))
+  expect_error(df %>%
+                 as_pibble(.i = c(i, x), .t = t) %>%
+                 panel_convert("tsibble") %>%
+                 panel_convert("plm"))
+  expect_warning(df %>% as_pibble(.i = i, .t = t, .d = 0) %>% panel_convert("tsibble") %>% panel_convert("plm"))
+  expect_warning(tsibble::tsibble(i = c(1, 1, 1),
+                                t = c(1, 3, 5),
+                                key = "i",
+                                index = "t") %>% panel_convert("plm"))
+  expect_error(df %>% as.matrix() %>% panel_convert("plm"))
+})
+
 ### PANEL_CONSISTENCY
 
 df <- pibble(
@@ -148,7 +182,7 @@ test_that("fixed_force input failstates", {
 })
 
 ### UNEXPORTED_SHARED_FUNCTIONS
-df <- data.frame(
+df <- tibble::tibble(
   i = 1:3,
   t = 1:3
 )
@@ -189,13 +223,13 @@ test_that("declare_in_fcn_check input failstates", {
 
 ### TIME_VARIABLE
 
-td <- data.frame(
+td <- tibble::tibble(
   year = 2008:2006,
   month = 1:3,
   date = lubridate::ymd(c("100101", "100302", "100604"))
 )
 
-td_multiyear <- data.frame(
+td_multiyear <- tibble::tibble(
   date = lubridate::ymd(c("100101", "110201", "120301", "130401"))
 )
 
@@ -235,4 +269,43 @@ test_that("time_variable input failstates", {
       .breaks = 2012,
       .skip = 2010
     )))
+  expect_warning(td %>%
+                   dplyr::mutate(t = time_variable(year, month,
+                                                   .method = "turnover",
+                                                   .turnover = c(2010, NA),
+                                                   .turnover_start = c(1, NA))))
+  expect_error(td %>%
+                   dplyr::mutate(t = time_variable(year,
+                                                   .method = "turnover")))
+  expect_error(td %>% dplyr::mutate(month = as.character(month)) %>%
+                 dplyr::mutate(t = time_variable(year,month,
+                                                 .method = "turnover")))
+  expect_error(td %>% dplyr::mutate(month = month - 3) %>%
+                 dplyr::mutate(t = time_variable(year,month,
+                                                 .method = "turnover")))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(year,month,
+                                                 .method = "turnover",
+                                                 .turnover = c(NA, 1, 2))))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(year,month,
+                                                 .method = "turnover",
+                                                 .turnover = c(NA, 1))))
+  expect_error(td %>% dplyr::mutate(date2 = date) %>%
+                 dplyr::mutate(t = time_variable(date, date2, .method = "year")))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(date, .method = "year", .start = "foo")))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(date, .method = "year", .datepos = c(NA, 2))))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(date, .method = "year", .skip = "foo")))
+  expect_error(td %>%
+                 dplyr::mutate(t = time_variable(date, .method = "year", .breaks = "foo")))
+  expect_error(td %>% dplyr::mutate(date = as.character(date)) %>%
+                 dplyr::mutate(t = time_variable(date, .method = "week", .datepos = c(1, 2))))
+  expect_error(td %>% dplyr::mutate(date2 = date) %>%
+                 dplyr::mutate(t = time_variable(date, .method = "day", .skip = c(1, 8))))
+  expect_error(time_variable("20140101", .method = "day", .datepos = 3:9))
+  expect_error(time_variable("20140101", .method = "year", .datepos = 3:5))
+  expect_error(time_variable("20140101", .method = "month", .datepos = 3:7))
 })

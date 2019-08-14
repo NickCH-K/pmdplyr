@@ -359,7 +359,7 @@ Observations in these months will be given a missing time value.")
   }
   ########################################## METHOD = WEEK
   else if (.method == "week") {
-    if (min(is.na(.skip)) == 0 | min(is.na(.breaks)) == 0) {
+    if (!anyNA(.skip) | !anyNA(.breaks)) {
       warning(".skip and .breaks options not available with .method='week'. Proceeding, ignoring these options.")
     }
 
@@ -380,7 +380,7 @@ Observations in these months will be given a missing time value.")
   }
   ########################################## METHOD = DAY
   else if (.method == "day") {
-    if (min(is.na(.breaks)) == 0) {
+    if (!anyNA(.breaks)) {
       warning(".breaks option not available with .method='day'. Proceeding, ignoring this option.")
     }
 
@@ -388,7 +388,7 @@ Observations in these months will be given a missing time value.")
     timevar <- date_methods_prep(data, var, .method, .start, .datepos, .skip, .breaks)
 
     # implement .skips
-    if (min(is.na(.skip)) == 0) {
+    if (!anyNA(.skip)) {
       # Find the first day of the first week in the data, in days from origin
       firstday <- min(timevar)
       # Find the Monday of the week that first day is on, in days since origin
@@ -424,7 +424,7 @@ Observations in these weekdays will be given a missing time value.")
   ########################################## METHOD = TURNOVER
   else if (.method == "turnover") {
     # This method is set out in its own function so it can be called by others.
-    timevar <- time_variable_turnover(data, .turnover = .turnover, .turnover_start = .turnover_start)
+    timevar <- time_variable_turnover(..., .turnover = .turnover, .turnover_start = .turnover_start)
   }
 
   return(as.integer(timevar))
@@ -434,26 +434,29 @@ Observations in these weekdays will be given a missing time value.")
 ################### THE TURNOVER METHOD
 # also a subfunction to make the month method work.
 time_variable_turnover <- function(..., .turnover = NA, .turnover_start = NA) {
-  data <- data.frame(...)
+  data <- tibble::tibble(...)
   var <- names(data)
 
   # Fill in if missing
-  if (min(is.na(.turnover_start)) == 1) {
+  if (identical(.turnover_start, NA)) {
     .turnover_start <- c(NA, rep(1, length(var) - 1))
   }
-  if (min(is.na(.turnover)) == 1) {
+  if (identical(.turnover, NA)) {
     .turnover <- t(as.vector((data %>%
       dplyr::select_at(var) %>%
       dplyr::summarize_all(max))[1, ]))
     .turnover[1] <- NA
   }
   # Check inputs
-  if (!is.na(.turnover[1]) | max(is.na(.turnover[-1])) == 1) {
-    warning("The turnover .method may produce strange results if the first element of .turnover is not NA, or if any of the later elements are NA. Proceeding, but be cautious...")
-  }
-  # Check that there's more than one variable in var, and that those vars are present in the data.
+  # Check that there's more than one variable in var
   if (length(var) < 2) {
     stop("To use the turnover .method, there must be more than one variable in the variable list.")
+  }
+  if (!is.na(.turnover[1]) | anyNA(.turnover[-1])) {
+    warning("The turnover .method may produce strange results if the first element of .turnover is not NA, or if any of the later elements are NA. Proceeding, but be cautious...")
+  }
+  if (!is.na(.turnover_start[1]) | anyNA(.turnover_start[-1])) {
+    warning("The turnover .method may produce strange results if the first element of .turnover_start is not NA, or if any of the later elements are NA. Proceeding, but be cautious...")
   }
   if (min(sapply(data, is.numeric)) == 0) {
     stop("To use the turnover .method, all variables in the variable list must be numeric.")
@@ -464,7 +467,8 @@ time_variable_turnover <- function(..., .turnover = NA, .turnover_start = NA) {
   if (length(.turnover) != length(var) | length(.turnover_start) != length(var)) {
     stop("To use the turnover .method, the number of variables in the variable list, .turnover, and .turnover_start must all be the same.")
   }
-  if (sum(dplyr::summarize_all(data, max) > .turnover, na.rm = TRUE) > 0 | sum(dplyr::summarize_all(data, min) < .turnover_start, na.rm = TRUE) > 0) {
+  if (sum(dplyr::summarize_all(data, max) > .turnover, na.rm = TRUE) > 0 |
+      sum(dplyr::summarize_all(data, min) < .turnover_start, na.rm = TRUE) > 0) {
     stop("All values must be within the minima and maxima given in .turnover_start and .turnover")
   }
 
@@ -472,14 +476,14 @@ time_variable_turnover <- function(..., .turnover = NA, .turnover_start = NA) {
   td <- data
 
   # Set everything to start at 1
-  td <- data.frame(sapply(1:length(var), function(x) {
+  td <- dplyr::as_tibble(data.frame(sapply(1:length(var), function(x) {
     if (is.na(.turnover[x])) {
       td[, x] - min(td[, x], na.rm = TRUE) + 1
     }
     else {
       td[, x] - .turnover_start[x] + 1
     }
-  }))
+  })))
 
   # And reduce the top-end to match
   .turnover <- ifelse(is.na(.turnover), NA, .turnover - .turnover_start + 1)
@@ -488,7 +492,8 @@ time_variable_turnover <- function(..., .turnover = NA, .turnover_start = NA) {
   .turnover[length(var) + 1] <- 1
 
   # Multiply by product of possibilities downstream to make room for every period
-  td <- sapply(1:length(var), function(x) td[, x] * prod(.turnover[(x + 1):(length(var) + 1)]))
+  td <- dplyr::as_tibble(data.frame(sapply(1:length(var),
+               function(x) td[, x] * prod(.turnover[(x + 1):(length(var) + 1)]))))
 
   timevar <- rowSums(td)
 
@@ -508,22 +513,22 @@ date_methods_prep <- function(data, var, .method, .start, .datepos, .skip, .brea
   if (!is.na(.start) & !is.numeric(.start)) {
     stop(".start must be numeric.")
   }
-  if (min(is.na(.datepos)) == 0 & !is.numeric(.datepos)) {
+  if (!anyNA(.datepos) & !is.numeric(.datepos)) {
     stop(".datepos must be a numeric vector.")
   }
-  if (min(is.na(.datepos)) == 0 & max(is.na(.datepos)) == 1) {
+  if (anyNA(.datepos) & length(.datepos) > 1) {
     stop(".datepos must not contain any missing values.")
   }
-  if (min(is.na(.skip)) == 0 & !is.numeric(.skip)) {
+  if (!anyNA(.skip) & !is.numeric(.skip)) {
     stop(".skip must be a numeric vector.")
   }
-  if (min(is.na(.breaks)) == 0 & !is.numeric(.breaks)) {
+  if (!anyNA(.breaks) & !is.numeric(.breaks)) {
     stop(".breaks must be a numeric vector.")
   }
-  if (.method == "week" & (min(is.na(.datepos)) == 0 | !lubridate::is.timepoint(data[[var]]))) {
+  if (.method == "week" & (!anyNA(.datepos) | !lubridate::is.timepoint(data[[var]]))) {
     stop("The week .method requires a timepoint-class (Date, POSIX, etc.) class variable as input, and does not allow .datepos.")
   }
-  if (min(is.na(.skip)) == 0 & .method == "day") {
+  if (!anyNA(.skip) & .method == "day") {
     if (sum(.skip %in% 1:7) < length(.skip)) {
       stop("When .method='day', All elements of .skip must be integers from 1 to 7. These represent days of the week from Monday (1) to Sunday (7).")
     }
@@ -534,7 +539,7 @@ date_methods_prep <- function(data, var, .method, .start, .datepos, .skip, .brea
 
   # If there's a .datepos, extract the date
   # If not, just take the date variable
-  if (min(is.na(.datepos)) == 0) {
+  if (!anyNA(.datepos)) {
     # Date as string
     timevar <- sapply(data[[var]], function(x) paste0(substring(x, .datepos, .datepos), collapse = ""))
 
