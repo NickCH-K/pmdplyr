@@ -66,6 +66,11 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
     stop("mutate_cascade() requires that .t be declared either in the function or by as_pibble().")
   }
 
+  # Fill in default if set to NA from above
+  if (is.na(inp$d)) {
+    inp$d <- 1
+  }
+
   # Get original grouping
   origgroups <- names(.df %@% "groups")
   # Last element is .rows
@@ -73,12 +78,15 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
     origgroups <- utils::head(origgroups, -1)
   }
 
-  # Panel-declare data if any changes have been made.
-  if (!anyNA(.icall) | !is.na(.tcall) | !is.na(.d)) {
-    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d, .uniqcheck = .uniqcheck)
+  # Avoid de-pibbling later
+  if (is_pibble(.df, .silent = TRUE)) {
+    .df <- .df %>%
+      dplyr::as_tibble()
 
-    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
-    inp$d <- .df %@% ".d"
+    if (!is.null(origgroups) & !(.group_i == TRUE & !anyNA(inp$i))) {
+      .df <- .df %>%
+        dplyr::group_by_at(origgroups)
+    }
   }
 
   if (.group_i == TRUE & !anyNA(inp$i)) {
@@ -116,8 +124,6 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   }
 
   # If there are new variables created, make sure they're present
-
-  begin <- Sys.time()
   for (t in list_of_times) {
     # Skip if there's nothing to do
     if (sum(.df[[inp$t]] == t & .df[[indexnames[2]]] != t) > 0) {
@@ -128,12 +134,16 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
         dplyr::filter(.data[[inp$t]] == !!t & .data[[indexnames[2]]] != !!t)
     }
   }
-  Sys.time() - begin
 
   # Rearrange by indexnames[1] if necessary here
 
   .df <- .df %>%
     dplyr::select(-!!indexnames[2])
+
+  # Panel-declare data if any changes have been made.
+  if (!anyNA(.icall) | !is.na(.tcall) | !is.na(.d)) {
+    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, inp$d, .uniqcheck = .uniqcheck)
+  }
 
   # Restore original grouping
   if (!is.null(origgroups)) {
@@ -216,12 +226,9 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
 
   inp <- declare_in_fcn_check(.df, .icall, .tcall, .d, .uniqcheck, .setpanel, .noneed = TRUE)
 
-  # Panel-declare data if any changes have been made.
-  if (!anyNA(.icall) | !is.na(.tcall) | !is.na(.d)) {
-    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, .d, .uniqcheck = .uniqcheck)
-
-    # .d might be unspecified and so inp$d is NA, but now .d is 1 from as_pibble default
-    inp$d <- .df %@% ".d"
+  # Fill in default if set to NA from above
+  if (is.na(inp$d)) {
+    inp$d <- 1
   }
 
   # Get original grouping
@@ -229,6 +236,17 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
   # Last element is .rows
   if (!is.null(origgroups)) {
     origgroups <- utils::head(origgroups, -1)
+  }
+
+  # Avoid de-pibbling later
+  if (is_pibble(.df, .silent = TRUE)) {
+    .df <- .df %>%
+      dplyr::as_tibble()
+
+    if (!is.null(origgroups) & !(.group_i == TRUE & !anyNA(inp$i))) {
+      .df <- .df %>%
+        dplyr::group_by_at(origgroups)
+    }
   }
 
   if (.group_i == TRUE & !anyNA(inp$i)) {
@@ -263,6 +281,11 @@ mutate_subset <- function(.df, ..., .filter, .group_i = TRUE, .i = NULL, .t = NU
       dplyr::select(-dplyr::one_of(notgroups))))
     suppressWarnings(.df <- .df %>%
       dplyr::left_join(summ, by = groups))
+  }
+
+  # Panel-declare data if any changes have been made.
+  if (.setpanel == TRUE & (!anyNA(.icall) | !is.na(.tcall) | !is.na(.d))) {
+    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, inp$d, .uniqcheck = .uniqcheck)
   }
 
   # Restore original grouping

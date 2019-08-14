@@ -304,6 +304,8 @@ df <- pibble(
 ) %>%
   mutate(PDV = payout) %>%
   mutate_cascade(PDV = payout + .95 * tlag(PDV, .n = -1), .backwards = TRUE)
+
+df
 ```
 
 As expected, the `PDV` in period `5` is just the payout: `4`. In period `4` it's `2 + .95*4 = 5.8`. Then in period `3` it's `2 + .95*5.8 = 7.51`, and so on.

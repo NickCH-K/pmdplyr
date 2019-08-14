@@ -374,18 +374,20 @@ dropchecker <- function(.data, .i, .t, .d, method) {
   checknames <- c(.i, .t)
   checknames <- checknames[!is.na(checknames)]
 
-  if (min(checknames %in% names(.data)) == 0) {
-    warning(paste(method, "() function leaves data without variables listed in .i or .t. Removing pibble status.", sep = ""))
+  if (length(checknames) > 0) {
+    if (min(checknames %in% names(.data)) == 0) {
+      warning(paste(method, "() function leaves data without variables listed in .i or .t. Removing pibble status.", sep = ""))
 
-    class(.data) <- class(.data)[!(class(.data) %in% "tbl_pb")]
+      class(.data) <- class(.data)[!(class(.data) %in% "tbl_pb")]
 
-    # %@% not working here for some reason?
-    attr(.data, ".i") <- NULL
-    attr(.data, ".t") <- NULL
-    attr(.data, ".d") <- NULL
+      # %@% not working here for some reason?
+      attr(.data, ".i") <- NULL
+      attr(.data, ".t") <- NULL
+      attr(.data, ".d") <- NULL
 
-    return(.data)
-  } else {
-    return(build_pibble(.data, .i, .t, .d))
+      return(.data)
+    }
   }
+
+  return(build_pibble(.data, .i, .t, .d))
 }

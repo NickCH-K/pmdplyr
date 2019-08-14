@@ -253,6 +253,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   }
 
   tocopy <- .df %>%
+    dplyr::ungroup() %>%
     dplyr::as_tibble() %>%
     dplyr::filter_at(copyname, dplyr::any_vars(. > 0)) %>%
     dplyr::select_at(selnames)
@@ -290,12 +291,17 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   # and return a pibble
   .df <- dplyr::bind_rows(
     .df %>%
+      dplyr::ungroup() %>%
       dplyr::as_tibble() %>%
       dplyr::select(-!!copyname),
     tocopy
   ) %>%
-    dplyr::arrange_at(arrnames) %>%
-    as_pibble(.i = inp$i, .t = inp$t, .d = inp$d)
+    dplyr::arrange_at(arrnames)
+
+  # Panel-declare data if any changes have been made.
+  if (.setpanel == TRUE & (!anyNA(.icall) | !is.na(.tcall) | !is.na(.d))) {
+    .df <- as_pibble(.df, {{ .i }}, {{ .t }}, inp$d, .uniqcheck = .uniqcheck)
+  }
 
   # Check if grouping has changed and there WAS an original grouping
   if (!setequal(c(origgroups, ".rows"), .df %@% "groups")) {
@@ -579,7 +585,7 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
 
 fixed_check <- function(.df, .var = NULL, .within = NULL) {
   if (sum(class(.df) %in% c("data.frame", "tbl", "tbl_df")) == 0) {
-    stop("Requires data to be a data frame or tibble.")
+    stop("Requires data to be a data frame, pibble, or tibble.")
   }
   if (sum(class(.df) == "data.table") > 0) {
     warning("pmdplyr functions have not been tested with data.tables.")
