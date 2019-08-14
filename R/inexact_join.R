@@ -88,9 +88,10 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
   }
 
   # Avoid "Removing Pibble Status" warning
-  x_not_unique <- suppressWarnings(x %>%
+  x_not_unique <- x %>%
+    dplyr::as_tibble() %>%
     dplyr::select_at(matchvarsx) %>%
-    anyDuplicated() > 0)
+    anyDuplicated() > 0
 
   # If we're doing an inexact_join, there may be a var to consider
   matchvarsy <- matchvars
@@ -103,9 +104,10 @@ safe_join <- function(x, y, expect = NULL, join = NULL, ...) {
     pluraly <- "s "
   }
 
-  y_not_unique <- suppressWarnings(y %>%
+  y_not_unique <- y %>%
+    dplyr::as_tibble() %>%
     dplyr::select_at(matchvarsy) %>%
-    anyDuplicated() > 0)
+    anyDuplicated() > 0
 
   if ("x" %in% expect & !("no m:m" %in% expect) & x_not_unique) {
     errormessagex <- paste("The left-hand data set x is not uniquely identified by the joining variable",
@@ -431,8 +433,8 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   yidname <- uniqname(y)
 
   # Likely to drop pibble status if it's a pibble
-  suppressWarnings(
     z <- y %>%
+      dplyr::as_tibble() %>%
       dplyr::select_at(c(matchvars, jvar)) %>%
       # collapse all the matchvars into one
       dplyr::mutate(!!yidname := id_variable(.[, matchvars], .method = "character")) %>%
@@ -441,7 +443,6 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
       dplyr::ungroup() %>%
       # one observation each
       dplyr::distinct()
-  )
 
   # similar one-column ID for x
   xidname <- uniqname(x)
@@ -567,9 +568,11 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   }
 
   # Get rid of the ID variable we were using
+  # Should not affect pibble status since this was added afterwards
   x <- x %>% select(-!!xidname)
 
   # Get rid of the matchvar if we created a fake one
+  # Should not affect pibble status since this was added afterwards
   if (rem_flag == TRUE) {
     x <- x %>% select(-!!matchvars)
   }

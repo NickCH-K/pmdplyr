@@ -52,13 +52,16 @@ within_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = functi
     stop("within_i() requires that .i be declared either in the function or by as_pibble().")
   }
 
+  # Convert to tibble so as to avoid dropping pibble status
+  .df <- dplyr::as_tibble(.df)
+
   # Figure out if we're working with grouped data and so length(var) < nrow(.df)
   # If we are, switch everything over to .data
   if (length(.var) < nrow(.df)) {
     # Pull out the .data
     datapro <- get(".data", envir = parent.frame())
 
-    .df <- data.frame(lapply(inp$i, function(x) datapro[[x]]))
+    .df <- dplyr::as_tibble(data.frame((lapply(inp$i, function(x) datapro[[x]]))))
     names(.df) <- inp$i
 
     if (length(.var) != nrow(.df)) {
@@ -111,13 +114,16 @@ between_i <- function(.var, .df = get(".", envir = parent.frame()), .fcn = funct
     stop("between_i() requires that .i be declared either in the function or by as_pibble().")
   }
 
+  # Convert to tibble so as to avoid dropping pibble status
+  .df <- dplyr::as_tibble(.df)
+
   # Figure out if we're working with grouped data and so length(var) < nrow(.df)
   # If we are, switch everything over to .data
   if (length(.var) < nrow(.df)) {
     # Pull out the .data
     datapro <- get(".data", envir = parent.frame())
 
-    .df <- data.frame(lapply(inp$i, function(x) datapro[[x]]))
+    .df <- dplyr::as_tibble(data.frame(lapply(inp$i, function(x) datapro[[x]])))
     names(.df) <- inp$i
 
     if (length(.var) != nrow(.df)) {

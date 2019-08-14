@@ -29,37 +29,44 @@ last_join <- joined %>%
 
 test_that("safe_join works", {
   expect_error(safe_join(left, right %>%
+    dplyr::as_tibble() %>%
     dplyr::rename(t = t2) %>%
     as_pibble(.i = i, .t = t),
   expect = c("x", "y"), by = "i", join = dplyr::left_join
   ))
   expect_equal(safe_join(left, right %>%
+    dplyr::as_tibble() %>%
     dplyr::rename(t = t2) %>%
     as_pibble(.i = i, .t = t),
   expect = c("x", "y"), join = dplyr::left_join
   ), joined)
   expect_error(safe_join(left, right %>%
+    dplyr::as_tibble() %>%
     dplyr::rename(t = t2) %>%
     as_pibble(.i = i, .t = t),
   expect = "y"
   ))
   expect_error(safe_join(left, right %>%
+    dplyr::as_tibble() %>%
     dplyr::rename(t = t2) %>%
     as_pibble(.i = i, .t = t),
   expect = "1:1", by = "i", join = dplyr::left_join
   ))
   expect_error(safe_join(left, right %>%
+    dplyr::as_tibble() %>%
     dplyr::rename(t = t2) %>%
     as_pibble(.i = i, .t = t),
   expect = "1:m", by = "i", join = dplyr::left_join
   ))
   expect_error(safe_join(right %>%
+    dplyr::as_tibble() %>%
     dplyr::rename(t = t2) %>%
     as_pibble(.i = i, .t = t), left,
   expect = "m:1", by = "i", join = dplyr::left_join
   ))
   expect_equal(
     safe_join(left, right %>%
+      dplyr::as_tibble() %>%
       dplyr::select(-t2),
     expect = "m:1", by = "i", join = dplyr::left_join
     ),
@@ -67,6 +74,7 @@ test_that("safe_join works", {
       dplyr::mutate(b = c(1, 1, 2, 2))
   )
   expect_equal(safe_join(left, right %>%
+    dplyr::as_tibble() %>%
     dplyr::rename(t = t2) %>%
     as_pibble(.i = i, .t = t),
   expect = "no m:m"

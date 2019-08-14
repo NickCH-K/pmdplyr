@@ -29,6 +29,7 @@ id_variable <- function(..., .method = "number", .minwidth = FALSE) {
   }
 
   # What we're working with
+  # Could use tibble here but there's no need
   idf <- data.frame(...)
   var <- names(idf)
 

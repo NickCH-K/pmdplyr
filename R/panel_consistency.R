@@ -436,9 +436,10 @@ panel_locf <- function(.var, .df = get(".", envir = parent.frame()), .fill = NA,
   arrnames <- arrnames[!is.na(arrnames)]
 
   # We only need these
-  .df <- suppressWarnings(.df %>%
+  .df <- .df %>%
+    dplyr::as_tibble() %>%
     dplyr::ungroup() %>%
-    dplyr::select_at(arrnames))
+    dplyr::select_at(arrnames)
 
   # Get rid of our undesirable values
   .var <- ifelse(.var %in% .fill, NA, .var)
