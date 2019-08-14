@@ -21,31 +21,49 @@ if ("tsibble" %in% pkgs) {
   test_that("pibble tsibble conversion", {
     expect_equal(panel_convert(pb, to = "tsibble"), ts)
     expect_equal(panel_convert(ts, to = "pibble"), pb)
-    expect_equal(tsibble::tsibble(i = c(1, 1, 1),
-                                  t = 1:3,
-                                  key = i,
-                                  index = t) %>%
-                   panel_convert("pibble"),
-                 pibble(i = c(1, 1, 1),
-                        t = 1:3,
-                        .i = i, .t = t))
-    expect_equal(tsibble::tsibble(i = c(1, 1, 1),
-                                  t = 1:3,
-                                  key = i,
-                                  index = t,
-                                  regular = FALSE) %>%
-                   panel_convert("pibble"),
-                 pibble(i = c(1, 1, 1),
-                        t = 1:3,
-                        .i = i, .t = t, .d = 0))
-    expect_equal(tsibble::tsibble(i = c(1, 1, 1),
-                                  t = c(1, 3, 5),
-                                  key = i,
-                                  index = t) %>%
-                   panel_convert("pibble"),
-                 pibble(i = c(1, 1, 1),
-                        t = c(1, 3, 5),
-                        .i = i, .t = t, .d = 2))
+    expect_equal(
+      tsibble::tsibble(
+        i = c(1, 1, 1),
+        t = 1:3,
+        key = i,
+        index = t
+      ) %>%
+        panel_convert("pibble"),
+      pibble(
+        i = c(1, 1, 1),
+        t = 1:3,
+        .i = i, .t = t
+      )
+    )
+    expect_equal(
+      tsibble::tsibble(
+        i = c(1, 1, 1),
+        t = 1:3,
+        key = i,
+        index = t,
+        regular = FALSE
+      ) %>%
+        panel_convert("pibble"),
+      pibble(
+        i = c(1, 1, 1),
+        t = 1:3,
+        .i = i, .t = t, .d = 0
+      )
+    )
+    expect_equal(
+      tsibble::tsibble(
+        i = c(1, 1, 1),
+        t = c(1, 3, 5),
+        key = i,
+        index = t
+      ) %>%
+        panel_convert("pibble"),
+      pibble(
+        i = c(1, 1, 1),
+        t = c(1, 3, 5),
+        .i = i, .t = t, .d = 2
+      )
+    )
   })
 }
 

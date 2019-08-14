@@ -48,17 +48,17 @@ test_that("time_variable works", {
     c(1L, 61L, 155L)
   )
   expect_equal(td %>%
-                 dplyr::mutate(t = time_variable(year, month,
-                                                 .method = "turnover",
-                                                 .turnover = c(NA, 12),
-                                                 .turnover_start = c(NA, 1)
-                 )) %>%
-                 dplyr::pull(t), c(23L, 12L, 1L))
+    dplyr::mutate(t = time_variable(year, month,
+      .method = "turnover",
+      .turnover = c(NA, 12),
+      .turnover_start = c(NA, 1)
+    )) %>%
+    dplyr::pull(t), c(23L, 12L, 1L))
   expect_equal(td %>%
-                 dplyr::mutate(t = time_variable(year, month,
-                                                 .method = "turnover"
-                 )) %>%
-                 dplyr::pull(t), c(5L, 3L, 1L))
+    dplyr::mutate(t = time_variable(year, month,
+      .method = "turnover"
+    )) %>%
+    dplyr::pull(t), c(5L, 3L, 1L))
   expect_equal(td %>%
     dplyr::mutate(t = time_variable(year,
       .method = "present"
@@ -88,11 +88,13 @@ test_that("time_variable works", {
   expect_equal(td_multiyear %>% dplyr::mutate(t = time_variable(date,
     .method = "month",
     .breaks = c(2, 4),
-    .skip = 3)) %>%
+    .skip = 3
+  )) %>%
     dplyr::pull(t), c(NA, NA, NA, 1L))
   expect_equal(td %>% dplyr::mutate(t = time_variable(date,
     .method = "day",
-    .skip = 3)) %>%
+    .skip = 3
+  )) %>%
     dplyr::pull(t), c(1L, NA, 133L))
   expect_equal(time_variable("20140101", .method = "day", .datepos = 3:8), 1L)
   expect_equal(time_variable("20140101", .method = "year", .datepos = 3:4), 2014L)

@@ -28,7 +28,8 @@ test_that("mutate_cascade with tlag works", {
         .t = t
       ) %>%
       dplyr::pull(x),
-    c(1, 3, 6))
+    c(1, 3, 6)
+  )
   # Alternate options
   expect_equal(
     cascade_data %>%
@@ -39,25 +40,33 @@ test_that("mutate_cascade with tlag works", {
         .setpanel = FALSE
       ) %>%
       dplyr::pull(x),
-    c(NA, 3, 5))
+    c(NA, 3, 5)
+  )
   expect_equal(
     cascade2 %>%
       dplyr::group_by(i) %>%
       mutate_cascade(x = x + tlag(x, .n = -1, .quick = TRUE), .backwards = TRUE) %>%
       dplyr::pull(x),
-    c(6, 5, 3, 15, 11, 6))
+    c(6, 5, 3, 15, 11, 6)
+  )
   expect_equal(
     (cascade2 %>%
-       as_pibble() %>%
-       mutate_cascade(x = x +
-                        tlag(x, .df = cascade2, .n = -1, .quick = TRUE),
-                      .backwards = TRUE, .i = i, .t = t, .setpanel = FALSE)) %@% ".i", NA_character_)
+      as_pibble() %>%
+      mutate_cascade(
+        x = x +
+          tlag(x, .df = cascade2, .n = -1, .quick = TRUE),
+        .backwards = TRUE, .i = i, .t = t, .setpanel = FALSE
+      )) %@% ".i", NA_character_
+  )
   expect_false(
     "tbl_pb" %in% class(cascade2 %>%
-       as_tibble() %>%
-       mutate_cascade(x = x +
-                        tlag(x, .df = cascade2, .n = -1, .quick = TRUE),
-                      .backwards = TRUE, .i = i, .t = t, .setpanel = FALSE)))
+      as_tibble() %>%
+      mutate_cascade(
+        x = x +
+          tlag(x, .df = cascade2, .n = -1, .quick = TRUE),
+        .backwards = TRUE, .i = i, .t = t, .setpanel = FALSE
+      ))
+  )
 })
 
 test_that("mutate_subset works", {
@@ -93,13 +102,17 @@ test_that("mutate_subset works", {
   expect_identical(
     (cascade2 %>%
       as_pibble() %>%
-      mutate_subset(y = mean(x), .filter = t <= 2, .setpanel = FALSE)) %@% ".i", NA_character_)
+      mutate_subset(y = mean(x), .filter = t <= 2, .setpanel = FALSE)) %@% ".i", NA_character_
+  )
   expect_false(
     "tbl_pb" %in% class(cascade2 %>%
       as_tibble() %>%
-      mutate_subset(y = mean(x),
-                    .filter = t <= 2,
-                    .i = i,
-                    .t = t,
-                    .setpanel = FALSE)))
+      mutate_subset(
+        y = mean(x),
+        .filter = t <= 2,
+        .i = i,
+        .t = t,
+        .setpanel = FALSE
+      ))
+  )
 })

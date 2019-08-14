@@ -468,7 +468,7 @@ time_variable_turnover <- function(..., .turnover = NA, .turnover_start = NA) {
     stop("To use the turnover .method, the number of variables in the variable list, .turnover, and .turnover_start must all be the same.")
   }
   if (sum(dplyr::summarize_all(data, max) > .turnover, na.rm = TRUE) > 0 |
-      sum(dplyr::summarize_all(data, min) < .turnover_start, na.rm = TRUE) > 0) {
+    sum(dplyr::summarize_all(data, min) < .turnover_start, na.rm = TRUE) > 0) {
     stop("All values must be within the minima and maxima given in .turnover_start and .turnover")
   }
 
@@ -492,8 +492,10 @@ time_variable_turnover <- function(..., .turnover = NA, .turnover_start = NA) {
   .turnover[length(var) + 1] <- 1
 
   # Multiply by product of possibilities downstream to make room for every period
-  td <- dplyr::as_tibble(data.frame(sapply(1:length(var),
-               function(x) td[, x] * prod(.turnover[(x + 1):(length(var) + 1)]))))
+  td <- dplyr::as_tibble(data.frame(sapply(
+    1:length(var),
+    function(x) td[, x] * prod(.turnover[(x + 1):(length(var) + 1)])
+  )))
 
   timevar <- rowSums(td)
 

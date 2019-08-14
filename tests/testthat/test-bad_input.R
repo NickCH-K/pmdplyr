@@ -2,33 +2,43 @@
 # Note that the data.table warning is not tested so as to avoid needing the package
 
 ### CHECK_PANEL_INPUTS
-df <- data.frame(i = 1:3,
-                 t = 1:3,
-                 x = 1:3)
+df <- data.frame(
+  i = 1:3,
+  t = 1:3,
+  x = 1:3
+)
 
-test_that("check_panel_inputs input failstates",{
+test_that("check_panel_inputs input failstates", {
   expect_error(pmdplyr:::check_panel_inputs(as.matrix(df),
-                                            .i = "i", .t = NA, .d = 1, .uniqcheck = FALSE))
+    .i = "i", .t = NA, .d = 1, .uniqcheck = FALSE
+  ))
   expect_warning(pmdplyr:::check_panel_inputs(as.list(df),
-                                            .i = "i", .t = NA, .d = 1, .uniqcheck = FALSE))
+    .i = "i", .t = NA, .d = 1, .uniqcheck = FALSE
+  ))
   expect_error(pmdplyr:::check_panel_inputs(df,
-                                              .i = 2, .t = NA, .d = 1, .uniqcheck = FALSE))
+    .i = 2, .t = NA, .d = 1, .uniqcheck = FALSE
+  ))
   expect_error(pmdplyr:::check_panel_inputs(df,
-                                            .i = "i", .t = 2, .d = 1, .uniqcheck = FALSE))
+    .i = "i", .t = 2, .d = 1, .uniqcheck = FALSE
+  ))
   expect_error(pmdplyr:::check_panel_inputs(df,
-                                            .i = "i", .t = c("t", "x"), .d = 1, .uniqcheck = FALSE))
+    .i = "i", .t = c("t", "x"), .d = 1, .uniqcheck = FALSE
+  ))
   expect_error(pmdplyr:::check_panel_inputs(df,
-                                            .i = "i", .t = "t", .d = "1", .uniqcheck = FALSE))
+    .i = "i", .t = "t", .d = "1", .uniqcheck = FALSE
+  ))
   expect_error(pmdplyr:::check_panel_inputs(df,
-                                            .i = "foo", .t = "t", .d = 1, .uniqcheck = FALSE))
+    .i = "foo", .t = "t", .d = 1, .uniqcheck = FALSE
+  ))
   expect_error(pmdplyr:::check_panel_inputs(df,
-                                            .i = "i", .t = "foo", .d = 1, .uniqcheck = FALSE))
+    .i = "i", .t = "foo", .d = 1, .uniqcheck = FALSE
+  ))
   expect_error(pmdplyr:::check_panel_inputs(df,
-                                            .i = "i", .t = "t", .d = 1, .uniqcheck = 2))
+    .i = "i", .t = "t", .d = 1, .uniqcheck = 2
+  ))
   expect_error(pmdplyr:::check_panel_inputs(df %>% dplyr::mutate(t = as.character(t)),
-                                            .i = "i", .t = "t", .d = 1, .uniqcheck = FALSE))
-
-
+    .i = "i", .t = "t", .d = 1, .uniqcheck = FALSE
+  ))
 })
 
 ### BETWEEN_WITHIN
@@ -146,17 +156,19 @@ test_that("panel_convert input failstates", {
   expect_error(df %>% panel_convert(to = "tsibble") %>% panel_convert(to = "tsibble"))
   expect_error(df %>% panel_convert(to = "panelr") %>% panel_convert(to = "panelr"))
   expect_error(df %>%
-                 as_pibble(.i = c(i, x), .t = t) %>%
-                 panel_convert("plm"))
+    as_pibble(.i = c(i, x), .t = t) %>%
+    panel_convert("plm"))
   expect_error(df %>%
-                 as_pibble(.i = c(i, x), .t = t) %>%
-                 panel_convert("tsibble") %>%
-                 panel_convert("plm"))
+    as_pibble(.i = c(i, x), .t = t) %>%
+    panel_convert("tsibble") %>%
+    panel_convert("plm"))
   expect_warning(df %>% as_pibble(.i = i, .t = t, .d = 0) %>% panel_convert("tsibble") %>% panel_convert("plm"))
-  expect_warning(tsibble::tsibble(i = c(1, 1, 1),
-                                t = c(1, 3, 5),
-                                key = "i",
-                                index = "t") %>% panel_convert("plm"))
+  expect_warning(tsibble::tsibble(
+    i = c(1, 1, 1),
+    t = c(1, 3, 5),
+    key = "i",
+    index = "t"
+  ) %>% panel_convert("plm"))
   expect_error(df %>% as.matrix() %>% panel_convert("plm"))
 })
 
@@ -300,43 +312,49 @@ test_that("time_variable input failstates", {
       .skip = 2010
     )))
   expect_warning(td %>%
-                   dplyr::mutate(t = time_variable(year, month,
-                                                   .method = "turnover",
-                                                   .turnover = c(2010, NA),
-                                                   .turnover_start = c(1, NA))))
+    dplyr::mutate(t = time_variable(year, month,
+      .method = "turnover",
+      .turnover = c(2010, NA),
+      .turnover_start = c(1, NA)
+    )))
   expect_error(td %>%
-                   dplyr::mutate(t = time_variable(year,
-                                                   .method = "turnover")))
+    dplyr::mutate(t = time_variable(year,
+      .method = "turnover"
+    )))
   expect_error(td %>% dplyr::mutate(month = as.character(month)) %>%
-                 dplyr::mutate(t = time_variable(year,month,
-                                                 .method = "turnover")))
+    dplyr::mutate(t = time_variable(year, month,
+      .method = "turnover"
+    )))
   expect_error(td %>% dplyr::mutate(month = month - 3) %>%
-                 dplyr::mutate(t = time_variable(year,month,
-                                                 .method = "turnover")))
+    dplyr::mutate(t = time_variable(year, month,
+      .method = "turnover"
+    )))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(year,month,
-                                                 .method = "turnover",
-                                                 .turnover = c(NA, 1, 2))))
+    dplyr::mutate(t = time_variable(year, month,
+      .method = "turnover",
+      .turnover = c(NA, 1, 2)
+    )))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(year,month,
-                                                 .method = "turnover",
-                                                 .turnover = c(NA, 1))))
+    dplyr::mutate(t = time_variable(year, month,
+      .method = "turnover",
+      .turnover = c(NA, 1)
+    )))
   expect_error(td %>% dplyr::mutate(date2 = date) %>%
-                 dplyr::mutate(t = time_variable(date, date2, .method = "year")))
+    dplyr::mutate(t = time_variable(date, date2, .method = "year")))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date, .method = "year", .start = "foo")))
+    dplyr::mutate(t = time_variable(date, .method = "year", .start = "foo")))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date, .method = "year", .datepos = c(NA, 2))))
+    dplyr::mutate(t = time_variable(date, .method = "year", .datepos = c(NA, 2))))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date, .method = "year", .datepos = c("b", "a"))))
+    dplyr::mutate(t = time_variable(date, .method = "year", .datepos = c("b", "a"))))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date, .method = "year", .skip = "foo")))
+    dplyr::mutate(t = time_variable(date, .method = "year", .skip = "foo")))
   expect_error(td %>%
-                 dplyr::mutate(t = time_variable(date, .method = "year", .breaks = "foo")))
+    dplyr::mutate(t = time_variable(date, .method = "year", .breaks = "foo")))
   expect_error(td %>% dplyr::mutate(date = as.character(date)) %>%
-                 dplyr::mutate(t = time_variable(date, .method = "week", .datepos = c(1, 2))))
+    dplyr::mutate(t = time_variable(date, .method = "week", .datepos = c(1, 2))))
   expect_error(td %>% dplyr::mutate(date2 = date) %>%
-                 dplyr::mutate(t = time_variable(date, .method = "day", .skip = c(1, 8))))
+    dplyr::mutate(t = time_variable(date, .method = "day", .skip = c(1, 8))))
   expect_error(time_variable("20140101", .method = "day", .datepos = 3:9))
   expect_error(time_variable("20140101", .method = "year", .datepos = 3:5))
   expect_error(time_variable("20140101", .method = "month", .datepos = 3:7))
@@ -374,15 +392,13 @@ test_that("tlag input failstates", {
   expect_error(df %>% dplyr::mutate(y = tlag(x, .quick = 2)))
   expect_error(df %>% dplyr::mutate(y = tlag(x, .default = c(1, 2))))
   expect_error(df %>%
-                 as_pibble(.i = i) %>%
-                 dplyr::mutate(y = tlag(x, .resolve = mean)))
+    as_pibble(.i = i) %>%
+    dplyr::mutate(y = tlag(x, .resolve = mean)))
   expect_error(tlag(df$x, df, .i = "x", .resolve = mean))
   expect_error(df2 %>%
-                 dplyr::group_by(i) %>%
-                 dplyr::mutate(y = tlag(1:2, .quick = TRUE)))
+    dplyr::group_by(i) %>%
+    dplyr::mutate(y = tlag(1:2, .quick = TRUE)))
   expect_error(df_to_resolve %>%
-                 dplyr::mutate(x = 1:6) %>%
-                 dplyr::mutate(y = tlag(x)))
+    dplyr::mutate(x = 1:6) %>%
+    dplyr::mutate(y = tlag(x)))
 })
-
-

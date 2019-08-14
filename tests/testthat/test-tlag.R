@@ -21,32 +21,44 @@ df_to_resolve <- pibble(
 )
 
 test_that("tlag works", {
-  expect_equal(df %>%
+  expect_equal(
+    df %>%
       dplyr::mutate(y = tlag(x, .resolve = mean)) %>%
       dplyr::pull(y),
-    c(NA, NA, 1.5, 1.5))
-  expect_equal(df %>%
-                 as_pibble(.t = t, .d = 0) %>%
-                 dplyr::mutate(y = tlag(x, .resolve = mean, .default = 1)) %>%
-                 dplyr::pull(y),
-               c(1.0, 1.0, 1.5, 1.5))
+    c(NA, NA, 1.5, 1.5)
+  )
+  expect_equal(
+    df %>%
+      as_pibble(.t = t, .d = 0) %>%
+      dplyr::mutate(y = tlag(x, .resolve = mean, .default = 1)) %>%
+      dplyr::pull(y),
+    c(1.0, 1.0, 1.5, 1.5)
+  )
   expect_equal(tlag(df$x, df, .t = t, .group_i = FALSE, .resolve = mean), c(NA, NA, 1.5, 1.5))
-  expect_equal(df2 %>%
-                 dplyr::group_by(i) %>%
-                 dplyr::mutate(y = tlag(x, .quick = TRUE)) %>%
-                 dplyr::pull(y),
-               c(NA, 1, 2, NA, 4, 5))
-  expect_equal(df2 %>%
-                 dplyr::mutate(y = tlag(x, .quick = TRUE)) %>%
-                 dplyr::pull(y),
-               c(NA, 1, 2, NA, 4, 5))
-  expect_equal(df2 %>%
-                 as_pibble(.i = i, .t = t, .d = 0) %>%
-                 dplyr::mutate(y = tlag(x, .quick = TRUE)) %>%
-                 dplyr::pull(y),
-               c(NA, 1, 2, NA, 4, 5))
-  expect_equal(df_to_resolve %>%
-                 dplyr::mutate(y = tlag(x)) %>%
-                 dplyr::pull(y),
-               c(NA, 1, 1, NA, 1, 1))
+  expect_equal(
+    df2 %>%
+      dplyr::group_by(i) %>%
+      dplyr::mutate(y = tlag(x, .quick = TRUE)) %>%
+      dplyr::pull(y),
+    c(NA, 1, 2, NA, 4, 5)
+  )
+  expect_equal(
+    df2 %>%
+      dplyr::mutate(y = tlag(x, .quick = TRUE)) %>%
+      dplyr::pull(y),
+    c(NA, 1, 2, NA, 4, 5)
+  )
+  expect_equal(
+    df2 %>%
+      as_pibble(.i = i, .t = t, .d = 0) %>%
+      dplyr::mutate(y = tlag(x, .quick = TRUE)) %>%
+      dplyr::pull(y),
+    c(NA, 1, 2, NA, 4, 5)
+  )
+  expect_equal(
+    df_to_resolve %>%
+      dplyr::mutate(y = tlag(x)) %>%
+      dplyr::pull(y),
+    c(NA, 1, 1, NA, 1, 1)
+  )
 })
