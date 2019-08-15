@@ -1,7 +1,7 @@
 Package: pmdplyr
 Type: Package
 Title: 'dplyr' Extension for Common Panel Data Maneuvers
-Version: 0.2.1.9012
+Version: 0.3.0
 Authors@R: c(
     person(given = "Nick", family = "Huntington-Klein", role = c("aut","cre"), 
            email = "nhuntington-klein@fullerton.edu", 
