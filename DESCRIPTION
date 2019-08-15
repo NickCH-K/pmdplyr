@@ -12,6 +12,7 @@ Description: Using the 'dplyr' package as a base, adds a family of functions des
 License: MIT + file LICENSE
 URL: https://nickch-k.github.io/pmdplyr, https://github.com/NickCH-K/pmdplyr
 BugReports: https://github.com/NickCH-K/pmdplyr/issues
+Copyright: file COPYRIGHTS
 Encoding: UTF-8
 Depends: 
     R (>= 3.4),
