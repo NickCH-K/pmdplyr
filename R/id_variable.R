@@ -18,6 +18,9 @@
 
 id_variable <- function(..., .method = "number", .minwidth = FALSE) {
   ########################################## CHECK INPUTS
+  if (length(.method) > 1) {
+    stop(".method must contain only one method.")
+  }
   if (!(.method %in% c("number", "random", "character"))) {
     stop("Unrecognized time_variable .method.")
   }

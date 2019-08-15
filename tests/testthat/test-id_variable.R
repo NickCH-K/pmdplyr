@@ -1,7 +1,5 @@
 library(pmdplyr)
 
-id_variable(a = c(1, 2, 2), b = c("a", "b", "b"), .method = "character", .minwidth = TRUE)
-
 test_that("id_variable works", {
   expect_equal(id_variable(
     a = c(1, 2, 2), b = c("a", "b", "b"),
