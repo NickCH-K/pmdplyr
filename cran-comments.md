@@ -12,7 +12,7 @@
   pibble (11:193)
   tibble (11:174)
   
-  This is expected. The tibble subclass used in this package is a slight variation of the spelling of the tibble subclass. 
+  This is expected. The tibble subclass used in this package ('pibble') is a slight variation of the spelling of 'tibble'. 
   
   This is a first submission.
   
