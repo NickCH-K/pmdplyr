@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -64,6 +64,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -88,7 +91,7 @@
       <h1>pmdplyr: Panel Maneuvers in dplyr</h1>
                         <h4 class="author">Nick Huntington-Klein, Philip Khor</h4>
             
-            <h4 class="date">2019-08-14</h4>
+            <h4 class="date">2019-08-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/NickCH-K/pmdplyr/blob/master/vignettes/pmdplyr.Rmd"><code>vignettes/pmdplyr.Rmd</code></a></small>
       <div class="hidden name"><code>pmdplyr.Rmd</code></div>
@@ -258,7 +261,7 @@
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">df &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(</a>
 <a class="sourceLine" id="cb7-2" title="2">  <span class="dt">country =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
 <a class="sourceLine" id="cb7-3" title="3">    <span class="st">"US"</span>, <span class="st">"US"</span>, <span class="st">"US"</span>, <span class="st">"US"</span>,</a>
-<a class="sourceLine" id="cb7-4" title="4">    <span class="st">"GBR"</span>, <span class="st">"GBR"</span>, <span class="st">"GBR"</span>, <span class="st">"GBR"</span></a>
+<a class="sourceLine" id="cb7-4" title="4">    <span class="st">"ENG"</span>, <span class="st">"ENG"</span>, <span class="st">"ENG"</span>, <span class="st">"ENG"</span></a>
 <a class="sourceLine" id="cb7-5" title="5">  ),</a>
 <a class="sourceLine" id="cb7-6" title="6">  <span class="dt">city =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
 <a class="sourceLine" id="cb7-7" title="7">    <span class="st">"NYC"</span>, <span class="st">"NYC"</span>, <span class="st">"Cambridge"</span>, <span class="st">"NYC"</span>,</a>
@@ -273,14 +276,14 @@
 <a class="sourceLine" id="cb7-16" title="16"></a>
 <a class="sourceLine" id="cb7-17" title="17">df</a>
 <a class="sourceLine" id="cb7-18" title="18"><span class="co">#&gt;   country       city numeric_ID random_ID           char_ID</span></a>
-<a class="sourceLine" id="cb7-19" title="19"><span class="co">#&gt; 1      US        NYC          1        23 |US|.|NYC|.......</span></a>
-<a class="sourceLine" id="cb7-20" title="20"><span class="co">#&gt; 2      US        NYC          1        23 |US|.|NYC|.......</span></a>
-<a class="sourceLine" id="cb7-21" title="21"><span class="co">#&gt; 3      US  Cambridge          2        13 |US|.|Cambridge|.</span></a>
-<a class="sourceLine" id="cb7-22" title="22"><span class="co">#&gt; 4      US        NYC          1        23 |US|.|NYC|.......</span></a>
-<a class="sourceLine" id="cb7-23" title="23"><span class="co">#&gt; 5     GBR  Cambridge          3         4 |GBR||Cambridge|.</span></a>
-<a class="sourceLine" id="cb7-24" title="24"><span class="co">#&gt; 6     GBR     London          4        39 |GBR||London|....</span></a>
-<a class="sourceLine" id="cb7-25" title="25"><span class="co">#&gt; 7     GBR Manchester          5        30 |GBR||Manchester|</span></a>
-<a class="sourceLine" id="cb7-26" title="26"><span class="co">#&gt; 8     GBR Manchester          5        30 |GBR||Manchester|</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-19" title="19"><span class="co">#&gt; 1      US        NYC          1        14 |US|.|NYC|.......</span></a>
+<a class="sourceLine" id="cb7-20" title="20"><span class="co">#&gt; 2      US        NYC          1        14 |US|.|NYC|.......</span></a>
+<a class="sourceLine" id="cb7-21" title="21"><span class="co">#&gt; 3      US  Cambridge          2        16 |US|.|Cambridge|.</span></a>
+<a class="sourceLine" id="cb7-22" title="22"><span class="co">#&gt; 4      US        NYC          1        14 |US|.|NYC|.......</span></a>
+<a class="sourceLine" id="cb7-23" title="23"><span class="co">#&gt; 5     ENG  Cambridge          3        19 |ENG||Cambridge|.</span></a>
+<a class="sourceLine" id="cb7-24" title="24"><span class="co">#&gt; 6     ENG     London          4         7 |ENG||London|....</span></a>
+<a class="sourceLine" id="cb7-25" title="25"><span class="co">#&gt; 7     ENG Manchester          5        18 |ENG||Manchester|</span></a>
+<a class="sourceLine" id="cb7-26" title="26"><span class="co">#&gt; 8     ENG Manchester          5        18 |ENG||Manchester|</span></a></code></pre></div>
 </div>
 <div id="time_variable" class="section level2">
 <h2 class="hasAnchor">

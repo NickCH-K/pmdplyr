@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -64,6 +64,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -88,7 +91,7 @@
       <h1>pmdplyr: dplyr Variants</h1>
                         <h4 class="author">Nick Huntington-Klein, Philip Khor</h4>
             
-            <h4 class="date">2019-08-14</h4>
+            <h4 class="date">2019-08-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/NickCH-K/pmdplyr/blob/master/vignettes/dplyr_variants.Rmd"><code>vignettes/dplyr_variants.Rmd</code></a></small>
       <div class="hidden name"><code>dplyr_variants.Rmd</code></div>
@@ -255,11 +258,11 @@
 <p><code>expect</code> is a character variable where you specify the type of join you <em>think</em> you’re about to do. You can specify this either as one-to-many / many-to-one / one-to-one directly, or you can specify which of the two data sets (<code>x</code> or <code>y</code>) you think should be uniquely identified by the joining variables.</p>
 <ul>
 <li>
-<code>expect = "1:1" or</code>expect = c(“x”, “y”)<code>or</code>expect = “xy”` indicates that you anticipate to join one-to-one.</li>
+<code>expect = "1:1"</code> or <code>expect = c("x", "y")</code> or <code>expect = "xy"</code> indicates that you anticipate to join one-to-one.</li>
 <li>
-<code>expect = "m:1" or</code>expect = “y”` indicates that you expect to join many-to-one.</li>
+<code>expect = "m:1"</code> or expect = “y”` indicates that you expect to join many-to-one.</li>
 <li>
-<code>expect = "1:m" or "expect = "x"</code> indicates that you expect to join one-to-many.</li>
+<code>expect = "1:m"</code> or <code>"expect = "x"</code> indicates that you expect to join one-to-many.</li>
 <li>
 <code>expect = "no m:m"</code> indicates that you don’t care whether you’re one-to-one, one-to-many, or many-to-one, as long as you’re not many-to-many.</li>
 <li>There is no <code>expect</code> option that allows you to run a many-to-many join.</li>
@@ -340,18 +343,16 @@
 <a class="sourceLine" id="cb12-10" title="10"><span class="st">  </span><span class="kw"><a href="../reference/mutate_subset.html">mutate_subset</a></span>(<span class="dt">college_earnings =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(earn), <span class="dt">.filter =</span> college <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb12-11" title="11"><span class="st">  </span><span class="co"># And compare to our own earnings</span></a>
 <a class="sourceLine" id="cb12-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">earnings_vs_college =</span> earn <span class="op">-</span><span class="st"> </span>college_earnings)</a>
-<a class="sourceLine" id="cb12-13" title="13"><span class="co">#&gt; # A pibble:                         6 x 5</span></a>
-<a class="sourceLine" id="cb12-14" title="14"><span class="co">#&gt; # Individual-level identifier (.i): state [2]</span></a>
-<a class="sourceLine" id="cb12-15" title="15"><span class="co">#&gt; # Gap (.d):                         1</span></a>
-<a class="sourceLine" id="cb12-16" title="16"><span class="co">#&gt;   state college  earn college_earnings earnings_vs_college</span></a>
-<a class="sourceLine" id="cb12-17" title="17"><span class="co">#&gt;   &lt;chr&gt; &lt;lgl&gt;   &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb12-18" title="18"><span class="co">#&gt; 1 CA    TRUE        1              1.5                -0.5</span></a>
-<a class="sourceLine" id="cb12-19" title="19"><span class="co">#&gt; 2 CA    TRUE        2              1.5                 0.5</span></a>
-<a class="sourceLine" id="cb12-20" title="20"><span class="co">#&gt; 3 CA    FALSE       3              1.5                 1.5</span></a>
-<a class="sourceLine" id="cb12-21" title="21"><span class="co">#&gt; 4 NV    TRUE        2              2                   0  </span></a>
-<a class="sourceLine" id="cb12-22" title="22"><span class="co">#&gt; 5 NV    FALSE       3              2                   1  </span></a>
-<a class="sourceLine" id="cb12-23" title="23"><span class="co">#&gt; 6 NV    FALSE       2              2                   0</span></a></code></pre></div>
-<p>The rest of the options include <code>.group_i</code> (by default, if <code>.i</code> can be found, analysis will be performed within-individual. Set <code>.group_i = FALSE</code> to ignore this), and standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.d</code>, <code>.uniqcheck</code>, see the “pibble” section above). The <code>.d = NA</code> will become <code>.d = 1</code> if either <code>.i</code> or <code>.t</code> are declared. <code>.setpanel</code> ensures that if you declare the panel structure in the <code><a href="../reference/panel_fill.html">panel_fill()</a></code> function, it will be maintained in the object you get back.</p>
+<a class="sourceLine" id="cb12-13" title="13"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
+<a class="sourceLine" id="cb12-14" title="14"><span class="co">#&gt;   state college  earn college_earnings earnings_vs_college</span></a>
+<a class="sourceLine" id="cb12-15" title="15"><span class="co">#&gt;   &lt;chr&gt; &lt;lgl&gt;   &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb12-16" title="16"><span class="co">#&gt; 1 CA    TRUE        1              1.5                -0.5</span></a>
+<a class="sourceLine" id="cb12-17" title="17"><span class="co">#&gt; 2 CA    TRUE        2              1.5                 0.5</span></a>
+<a class="sourceLine" id="cb12-18" title="18"><span class="co">#&gt; 3 CA    FALSE       3              1.5                 1.5</span></a>
+<a class="sourceLine" id="cb12-19" title="19"><span class="co">#&gt; 4 NV    TRUE        2              2                   0  </span></a>
+<a class="sourceLine" id="cb12-20" title="20"><span class="co">#&gt; 5 NV    FALSE       3              2                   1  </span></a>
+<a class="sourceLine" id="cb12-21" title="21"><span class="co">#&gt; 6 NV    FALSE       2              2                   0</span></a></code></pre></div>
+<p>The rest of the options include <code>.group_i</code> (by default, if <code>.i</code> can be found, analysis will be performed within-individual. Set <code>.group_i = FALSE</code> to ignore this), and standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.d</code>, <code>.uniqcheck</code>, see the “pibble” section above). The <code>.d = NA</code> will become <code>.d = 1</code> if either <code>.i</code> or <code>.t</code> are declared. <code>.setpanel</code> ensures that if you declare the panel structure in the <code><a href="../reference/mutate_subset.html">mutate_subset()</a></code> function, it will be maintained in the object you get back.</p>
 </div>
 <div id="mutate_cascade" class="section level2">
 <h2 class="hasAnchor">
@@ -371,7 +372,7 @@
 <a class="sourceLine" id="cb13-10" title="10">  <span class="dt">.setpanel =</span> <span class="ot">TRUE</span></a>
 <a class="sourceLine" id="cb13-11" title="11">)</a></code></pre></div>
 <p>where <code>.df</code> is the data set being mutated, and <code>...</code> is the list of expressions to be passed to <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate()</a></code>.</p>
-<p><code>.skip</code> instructs <code><a href="../reference/mutate_cascade.html">mutate_cascade()</a></code> to skip over the first time period (or last time period if <code>backwards = TRUE</code>). This should usually be set to <code>TRUE</code>, since most usages of <code><a href="../reference/mutate_cascade.html">mutate_cascade()</a></code> involve a <code><a href="../reference/tlag.html">tlag()</a></code>, and the <code><a href="../reference/tlag.html">tlag()</a></code> of something in the first time period is usually <code>NA</code>. Then, you’ve filled in that first-period <code>NA</code> - now the <code><a href="../reference/tlag.html">tlag()</a></code> in period 2 is NA as well, and it will cascade down to make your whole data set <code>NA</code>.</p>
+<p><code>.skip</code> instructs <code><a href="../reference/mutate_cascade.html">mutate_cascade()</a></code> to skip over the first time period within the group (or last time period if <code>backwards = TRUE</code>). This should usually be set to <code>TRUE</code>, since most usages of <code><a href="../reference/mutate_cascade.html">mutate_cascade()</a></code> involve a <code><a href="../reference/tlag.html">tlag()</a></code>, and the <code><a href="../reference/tlag.html">tlag()</a></code> of something in the first time period is usually <code>NA</code>. Then, you’ve filled in that first-period <code>NA</code> - now the <code><a href="../reference/tlag.html">tlag()</a></code> in period 2 is NA as well, and it will cascade down to make your whole data set <code>NA</code>. If you set <code>.skip = FALSE</code>, you should have some way in <code>...</code> of handling <code>NA</code>s (which you may want to do anyway in case there are <code>NA</code>s elsewhere in your data).</p>
 <p><code>.backwards</code>, unsurprisingly, tells <code><a href="../reference/mutate_cascade.html">mutate_cascade()</a></code> to start with the last time period and work backwards.</p>
 <p>Let’s do a very simple example and use <code><a href="../reference/mutate_cascade.html">mutate_cascade()</a></code> to build a present discounted value. We have an asset with a <code>payout</code> each period, and we have a discount factor <code>.95</code>. We can build a present discounted value <code>PDV</code> by taking the <code>PDV</code> in the next period, multiplying it by <code>.95</code>, and adding on the current <code>payout</code>. But we need to calculate <code>PDV</code> one period at a time, so that we can use each period’s calculation to calculate the previous one.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(</a>
@@ -380,9 +381,19 @@
 <a class="sourceLine" id="cb14-4" title="4">  <span class="dt">.t =</span> t</a>
 <a class="sourceLine" id="cb14-5" title="5">) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb14-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">PDV =</span> payout) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="st">  </span><span class="kw"><a href="../reference/mutate_cascade.html">mutate_cascade</a></span>(<span class="dt">PDV =</span> payout <span class="op">+</span><span class="st"> </span><span class="fl">.95</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="../reference/tlag.html">tlag</a></span>(PDV, <span class="dt">.n =</span> <span class="dv">-1</span>), <span class="dt">.backwards =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb14-7" title="7"><span class="st">  </span><span class="kw"><a href="../reference/mutate_cascade.html">mutate_cascade</a></span>(<span class="dt">PDV =</span> payout <span class="op">+</span><span class="st"> </span><span class="fl">.95</span> <span class="op">*</span><span class="st"> </span><span class="kw"><a href="../reference/tlag.html">tlag</a></span>(PDV, <span class="dt">.n =</span> <span class="dv">-1</span>), <span class="dt">.backwards =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb14-8" title="8"></a>
+<a class="sourceLine" id="cb14-9" title="9">df</a>
+<a class="sourceLine" id="cb14-10" title="10"><span class="co">#&gt; # A tibble: 5 x 3</span></a>
+<a class="sourceLine" id="cb14-11" title="11"><span class="co">#&gt;       t payout   PDV</span></a>
+<a class="sourceLine" id="cb14-12" title="12"><span class="co">#&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb14-13" title="13"><span class="co">#&gt; 1     1      3 13.6 </span></a>
+<a class="sourceLine" id="cb14-14" title="14"><span class="co">#&gt; 2     2      4 11.1 </span></a>
+<a class="sourceLine" id="cb14-15" title="15"><span class="co">#&gt; 3     3      2  7.51</span></a>
+<a class="sourceLine" id="cb14-16" title="16"><span class="co">#&gt; 4     4      2  5.8 </span></a>
+<a class="sourceLine" id="cb14-17" title="17"><span class="co">#&gt; 5     5      4  4</span></a></code></pre></div>
 <p>As expected, the <code>PDV</code> in period <code>5</code> is just the payout: <code>4</code>. In period <code>4</code> it’s <code>2 + .95*4 = 5.8</code>. Then in period <code>3</code> it’s <code>2 + .95*5.8 = 7.51</code>, and so on.</p>
-<p>The rest of the options include <code>.group_i</code> (by default, if <code>.i</code> can be found, analysis will be performed within-individual. Set <code>.group_i = FALSE</code> to ignore this), and standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.d</code>, <code>.uniqcheck</code>, see the “pibble” section above). The <code>.d = NA</code> will become <code>.d = 1</code> if either <code>.i</code> or <code>.t</code> are declared. <code>.setpanel</code> ensures that if you declare the panel structure in the <code><a href="../reference/panel_fill.html">panel_fill()</a></code> function, it will be maintained in the object you get back.</p>
+<p>The rest of the options include <code>.group_i</code> (by default, if <code>.i</code> can be found, analysis will be performed within-individual. Set <code>.group_i = FALSE</code> to ignore this), and standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.d</code>, <code>.uniqcheck</code>, see the “pibble” section above). The <code>.d = NA</code> will become <code>.d = 1</code> if either <code>.i</code> or <code>.t</code> are declared. <code>.setpanel</code> ensures that if you declare the panel structure in the <code>mutaet_cascade()</code> function, it will be maintained in the object you get back.</p>
 <hr>
 </div>
 </div>
@@ -402,10 +413,10 @@
 <a class="sourceLine" id="cb15-10" title="10">  <span class="dt">.d =</span> <span class="ot">NA</span>,</a>
 <a class="sourceLine" id="cb15-11" title="11">  <span class="dt">.uniqcheck =</span> <span class="ot">FALSE</span></a>
 <a class="sourceLine" id="cb15-12" title="12">)</a></code></pre></div>
-<p>where <code>.var</code> is the variable being lagged, , and <code>.df</code> is the data set that variable lives in. If the data set is being passed in via <code><a href="../reference/pipe.html">%&gt;%</a></code>, then <code>.df</code> will automatically pick it up and you don’t need to specify it.</p>
+<p>where <code>.var</code> is the variable being lagged, , and <code>.df</code> is the data set that variable lives in. If the data set is being passed in via <code>%&gt;% mutate()</code> or similar, then <code>.df</code> will automatically pick it up and you don’t need to specify it.</p>
 <p><code>.n</code> is the number of periods to lag. Negative values of <code>.n</code> imply a lead instead of a lag (as in the example in <code><a href="../reference/mutate_cascade.html">mutate_cascade()</a></code> in the Mutate Variations section). There’s not a separate <code>tlead()</code> function.</p>
 <p><code>.default</code> is the value to use if a lag does not exist. By default, this is <code>NA</code>. So if you have data in periods <code>1</code> and <code>3</code> but not <code>2</code>, then the <code>tlag</code> in the third period will produce <code>NA</code>.</p>
-<p><code>.quick</code> is a setting you can use if your data is very nicely structured, with rows uniquely identified by <code>.i</code>/<code>.t</code> and there are either no gaps between time periods or <code>.d = 0</code>. <code><a href="../reference/tlag.html">tlag()</a></code> will run more quickly with <code>.quick = TRUE</code>, but will produce incorrect results if these conditions are not met.</p>
+<p><code>.quick</code> is a setting you can use if your data is very nicely structured, with rows uniquely identified by <code>.i</code>/<code>.t</code> and either no gaps between time periods or <code>.d = 0</code>. <code><a href="../reference/tlag.html">tlag()</a></code> will run more quickly with <code>.quick = TRUE</code>, but will produce incorrect results if these conditions are not met.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(</a>
 <a class="sourceLine" id="cb16-2" title="2">  <span class="dt">i =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</a>
 <a class="sourceLine" id="cb16-3" title="3">  <span class="dt">t =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</a>
@@ -458,7 +469,7 @@
 <a class="sourceLine" id="cb17-20" title="20"><span class="co">#&gt; 4     2     1     4  NA  </span></a>
 <a class="sourceLine" id="cb17-21" title="21"><span class="co">#&gt; 5     2     1     5  NA  </span></a>
 <a class="sourceLine" id="cb17-22" title="22"><span class="co">#&gt; 6     2     2     6   4.5</span></a></code></pre></div>
-<p>The rest of the options include <code>.group_i</code> (by default, if <code>.i</code> can be found, lags will be performed within-individual. Set <code>.group_i = FALSE</code> to ignore this), and standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.d</code>, <code>.uniqcheck</code>, see the “pibble” section above). The <code>.d = NA</code> will become <code>.d = 1</code> if either <code>.i</code> or <code>.t</code> are declared. <code>.setpanel</code> ensures that if you declare the panel structure in the <code><a href="../reference/panel_fill.html">panel_fill()</a></code> function, it will be maintained in the object you get back.</p>
+<p>The rest of the options include <code>.group_i</code> (by default, if <code>.i</code> can be found, lags will be performed within-individual. Set <code>.group_i = FALSE</code> to ignore this), and standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.d</code>, <code>.uniqcheck</code>, see the “pibble” section above). The <code>.d = NA</code> will become <code>.d = 1</code> if either <code>.i</code> or <code>.t</code> are declared.</p>
 </div>
   </div>
 

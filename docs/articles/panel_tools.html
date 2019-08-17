@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -64,6 +64,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -88,7 +91,7 @@
       <h1>pmdplyr: Panel Tools</h1>
                         <h4 class="author">Nick Huntington-Klein, Philip Khor</h4>
             
-            <h4 class="date">2019-08-14</h4>
+            <h4 class="date">2019-08-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/NickCH-K/pmdplyr/blob/master/vignettes/panel_tools.Rmd"><code>vignettes/panel_tools.Rmd</code></a></small>
       <div class="hidden name"><code>panel_tools.Rmd</code></div>
@@ -129,7 +132,7 @@
 <a class="sourceLine" id="cb2-11" title="11">  <span class="dt">.uniqcheck =</span> <span class="ot">FALSE</span>,</a>
 <a class="sourceLine" id="cb2-12" title="12">  <span class="dt">.setpanel =</span> <span class="ot">TRUE</span></a>
 <a class="sourceLine" id="cb2-13" title="13">)</a></code></pre></div>
-<p><code><a href="../reference/panel_fill.html">panel_fill()</a></code> will give us some newly-created observations, and we need to decide what to fill them in with. By default, it will fill in values using what we see in the most recent non-missing observation. But we can set <code>.backwards = TRUE</code> to use the <em>next</em> non-missing observation instead, or use <code>.set_NA</code> to fill the new observations with missing data.</p>
+<p><code><a href="../reference/panel_fill.html">panel_fill()</a></code> will give us some newly-created observations, and we need to decide what to fill them in with. By default, it will fill in values using what we see in the most recent non-missing observation. But we can set <code>.backwards = TRUE</code> to use the <em>next</em> non-missing observation instead, or use <code>.set_NA</code> to fill the new observations with <code>NA</code>.</p>
 <p><code>.set_NA</code> is a character vector of variable names that should be set to <code>NA</code> for newly-created observations, or set to <code>TRUE</code> to set everything except <code>.i</code> and <code>.t</code> to <code>NA</code>. You can also create a new variable indicating which observations are newly-created with <code>.flag</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># Note the gap between periods 2 and 4 for person 1.</span></a>
 <a class="sourceLine" id="cb3-2" title="2">df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(</a>
@@ -142,40 +145,36 @@
 <a class="sourceLine" id="cb3-9" title="9">)</a>
 <a class="sourceLine" id="cb3-10" title="10"></a>
 <a class="sourceLine" id="cb3-11" title="11"><span class="kw"><a href="../reference/panel_fill.html">panel_fill</a></span>(df, <span class="dt">.set_NA =</span> <span class="st">"y"</span>, <span class="dt">.flag =</span> <span class="st">"new_obs"</span>)</a>
-<a class="sourceLine" id="cb3-12" title="12"><span class="co">#&gt; # A pibble:                         7 x 5</span></a>
-<a class="sourceLine" id="cb3-13" title="13"><span class="co">#&gt; # Individual-level identifier (.i): i [2]</span></a>
-<a class="sourceLine" id="cb3-14" title="14"><span class="co">#&gt; # Time variable (.t):               t [5]</span></a>
-<a class="sourceLine" id="cb3-15" title="15"><span class="co">#&gt; # Gap (.d):                         1</span></a>
-<a class="sourceLine" id="cb3-16" title="16"><span class="co">#&gt;       i     t     x     y new_obs</span></a>
-<a class="sourceLine" id="cb3-17" title="17"><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;lgl&gt;  </span></a>
-<a class="sourceLine" id="cb3-18" title="18"><span class="co">#&gt; 1     1     2     1     7 FALSE  </span></a>
-<a class="sourceLine" id="cb3-19" title="19"><span class="co">#&gt; 2     1     3     1    NA TRUE   </span></a>
-<a class="sourceLine" id="cb3-20" title="20"><span class="co">#&gt; 3     1     4     2     8 FALSE  </span></a>
-<a class="sourceLine" id="cb3-21" title="21"><span class="co">#&gt; 4     1     5     3     9 FALSE  </span></a>
-<a class="sourceLine" id="cb3-22" title="22"><span class="co">#&gt; 5     2     1     4    10 FALSE  </span></a>
-<a class="sourceLine" id="cb3-23" title="23"><span class="co">#&gt; 6     2     2     5    11 FALSE  </span></a>
-<a class="sourceLine" id="cb3-24" title="24"><span class="co">#&gt; 7     2     3     6    12 FALSE</span></a>
-<a class="sourceLine" id="cb3-25" title="25"><span class="kw"><a href="../reference/panel_fill.html">panel_fill</a></span>(df, <span class="dt">.set_NA =</span> <span class="st">"y"</span>, <span class="dt">.backwards =</span> <span class="ot">TRUE</span>)<span class="op">$</span>x</a>
-<a class="sourceLine" id="cb3-26" title="26"><span class="co">#&gt; [1] 1 2 2 3 4 5 6</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-12" title="12"><span class="co">#&gt; # A pibble: 7 x 5</span></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="co">#&gt; # Gap (.d): 1</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="co">#&gt;       i     t     x     y new_obs</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;lgl&gt;  </span></a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="co">#&gt; 1     1     2     1     7 FALSE  </span></a>
+<a class="sourceLine" id="cb3-17" title="17"><span class="co">#&gt; 2     1     3     1    NA TRUE   </span></a>
+<a class="sourceLine" id="cb3-18" title="18"><span class="co">#&gt; 3     1     4     2     8 FALSE  </span></a>
+<a class="sourceLine" id="cb3-19" title="19"><span class="co">#&gt; 4     1     5     3     9 FALSE  </span></a>
+<a class="sourceLine" id="cb3-20" title="20"><span class="co">#&gt; 5     2     1     4    10 FALSE  </span></a>
+<a class="sourceLine" id="cb3-21" title="21"><span class="co">#&gt; 6     2     2     5    11 FALSE  </span></a>
+<a class="sourceLine" id="cb3-22" title="22"><span class="co">#&gt; 7     2     3     6    12 FALSE</span></a>
+<a class="sourceLine" id="cb3-23" title="23"><span class="kw"><a href="../reference/panel_fill.html">panel_fill</a></span>(df, <span class="dt">.set_NA =</span> <span class="st">"y"</span>, <span class="dt">.backwards =</span> <span class="ot">TRUE</span>)<span class="op">$</span>x</a>
+<a class="sourceLine" id="cb3-24" title="24"><span class="co">#&gt; [1] 1 2 2 3 4 5 6</span></a></code></pre></div>
 <p>By default, <code><a href="../reference/panel_fill.html">panel_fill()</a></code> will only fill in gaps between existing observations. However, commonly we might want to create new observations outside of the existing range, perhaps to create a fully balanced panel for ourselves. <code>.min</code> and <code>.max</code> will ensure that each individual has observations at least as far back as <code>.min</code>, and at least as far out as <code>.max</code>. Set <code>.min = min(t)</code> and <code>.max = max(t)</code> (where <code>t</code> is your time variable) to ensure a fully balanced panel.</p>
 <p>Data for the outside-the-observed-range values will be taken from the closest observed value.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="../reference/panel_fill.html">panel_fill</a></span>(df, <span class="dt">.min =</span> <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(df<span class="op">$</span>t), <span class="dt">.max =</span> <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(df<span class="op">$</span>t))</a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt; # A pibble:                         10 x 4</span></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt; # Individual-level identifier (.i): i [2]</span></a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt; # Time variable (.t):               t [5]</span></a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; # Gap (.d):                         1</span></a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt;        i     t     x     y</span></a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;</span></a>
-<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt;  1     1     1     1     7</span></a>
-<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt;  2     1     2     1     7</span></a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt;  3     1     3     1     7</span></a>
-<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt;  4     1     4     2     8</span></a>
-<a class="sourceLine" id="cb4-12" title="12"><span class="co">#&gt;  5     1     5     3     9</span></a>
-<a class="sourceLine" id="cb4-13" title="13"><span class="co">#&gt;  6     2     1     4    10</span></a>
-<a class="sourceLine" id="cb4-14" title="14"><span class="co">#&gt;  7     2     2     5    11</span></a>
-<a class="sourceLine" id="cb4-15" title="15"><span class="co">#&gt;  8     2     3     6    12</span></a>
-<a class="sourceLine" id="cb4-16" title="16"><span class="co">#&gt;  9     2     4     6    12</span></a>
-<a class="sourceLine" id="cb4-17" title="17"><span class="co">#&gt; 10     2     5     6    12</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt; # A pibble: 10 x 4</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt; # Gap (.d): 1</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt;        i     t     x     y</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt;  1     1     1     1     7</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt;  2     1     2     1     7</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt;  3     1     3     1     7</span></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt;  4     1     4     2     8</span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt;  5     1     5     3     9</span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt;  6     2     1     4    10</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">#&gt;  7     2     2     5    11</span></a>
+<a class="sourceLine" id="cb4-13" title="13"><span class="co">#&gt;  8     2     3     6    12</span></a>
+<a class="sourceLine" id="cb4-14" title="14"><span class="co">#&gt;  9     2     4     6    12</span></a>
+<a class="sourceLine" id="cb4-15" title="15"><span class="co">#&gt; 10     2     5     6    12</span></a></code></pre></div>
 <p>The rest of the options include <code>.group_i</code> (by default, if <code>.i</code> can be found, data will be filled within-individual. Set <code>.group_i = FALSE</code> to ignore this), and standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.d</code>, <code>.uniqcheck</code>, see the “pibble” section above). <code>.setpanel</code> ensures that if you declare the panel structure in the <code><a href="../reference/panel_fill.html">panel_fill()</a></code> function, it will be maintained in the object you get back.</p>
 </div>
 <div id="panel_locf" class="section level2">
@@ -193,7 +192,7 @@
 <a class="sourceLine" id="cb5-9" title="9">  <span class="dt">.d =</span> <span class="dv">1</span>,</a>
 <a class="sourceLine" id="cb5-10" title="10">  <span class="dt">.uniqcheck =</span> <span class="ot">FALSE</span></a>
 <a class="sourceLine" id="cb5-11" title="11">)</a></code></pre></div>
-<p>where <code>.var</code> is the variable to be filled in, and <code>.df</code> is the data set that variable lives in. If the data set is being passed in via <code><a href="../reference/pipe.html">%&gt;%</a></code>, then <code>.df</code> will automatically pick it up and you don’t need to specify it.</p>
+<p>where <code>.var</code> is the variable to be filled in, and <code>.df</code> is the data set that variable lives in. If the data set is being passed in via <code>%&gt;% mutate()</code> or similar, then <code>.df</code> will automatically pick it up and you don’t need to specify it.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(</a>
 <a class="sourceLine" id="cb6-2" title="2">  <span class="dt">i =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</a>
 <a class="sourceLine" id="cb6-3" title="3">  <span class="dt">t =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</a>
@@ -260,7 +259,7 @@
 <a class="sourceLine" id="cb8-22" title="22"><span class="co">#&gt; 4     2     1     1      1  </span></a>
 <a class="sourceLine" id="cb8-23" title="23"><span class="co">#&gt; 5     2     2     2      2  </span></a>
 <a class="sourceLine" id="cb8-24" title="24"><span class="co">#&gt; 6     2     3     3      3</span></a></code></pre></div>
-<p>The rest of the options include <code>.group_i</code> (by default, if <code>.i</code> can be found, data will be filled within-individual. Set <code>.group_i = FALSE</code> to ignore this), and standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.d</code>, <code>.uniqcheck</code>, see the “pibble” section above). <code>.setpanel</code> ensures that if you declare the panel structure in the <code><a href="../reference/panel_fill.html">panel_fill()</a></code> function, it will be maintained in the object you get back.</p>
+<p>The rest of the options include <code>.group_i</code> (by default, if <code>.i</code> can be found, data will be filled within-individual. Set <code>.group_i = FALSE</code> to ignore this), and standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.d</code>, <code>.uniqcheck</code>, see the “pibble” section above).</p>
 <hr>
 </div>
 </div>
@@ -323,7 +322,7 @@
 <div id="fixed_force" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fixed_force" class="anchor"></a>fixed_force()</h2>
-<p><code><a href="../reference/fixed_force.html">fixed_force()</a></code> will take a data set <code>.df</code>, find any inconsistencies in the variables <code>.var</code> within combinations of the variables <code>.within</code>, and will “fix” those inconsistencies, using the function <code>.resolve</code> to select the correct values. It will flag any changed values with a new variable named <code>.flag</code>.</p>
+<p><code><a href="../reference/fixed_force.html">fixed_force()</a></code> will take a data set <code>.df</code>, find any inconsistencies in the variables <code>.var</code> within combinations of the variables <code>.within</code>, and will “fix” those inconsistencies, using the function <code>.resolve</code> to select the correct values. It can flag any changed values with a new variable named <code>.flag</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="../reference/fixed_force.html">fixed_force</a></span>(..df,</a>
 <a class="sourceLine" id="cb13-2" title="2">  <span class="dt">.var =</span> <span class="ot">NULL</span>,</a>
 <a class="sourceLine" id="cb13-3" title="3">  <span class="dt">.within =</span> <span class="ot">NULL</span>,</a>
@@ -371,7 +370,7 @@
 <a class="sourceLine" id="cb16-5" title="5">  <span class="dt">.t =</span> <span class="ot">NULL</span>,</a>
 <a class="sourceLine" id="cb16-6" title="6">  <span class="dt">uniqcheck =</span> <span class="ot">FALSE</span></a>
 <a class="sourceLine" id="cb16-7" title="7">)</a></code></pre></div>
-<p>Where <code>.var</code> is the variable on which the transformation is performed, and <code>.df</code> is the data set. If the data set is being passed in via <code><a href="../reference/pipe.html">%&gt;%</a></code>, then <code>.df</code> will automatically pick it up and you don’t need to specify it. <code>.fcn</code> is the function applied to calculate the group and grand values, i.e. <span class="math inline">\(.fcn(x) = \bar{x}\)</span>. The standard definition of the between transformation is for this to be the mean, but it has been left flexible.</p>
+<p>Where <code>.var</code> is the variable on which the transformation is performed, and <code>.df</code> is the data set. If the data set is being passed in via <code>%&gt;% mutate()</code> or similar, then <code>.df</code> will automatically pick it up and you don’t need to specify it. <code>.fcn</code> is the function applied to calculate the group and grand values, i.e. <span class="math inline">\(.fcn(x) = \bar{x}\)</span>. The standard definition of the between transformation is for this to be the mean, but it has been left flexible.</p>
 <p>The rest of the options include standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.uniqcheck</code>, see the “pibble” section above). <code>.d</code> is omitted because it is irrelevant to the calculation.</p>
 <p>An example of the between transformation follows:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(</a>
@@ -416,7 +415,7 @@
 <a class="sourceLine" id="cb18-5" title="5">  <span class="dt">.t =</span> <span class="ot">NULL</span>,</a>
 <a class="sourceLine" id="cb18-6" title="6">  <span class="dt">uniqcheck =</span> <span class="ot">FALSE</span></a>
 <a class="sourceLine" id="cb18-7" title="7">)</a></code></pre></div>
-<p>Where <code>.var</code> is the variable on which the transformation is performed, and <code>.df</code> is the data set. If the data set is being passed in via <code><a href="../reference/pipe.html">%&gt;%</a></code>, then <code>.df</code> will automatically pick it up and you don’t need to specify it. <code>.fcn</code> is the function applied to calculate the group values, i.e. <span class="math inline">\(.fcn(x) = \bar{x}\)</span>. The standard definition of the within transformation is for this to be the mean, but it has been left flexible.</p>
+<p>Where <code>.var</code> is the variable on which the transformation is performed, and <code>.df</code> is the data set. If the data set is being passed in via <code>%&gt;% mutate()</code> or similar, then <code>.df</code> will automatically pick it up and you don’t need to specify it. <code>.fcn</code> is the function applied to calculate the group values, i.e. <span class="math inline">\(.fcn(x) = \bar{x}\)</span>. The standard definition of the within transformation is for this to be the mean, but it has been left flexible.</p>
 <p>The rest of the options include standard arguments related to declaring the panel structure of the data (<code>.i</code>, <code>.t</code>, <code>.uniqcheck</code>, see the “pibble” section above). <code>.d</code> is omitted because it is irrelevant to the calculation.</p>
 <p>An example of the between transformation follows:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(</a>
