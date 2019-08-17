@@ -165,7 +165,7 @@ where `...` is the set of identity variables that you want to combine into a sin
 df <- data.frame(
   country = c(
     "US", "US", "US", "US",
-    "GBR", "GBR", "GBR", "GBR"
+    "ENG", "ENG", "ENG", "ENG"
   ),
   city = c(
     "NYC", "NYC", "Cambridge", "NYC",

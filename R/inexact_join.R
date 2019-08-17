@@ -433,16 +433,16 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   yidname <- uniqname(y)
 
   # Likely to drop pibble status if it's a pibble
-    z <- y %>%
-      dplyr::as_tibble() %>%
-      dplyr::select_at(c(matchvars, jvar)) %>%
-      # collapse all the matchvars into one
-      dplyr::mutate(!!yidname := id_variable(.[, matchvars], .method = "character")) %>%
-      # May give warning for dropping pibble status
-      dplyr::select(-!!matchvars) %>%
-      dplyr::ungroup() %>%
-      # one observation each
-      dplyr::distinct()
+  z <- y %>%
+    dplyr::as_tibble() %>%
+    dplyr::select_at(c(matchvars, jvar)) %>%
+    # collapse all the matchvars into one
+    dplyr::mutate(!!yidname := id_variable(.[, matchvars], .method = "character")) %>%
+    # May give warning for dropping pibble status
+    dplyr::select(-!!matchvars) %>%
+    dplyr::ungroup() %>%
+    # one observation each
+    dplyr::distinct()
 
   # similar one-column ID for x
   xidname <- uniqname(x)

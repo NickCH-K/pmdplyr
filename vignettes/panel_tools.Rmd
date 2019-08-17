@@ -63,7 +63,7 @@ panel_fill(.df,
 )
 ```
 
-`panel_fill()` will give us some newly-created observations, and we need to decide what to fill them in with. By default, it will fill in values using what we see in the most recent non-missing observation. But we can set `.backwards = TRUE` to use the *next* non-missing observation instead, or use `.set_NA` to fill the new observations with missing data.
+`panel_fill()` will give us some newly-created observations, and we need to decide what to fill them in with. By default, it will fill in values using what we see in the most recent non-missing observation. But we can set `.backwards = TRUE` to use the *next* non-missing observation instead, or use `.set_NA` to fill the new observations with `NA`.
 
 `.set_NA` is a character vector of variable names that should be set to `NA` for newly-created observations, or set to `TRUE` to set everything except `.i` and `.t` to `NA`. You can also create a new variable indicating which observations are newly-created with `.flag`.
 
@@ -110,7 +110,7 @@ panel_locf(.var,
 )
 ```
 
-where `.var` is the variable to be filled in, and `.df` is the data set that variable lives in. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it.
+where `.var` is the variable to be filled in, and `.df` is the data set that variable lives in. If the data set is being passed in via `%>% mutate()` or similar, then `.df` will automatically pick it up and you don't need to specify it.
 
 ```{r}
 df <- pibble(
@@ -153,7 +153,7 @@ inconsistent_df %>% mutate(
 )
 ```
 
-The rest of the options include `.group_i` (by default, if `.i` can be found, data will be filled within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). `.setpanel` ensures that if you declare the panel structure in the `panel_fill()` function, it will be maintained in the object you get back.
+The rest of the options include `.group_i` (by default, if `.i` can be found, data will be filled within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above).
 
 ----- 
 
@@ -217,7 +217,7 @@ Some handy `fixed_check()` tips:
 
 ## fixed_force()
 
-`fixed_force()` will take a data set `.df`, find any inconsistencies in the variables `.var` within combinations of the variables `.within`, and will "fix" those inconsistencies, using the function `.resolve` to select the correct values. It will flag any changed values with a new variable named `.flag`.
+`fixed_force()` will take a data set `.df`, find any inconsistencies in the variables `.var` within combinations of the variables `.within`, and will "fix" those inconsistencies, using the function `.resolve` to select the correct values. It can flag any changed values with a new variable named `.flag`.
 
 ```{r, eval = FALSE}
 fixed_force(..df,
@@ -272,7 +272,7 @@ between_i(.var,
 )
 ```
 
-Where `.var` is the variable on which the transformation is performed, and `.df` is the data set. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it. `.fcn` is the function applied to calculate the group and grand values, i.e. $.fcn(x) = \bar{x}$. The standard definition of the between transformation is for this to be the mean, but it has been left flexible.
+Where `.var` is the variable on which the transformation is performed, and `.df` is the data set. If the data set is being passed in via `%>% mutate()` or similar, then `.df` will automatically pick it up and you don't need to specify it. `.fcn` is the function applied to calculate the group and grand values, i.e. $.fcn(x) = \bar{x}$. The standard definition of the between transformation is for this to be the mean, but it has been left flexible.
 
 The rest of the options include standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.uniqcheck`, see the "pibble" section above). `.d` is omitted because it is irrelevant to the calculation.
 
@@ -320,7 +320,7 @@ within_i(.var,
 )
 ```
 
-Where `.var` is the variable on which the transformation is performed, and `.df` is the data set. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it. `.fcn` is the function applied to calculate the group values, i.e. $.fcn(x) = \bar{x}$. The standard definition of the within transformation is for this to be the mean, but it has been left flexible.
+Where `.var` is the variable on which the transformation is performed, and `.df` is the data set. If the data set is being passed in via `%>% mutate()` or similar, then `.df` will automatically pick it up and you don't need to specify it. `.fcn` is the function applied to calculate the group values, i.e. $.fcn(x) = \bar{x}$. The standard definition of the within transformation is for this to be the mean, but it has been left flexible.
 
 The rest of the options include standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.uniqcheck`, see the "pibble" section above). `.d` is omitted because it is irrelevant to the calculation.
 

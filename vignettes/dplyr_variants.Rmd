@@ -171,9 +171,9 @@ safe_join(x, y,
 
 `expect` is a character variable where you specify the type of join you *think* you're about to do. You can specify this either as one-to-many / many-to-one / one-to-one directly, or you can specify which of the two data sets (`x` or `y`) you think should be uniquely identified by the joining variables.
 
-* `expect = "1:1" or `expect = c("x", "y")` or `expect = "xy"` indicates that you anticipate to join one-to-one. 
-* `expect = "m:1" or `expect = "y"` indicates that you expect to join many-to-one.
-* `expect = "1:m" or "expect = "x"` indicates that you expect to join one-to-many.
+* `expect = "1:1"` or `expect = c("x", "y")` or `expect = "xy"` indicates that you anticipate to join one-to-one. 
+* `expect = "m:1"` or expect = "y"` indicates that you expect to join many-to-one.
+* `expect = "1:m"` or `"expect = "x"` indicates that you expect to join one-to-many.
 * `expect = "no m:m"` indicates that you don't care whether you're one-to-one, one-to-many, or many-to-one, as long as you're not many-to-many.
 * There is no `expect` option that allows you to run a many-to-many join.
 
@@ -264,7 +264,7 @@ df %>%
   mutate(earnings_vs_college = earn - college_earnings)
 ```
 
-The rest of the options include `.group_i` (by default, if `.i` can be found, analysis will be performed within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). The `.d = NA` will become `.d = 1` if either `.i` or `.t` are declared. `.setpanel` ensures that if you declare the panel structure in the `panel_fill()` function, it will be maintained in the object you get back.
+The rest of the options include `.group_i` (by default, if `.i` can be found, analysis will be performed within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). The `.d = NA` will become `.d = 1` if either `.i` or `.t` are declared. `.setpanel` ensures that if you declare the panel structure in the `mutate_subset()` function, it will be maintained in the object you get back.
 
 ## mutate_cascade()
 
@@ -290,7 +290,7 @@ mutate_cascade(.df,
 
 where `.df` is the data set being mutated, and `...` is the list of expressions to be passed to `dplyr::mutate()`.
 
-`.skip` instructs `mutate_cascade()` to skip over the first time period (or last time period if `backwards = TRUE`). This should usually be set to `TRUE`, since most usages of `mutate_cascade()` involve a `tlag()`, and the `tlag()` of something in the first time period is usually `NA`. Then, you've filled in that first-period `NA` - now the `tlag()` in period 2 is NA as well, and it will cascade down to make your whole data set `NA`.
+`.skip` instructs `mutate_cascade()` to skip over the first time period within the group (or last time period if `backwards = TRUE`). This should usually be set to `TRUE`, since most usages of `mutate_cascade()` involve a `tlag()`, and the `tlag()` of something in the first time period is usually `NA`. Then, you've filled in that first-period `NA` - now the `tlag()` in period 2 is NA as well, and it will cascade down to make your whole data set `NA`. If you set `.skip = FALSE`, you should have some way in `...` of handling `NA`s (which you may want to do anyway in case there are `NA`s elsewhere in your data).
 
 `.backwards`, unsurprisingly, tells `mutate_cascade()` to start with the last time period and work backwards.
 
@@ -310,7 +310,7 @@ df
 
 As expected, the `PDV` in period `5` is just the payout: `4`. In period `4` it's `2 + .95*4 = 5.8`. Then in period `3` it's `2 + .95*5.8 = 7.51`, and so on.
 
-The rest of the options include `.group_i` (by default, if `.i` can be found, analysis will be performed within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). The `.d = NA` will become `.d = 1` if either `.i` or `.t` are declared. `.setpanel` ensures that if you declare the panel structure in the `panel_fill()` function, it will be maintained in the object you get back.
+The rest of the options include `.group_i` (by default, if `.i` can be found, analysis will be performed within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). The `.d = NA` will become `.d = 1` if either `.i` or `.t` are declared. `.setpanel` ensures that if you declare the panel structure in the `mutaet_cascade()` function, it will be maintained in the object you get back.
 
 -----
 
@@ -333,13 +333,13 @@ tlag(.var,
 )
 ```
 
-where `.var` is the variable being lagged, , and `.df` is the data set that variable lives in. If the data set is being passed in via `%>%`, then `.df` will automatically pick it up and you don't need to specify it.
+where `.var` is the variable being lagged, , and `.df` is the data set that variable lives in. If the data set is being passed in via `%>% mutate()` or similar, then `.df` will automatically pick it up and you don't need to specify it.
 
 `.n` is the number of periods to lag. Negative values of `.n` imply a lead instead of a lag (as in the example in `mutate_cascade()` in the Mutate Variations section). There's not a separate `tlead()` function.
 
 `.default` is the value to use if a lag does not exist. By default, this is `NA`. So if you have data in periods `1` and `3` but not `2`, then the `tlag` in the third period will produce `NA`.
 
-`.quick` is a setting you can use if your data is very nicely structured, with rows uniquely identified by `.i`/`.t` and there are either no gaps between time periods or `.d = 0`. `tlag()` will run more quickly with `.quick = TRUE`, but will produce incorrect results if these conditions are not met.
+`.quick` is a setting you can use if your data is very nicely structured, with rows uniquely identified by `.i`/`.t` and either no gaps between time periods or `.d = 0`. `tlag()` will run more quickly with `.quick = TRUE`, but will produce incorrect results if these conditions are not met.
 
 ```{r}
 df <- pibble(
@@ -376,4 +376,4 @@ df <- pibble(
 df
 ```
 
-The rest of the options include `.group_i` (by default, if `.i` can be found, lags will be performed within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). The `.d = NA` will become `.d = 1` if either `.i` or `.t` are declared. `.setpanel` ensures that if you declare the panel structure in the `panel_fill()` function, it will be maintained in the object you get back.
+The rest of the options include `.group_i` (by default, if `.i` can be found, lags will be performed within-individual. Set `.group_i = FALSE` to ignore this), and standard arguments related to declaring the panel structure of the data (`.i`, `.t`, `.d`, `.uniqcheck`, see the "pibble" section above). The `.d = NA` will become `.d = 1` if either `.i` or `.t` are declared.
