@@ -177,7 +177,7 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
   return(.df)
 }
 
-#' Propogate a calculation performed on a subset of data to the rest of the data
+#' Propagate a calculation performed on a subset of data to the rest of the data
 #'
 #' This function performs \code{dplyr::summarize} on a \code{.filter}ed subset of data. Then it applies the result to all observations (or all observations in the group, if applied to grouped data), filling in columns of the data with the summarize results, as though \code{dplyr::mutate} had been run.
 #'

@@ -195,7 +195,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Note that, in the case where there is more than one observation for a given individual/time period (or just time period if <code>.group_i = FALSE</code>), <code>panel_fill()</code> will create copies of *every observation* in the appropriate individual/time period for filling-in purposes. So if there are four t = 1 observations and nothing in t = 2, <code>panel_fill()</code> will create four new observations with t = 2, copying the original four in t = 1.</p>
-<p>By default, the <code>panel_fill()</code> operation is grouped by <code>.i</code>, although it will retun the data in the original grouping structure. Leave <code>.i</code> blank, or, if <code>.i</code> is already in the data from <code>as_pibble</code>, set <code>.group_i=FALSE</code> to run the function ungrouped, or with the existing group structure.</p>
+<p>By default, the <code>panel_fill()</code> operation is grouped by <code>.i</code>, although it will return the data in the original grouping structure. Leave <code>.i</code> blank, or, if <code>.i</code> is already in the data from <code>as_pibble</code>, set <code>.group_i=FALSE</code> to run the function ungrouped, or with the existing group structure.</p>
 <p>This function requires <code>.t</code> and <code>.d</code> to be declared in the function or already established in the data by <code><a href='as_pibble.html'>as_pibble()</a></code>. Also, this requires a cardinal <code>.t</code>. It must not be the case that <code>.d=0</code>.</p>
     
 

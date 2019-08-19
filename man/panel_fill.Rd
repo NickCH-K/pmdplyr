@@ -39,7 +39,7 @@ This function creates new observations to fill in any gaps in panel data. For ex
 \details{
 Note that, in the case where there is more than one observation for a given individual/time period (or just time period if \code{.group_i = FALSE}), \code{panel_fill()} will create copies of *every observation* in the appropriate individual/time period for filling-in purposes. So if there are four t = 1 observations and nothing in t = 2, \code{panel_fill()} will create four new observations with t = 2, copying the original four in t = 1.
 
-By default, the \code{panel_fill()} operation is grouped by \code{.i}, although it will retun the data in the original grouping structure. Leave \code{.i} blank, or, if \code{.i} is already in the data from \code{as_pibble}, set \code{.group_i=FALSE} to run the function ungrouped, or with the existing group structure.
+By default, the \code{panel_fill()} operation is grouped by \code{.i}, although it will return the data in the original grouping structure. Leave \code{.i} blank, or, if \code{.i} is already in the data from \code{as_pibble}, set \code{.group_i=FALSE} to run the function ungrouped, or with the existing group structure.
 
 This function requires \code{.t} and \code{.d} to be declared in the function or already established in the data by \code{as_pibble()}. Also, this requires a cardinal \code{.t}. It must not be the case that \code{.d=0}.
 }

@@ -33,7 +33,7 @@ There are three vignettes in total describing the contents of `pmdplyr`:
 
 2. "dplyr variants", which that describes `pmdplyr` variations on `dplyr` functions `mutate()` (`mutate_cascade()` and `mutate_subset()`), `_join` (`inexact_join` and `safe_join()`), and `lag` (`tlag()`).
 
-3. "Panel Tools", which describes novel tools that `pmdplyr` provides for cleaning andd manipulating panel data (`panel_fill()`, `panel_locf()`, `fixed_check()`, `fixed_force()`, `between_i()`, `within_i()`, `mode_order()`).
+3. "Panel Tools", which describes novel tools that `pmdplyr` provides for cleaning and manipulating panel data (`panel_fill()`, `panel_locf()`, `fixed_check()`, `fixed_force()`, `between_i()`, `within_i()`, `mode_order()`).
 
 -----
 
