@@ -152,6 +152,6 @@ And so there we have it—`Preferente` will really set you back relative to the 
 ---
 
 Please note that the 'pmdplyr' project is released with a
-[Contributor Code of Conduct](.github/CODE_OF_CONDUCT.md).
+[Contributor Code of Conduct](https://nickch-k.github.io/pmdplyr/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.
 
