@@ -16,3 +16,24 @@
   
   This is a first submission.
   
+  ## Resubmission 
+  
+  > Found the following (possibly) invalid file URI:
+  > URI: .github/CODE_OF_CONDUCT.md
+  > From: README.md
+  
+  Replaced with a valid URL.
+
+  > If there are references describing the methods in your package, please
+  > add these in the description field of your DESCRIPTION file in the form
+  > authors (year) <doi:...>
+  > authors (year) <arXiv:...>
+  > authors (year, ISBN:...)
+  > or if those are not available: authors (year) <https:...>
+  > with no space after 'doi:', 'arXiv:', 'https:' and angle brackets for
+  > auto-linking.
+  
+  References are not relevant for the methods in this package.
+  
+
+  
