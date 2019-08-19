@@ -13,9 +13,7 @@
   tibble (11:174)
   
   This is expected. The tibble subclass used in this package ('pibble') is a slight variation of the spelling of 'tibble'. 
-  
-  This is a first submission.
-  
+    
   ## Resubmission 
   
   This is a resubmission. In this version I have:
@@ -24,8 +22,7 @@
 
   > Found the following (possibly) invalid file URI:
   > URI: .github/CODE_OF_CONDUCT.md
-  > From: README.md
-  
+  > From: README.md  
 
   > If there are references describing the methods in your package, please
   > add these in the description field of your DESCRIPTION file in the form
