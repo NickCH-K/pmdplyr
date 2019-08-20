@@ -23,6 +23,8 @@
   > Found the following (possibly) invalid file URI:
   > URI: .github/CODE_OF_CONDUCT.md
   > From: README.md  
+  
+  Previous submission only replaced URL in README.Rmd without fixing the knitted Markdown file. 
 
   > If there are references describing the methods in your package, please
   > add these in the description field of your DESCRIPTION file in the form
