@@ -212,7 +212,7 @@ sprail_compare_premia
 #> 3 Turista Plus   14.4
 ```
 
-And so there we have it—”`Preferente` will really set you back relative
+And so there we have it—`Preferente` will really set you back relative
 to the cheapo ticket on the same route.
 
 -----
