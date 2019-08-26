@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9000</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@
       <h1>pmdplyr: Panel Maneuvers in dplyr</h1>
                         <h4 class="author">Nick Huntington-Klein, Philip Khor</h4>
             
-            <h4 class="date">2019-08-16</h4>
+            <h4 class="date">2019-08-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/NickCH-K/pmdplyr/blob/master/vignettes/pmdplyr.Rmd"><code>vignettes/pmdplyr.Rmd</code></a></small>
       <div class="hidden name"><code>pmdplyr.Rmd</code></div>
@@ -100,14 +100,14 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(pmdplyr)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(pmdplyr)</span></code></pre></div>
 <p>The <code>pmdplyr</code> package is an extension to <code>dplyr</code> designed for cleaning and managing panel and hierarchical data. It contains variations on the <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/join.html">dplyr::join()</a></code> functions that address common panel data needs, and contains functions for managing and cleaning panel data.</p>
 <p>Unlike other panel data packages, functions in <code>pmdplyr</code> are all designed to work even if there is more than one observation per individual per period. This comes in handy if each individual is observed multiple times per period - for example, multiple classes per student per term; or if you have hierarchical data - for example, multiple companies per country.</p>
 <p>There are three vignettes in total describing the contents of <code>pmdplyr</code>:</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>CURRENT VIGNETTE</strong> “pmdplyr”/“Get Started”, which describes the <code>pibble</code> panel data object type, and the <code>pmdplyr</code> tools for creating well-behaved ID and time variables <code><a href="../reference/id_variable.html">id_variable()</a></code> and <code><a href="../reference/time_variable.html">time_variable()</a></code>.</p></li>
 <li><p>“dplyr variants”, which that describes <code>pmdplyr</code> variations on <code>dplyr</code> functions <code>mutate()</code> (<code><a href="../reference/mutate_cascade.html">mutate_cascade()</a></code> and <code><a href="../reference/mutate_subset.html">mutate_subset()</a></code>), <code>_join</code> (<code>inexact_join</code> and <code><a href="../reference/safe_join.html">safe_join()</a></code>), and <code>lag</code> (<code><a href="../reference/tlag.html">tlag()</a></code>).</p></li>
-<li><p>“Panel Tools”, which describes novel tools that <code>pmdplyr</code> provides for cleaning andd manipulating panel data (<code><a href="../reference/panel_fill.html">panel_fill()</a></code>, <code><a href="../reference/panel_locf.html">panel_locf()</a></code>, <code><a href="../reference/fixed_check.html">fixed_check()</a></code>, <code><a href="../reference/fixed_force.html">fixed_force()</a></code>, <code><a href="../reference/panel_calculations.html">between_i()</a></code>, <code><a href="../reference/panel_calculations.html">within_i()</a></code>, <code><a href="../reference/mode_order.html">mode_order()</a></code>).</p></li>
+<li><p>“Panel Tools”, which describes novel tools that <code>pmdplyr</code> provides for cleaning and manipulating panel data (<code><a href="../reference/panel_fill.html">panel_fill()</a></code>, <code><a href="../reference/panel_locf.html">panel_locf()</a></code>, <code><a href="../reference/fixed_check.html">fixed_check()</a></code>, <code><a href="../reference/fixed_force.html">fixed_force()</a></code>, <code><a href="../reference/panel_calculations.html">between_i()</a></code>, <code><a href="../reference/panel_calculations.html">within_i()</a></code>, <code><a href="../reference/mode_order.html">mode_order()</a></code>).</p></li>
 </ol>
 <hr>
 <div id="pibble" class="section level1">
@@ -120,50 +120,50 @@
 <h2 class="hasAnchor">
 <a href="#pibble-and-as_pibble" class="anchor"></a>pibble() and as_pibble()</h2>
 <p><code>pibble</code>s can be declared in two main ways: raw, via <code><a href="../reference/pibble.html">pibble()</a></code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(...,</a>
-<a class="sourceLine" id="cb2-2" title="2">  <span class="dt">.i =</span> <span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb2-3" title="3">  <span class="dt">.t =</span> <span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb2-4" title="4">  <span class="dt">.d =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb2-5" title="5">  <span class="dt">.uniqcheck =</span> <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb2-6" title="6">)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(...,</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="dt">.i =</span> <span class="ot">NULL</span>,</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="dt">.t =</span> <span class="ot">NULL</span>,</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="dt">.d =</span> <span class="dv">1</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="dt">.uniqcheck =</span> <span class="ot">FALSE</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>)</span></code></pre></div>
 <p>or by transforming an existing <code>data.frame</code>, <code>list</code>, or <code>tbl_df</code> using <code><a href="../reference/as_pibble.html">as_pibble()</a></code>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="../reference/as_pibble.html">as_pibble</a></span>(x,</a>
-<a class="sourceLine" id="cb3-2" title="2">  <span class="dt">.i =</span> <span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb3-3" title="3">  <span class="dt">.t =</span> <span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb3-4" title="4">  <span class="dt">.d =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb3-5" title="5">  <span class="dt">.uniqcheck =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb3-6" title="6">  ...</a>
-<a class="sourceLine" id="cb3-7" title="7">)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="../reference/as_pibble.html">as_pibble</a></span>(x,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="dt">.i =</span> <span class="ot">NULL</span>,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="dt">.t =</span> <span class="ot">NULL</span>,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="dt">.d =</span> <span class="dv">1</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="dt">.uniqcheck =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  ...</span>
+<span id="cb3-7"><a href="#cb3-7"></a>)</span></code></pre></div>
 <p>Both functions work exactly as <code><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble::tibble()</a></code> and <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html">tibble::as_tibble()</a></code> do, except that they also take the arguments <code>.i</code>, <code>.t</code>, and <code>.d</code>, with <code>.i</code> and <code>.t</code> accepting either unquoted or quoted variable names. If you’d like your <code>pibble</code> checked to see if <code>.i</code> and <code>.t</code> uniquely identify your observations, set <code>.uniqcheck = TRUE</code>. It will do this automatically the first time in each R session you create a <code>pibble</code>, but if you’d like it to keep doing it, use <code>uniqcheck</code>.</p>
 <p>As a side bonus, you can check if the variables <code>a, b, c</code> uniquely identify the observations in data set <code>d</code> by running <code><a href="../reference/as_pibble.html">as_pibble(d, .i = c(a, b, c), .uniqcheck = TRUE)</a></code>. No warning? It’s uniquely identified!</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co"># .d = 1 by default, so in this data,</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co"># a = 1, b = 3 comes one period after a = 1, b = 2.</span></a>
-<a class="sourceLine" id="cb4-3" title="3">basic_pibble &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(</a>
-<a class="sourceLine" id="cb4-4" title="4">  <span class="dt">a =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb4-5" title="5">  <span class="dt">b =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>),</a>
-<a class="sourceLine" id="cb4-6" title="6">  <span class="dt">c =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,</a>
-<a class="sourceLine" id="cb4-7" title="7">  <span class="dt">.i =</span> a,</a>
-<a class="sourceLine" id="cb4-8" title="8">  <span class="dt">.t =</span> b</a>
-<a class="sourceLine" id="cb4-9" title="9">)</a>
-<a class="sourceLine" id="cb4-10" title="10"></a>
-<a class="sourceLine" id="cb4-11" title="11"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(SPrail)</a>
-<a class="sourceLine" id="cb4-12" title="12"><span class="co"># In SPrail, insert_date does not imply regular gaps between</span></a>
-<a class="sourceLine" id="cb4-13" title="13"><span class="co"># time periods, so we set .d = 0</span></a>
-<a class="sourceLine" id="cb4-14" title="14">declared_pibble &lt;-<span class="st"> </span><span class="kw"><a href="../reference/as_pibble.html">as_pibble</a></span>(SPrail,</a>
-<a class="sourceLine" id="cb4-15" title="15">  <span class="dt">.i =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(origin, destination),</a>
-<a class="sourceLine" id="cb4-16" title="16">  <span class="dt">.t =</span> insert_date,</a>
-<a class="sourceLine" id="cb4-17" title="17">  <span class="dt">.d =</span> <span class="dv">0</span></a>
-<a class="sourceLine" id="cb4-18" title="18">)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># .d = 1 by default, so in this data,</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># a = 1, b = 3 comes one period after a = 1, b = 2.</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>basic_pibble &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pibble.html">pibble</a></span>(</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="dt">a =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="dt">b =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="dt">c =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,</span>
+<span id="cb4-7"><a href="#cb4-7"></a>  <span class="dt">.i =</span> a,</span>
+<span id="cb4-8"><a href="#cb4-8"></a>  <span class="dt">.t =</span> b</span>
+<span id="cb4-9"><a href="#cb4-9"></a>)</span>
+<span id="cb4-10"><a href="#cb4-10"></a></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(SPrail)</span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co"># In SPrail, insert_date does not imply regular gaps between</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co"># time periods, so we set .d = 0</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a>declared_pibble &lt;-<span class="st"> </span><span class="kw"><a href="../reference/as_pibble.html">as_pibble</a></span>(SPrail,</span>
+<span id="cb4-15"><a href="#cb4-15"></a>  <span class="dt">.i =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(origin, destination),</span>
+<span id="cb4-16"><a href="#cb4-16"></a>  <span class="dt">.t =</span> insert_date,</span>
+<span id="cb4-17"><a href="#cb4-17"></a>  <span class="dt">.d =</span> <span class="dv">0</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a>)</span></code></pre></div>
 </div>
 <div id="panel_convert" class="section level2">
 <h2 class="hasAnchor">
 <a href="#panel_convert" class="anchor"></a>panel_convert()</h2>
 <p><code>pmdplyr</code> also has the function <code><a href="../reference/panel_convert.html">panel_convert()</a></code> which allows you to convert between different popular R panel data objects, including <code>pibble</code>. This can come in handy for creating <code>pibbles</code>, or exporting your cleaned <code>pibble</code> to use with a package that does panel data <em>analysis</em> (which <code>pmdplyr</code> does not):</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="../reference/panel_convert.html">panel_convert</a></span>(</a>
-<a class="sourceLine" id="cb5-2" title="2">  data,</a>
-<a class="sourceLine" id="cb5-3" title="3">  to,</a>
-<a class="sourceLine" id="cb5-4" title="4">  ...</a>
-<a class="sourceLine" id="cb5-5" title="5">)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw"><a href="../reference/panel_convert.html">panel_convert</a></span>(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  data,</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  to,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  ...</span>
+<span id="cb5-5"><a href="#cb5-5"></a>)</span></code></pre></div>
 <p>Where <code>data</code> is a panel data object, either <code>pibble</code>, <code>tsibble</code>, <code>pdata.frame</code>, or <code>panel_data</code>, and <code>to</code> is the type of object you’d like returned, which you can refer to by object name, object class, or package name: get a <code>pibble</code> with <code>"pmdplyr"</code>, <code>"pibble"</code>, or <code>"tbl_pb"</code>, a <code>tsibble</code> with <code>"tsibble"</code> or <code>"tbl_ts"</code>, a <code>pdata.frame</code> with <code>"plm"</code> or <code>"pdata.frame"</code>, or a <code>panel_data</code> with <code>"panelr"</code> or <code>"panel_data"</code>. <code>...</code> sends additional arguments to the functions used to declare those objects.</p>
 <p>When using <code>panel_convert</code>, be aware that any grouping will be lost, and you must have the relevant package of your <code>to</code> option installed (<code>tsibble</code>, <code>plm</code>, or <code>panelr</code>). When your <code>data</code> object is a <code>pdata.frame</code>, it is recommended to also have <code>sjlabelled</code> installed.</p>
 <p>All valid objects of the non-<code>pibble</code> types can be converted to <code>pibbles</code>, but the reverse is not true, since <code>pibble</code> does not enforce some strict requirements that other types do:</p>
@@ -244,10 +244,10 @@
 <h2 class="hasAnchor">
 <a href="#id_variable" class="anchor"></a>id_variable()</h2>
 <p><code><a href="../reference/id_variable.html">id_variable()</a></code> syntax follows:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw"><a href="../reference/id_variable.html">id_variable</a></span>(...,</a>
-<a class="sourceLine" id="cb6-2" title="2">  <span class="dt">.method =</span> <span class="st">"number"</span>,</a>
-<a class="sourceLine" id="cb6-3" title="3">  <span class="dt">.minwidth =</span> <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb6-4" title="4">)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw"><a href="../reference/id_variable.html">id_variable</a></span>(...,</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="dt">.method =</span> <span class="st">"number"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="dt">.minwidth =</span> <span class="ot">FALSE</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>)</span></code></pre></div>
 <p>where <code>...</code> is the set of identity variables that you want to combine into a single one (or, potentially, a single variable you’d like to encode numerically).</p>
 <p><code>.method</code> describes the way in which you’d like the variable encoded:</p>
 <ul>
@@ -258,46 +258,46 @@
 <li>
 <code>.method = character</code> preserves all original information and combines the variables together into a string, adding spacing to ensure uniqueness. Set <code>.minwidth = TRUE</code> to remove the spacing, although this may lead to non-uniqueness in some cases.</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">df &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(</a>
-<a class="sourceLine" id="cb7-2" title="2">  <span class="dt">country =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
-<a class="sourceLine" id="cb7-3" title="3">    <span class="st">"US"</span>, <span class="st">"US"</span>, <span class="st">"US"</span>, <span class="st">"US"</span>,</a>
-<a class="sourceLine" id="cb7-4" title="4">    <span class="st">"ENG"</span>, <span class="st">"ENG"</span>, <span class="st">"ENG"</span>, <span class="st">"ENG"</span></a>
-<a class="sourceLine" id="cb7-5" title="5">  ),</a>
-<a class="sourceLine" id="cb7-6" title="6">  <span class="dt">city =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
-<a class="sourceLine" id="cb7-7" title="7">    <span class="st">"NYC"</span>, <span class="st">"NYC"</span>, <span class="st">"Cambridge"</span>, <span class="st">"NYC"</span>,</a>
-<a class="sourceLine" id="cb7-8" title="8">    <span class="st">"Cambridge"</span>, <span class="st">"London"</span>, <span class="st">"Manchester"</span>, <span class="st">"Manchester"</span></a>
-<a class="sourceLine" id="cb7-9" title="9">  )</a>
-<a class="sourceLine" id="cb7-10" title="10">) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-11" title="11"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb7-12" title="12">    <span class="dt">numeric_ID =</span> <span class="kw"><a href="../reference/id_variable.html">id_variable</a></span>(country, city),</a>
-<a class="sourceLine" id="cb7-13" title="13">    <span class="dt">random_ID =</span> <span class="kw"><a href="../reference/id_variable.html">id_variable</a></span>(country, city, <span class="dt">.method =</span> <span class="st">"random"</span>),</a>
-<a class="sourceLine" id="cb7-14" title="14">    <span class="dt">char_ID =</span> <span class="kw"><a href="../reference/id_variable.html">id_variable</a></span>(country, city, <span class="dt">.method =</span> <span class="st">"character"</span>)</a>
-<a class="sourceLine" id="cb7-15" title="15">  )</a>
-<a class="sourceLine" id="cb7-16" title="16"></a>
-<a class="sourceLine" id="cb7-17" title="17">df</a>
-<a class="sourceLine" id="cb7-18" title="18"><span class="co">#&gt;   country       city numeric_ID random_ID           char_ID</span></a>
-<a class="sourceLine" id="cb7-19" title="19"><span class="co">#&gt; 1      US        NYC          1        14 |US|.|NYC|.......</span></a>
-<a class="sourceLine" id="cb7-20" title="20"><span class="co">#&gt; 2      US        NYC          1        14 |US|.|NYC|.......</span></a>
-<a class="sourceLine" id="cb7-21" title="21"><span class="co">#&gt; 3      US  Cambridge          2        16 |US|.|Cambridge|.</span></a>
-<a class="sourceLine" id="cb7-22" title="22"><span class="co">#&gt; 4      US        NYC          1        14 |US|.|NYC|.......</span></a>
-<a class="sourceLine" id="cb7-23" title="23"><span class="co">#&gt; 5     ENG  Cambridge          3        19 |ENG||Cambridge|.</span></a>
-<a class="sourceLine" id="cb7-24" title="24"><span class="co">#&gt; 6     ENG     London          4         7 |ENG||London|....</span></a>
-<a class="sourceLine" id="cb7-25" title="25"><span class="co">#&gt; 7     ENG Manchester          5        18 |ENG||Manchester|</span></a>
-<a class="sourceLine" id="cb7-26" title="26"><span class="co">#&gt; 8     ENG Manchester          5        18 |ENG||Manchester|</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>df &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(</span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="dt">country =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    <span class="st">"US"</span>, <span class="st">"US"</span>, <span class="st">"US"</span>, <span class="st">"US"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="st">"ENG"</span>, <span class="st">"ENG"</span>, <span class="st">"ENG"</span>, <span class="st">"ENG"</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  ),</span>
+<span id="cb7-6"><a href="#cb7-6"></a>  <span class="dt">city =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    <span class="st">"NYC"</span>, <span class="st">"NYC"</span>, <span class="st">"Cambridge"</span>, <span class="st">"NYC"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="st">"Cambridge"</span>, <span class="st">"London"</span>, <span class="st">"Manchester"</span>, <span class="st">"Manchester"</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>  )</span>
+<span id="cb7-10"><a href="#cb7-10"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb7-12"><a href="#cb7-12"></a>    <span class="dt">numeric_ID =</span> <span class="kw"><a href="../reference/id_variable.html">id_variable</a></span>(country, city),</span>
+<span id="cb7-13"><a href="#cb7-13"></a>    <span class="dt">random_ID =</span> <span class="kw"><a href="../reference/id_variable.html">id_variable</a></span>(country, city, <span class="dt">.method =</span> <span class="st">"random"</span>),</span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="dt">char_ID =</span> <span class="kw"><a href="../reference/id_variable.html">id_variable</a></span>(country, city, <span class="dt">.method =</span> <span class="st">"character"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15"></a>  )</span>
+<span id="cb7-16"><a href="#cb7-16"></a></span>
+<span id="cb7-17"><a href="#cb7-17"></a>df</span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="co">#&gt;   country       city numeric_ID random_ID           char_ID</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="co">#&gt; 1      US        NYC          1         2 |US|.|NYC|.......</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="co">#&gt; 2      US        NYC          1         2 |US|.|NYC|.......</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="co">#&gt; 3      US  Cambridge          2        29 |US|.|Cambridge|.</span></span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="co">#&gt; 4      US        NYC          1         2 |US|.|NYC|.......</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="co">#&gt; 5     ENG  Cambridge          3        40 |ENG||Cambridge|.</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="co">#&gt; 6     ENG     London          4         8 |ENG||London|....</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a><span class="co">#&gt; 7     ENG Manchester          5        36 |ENG||Manchester|</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a><span class="co">#&gt; 8     ENG Manchester          5        36 |ENG||Manchester|</span></span></code></pre></div>
 </div>
 <div id="time_variable" class="section level2">
 <h2 class="hasAnchor">
 <a href="#time_variable" class="anchor"></a>time_variable()</h2>
 <p><code><a href="../reference/time_variable.html">time_variable()</a></code> syntax follows:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(...,</a>
-<a class="sourceLine" id="cb8-2" title="2">  <span class="dt">.method =</span> <span class="st">"present"</span>,</a>
-<a class="sourceLine" id="cb8-3" title="3">  <span class="dt">.datepos =</span> <span class="ot">NA</span>,</a>
-<a class="sourceLine" id="cb8-4" title="4">  <span class="dt">.start =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb8-5" title="5">  <span class="dt">.skip =</span> <span class="ot">NA</span>,</a>
-<a class="sourceLine" id="cb8-6" title="6">  <span class="dt">.breaks =</span> <span class="ot">NA</span>,</a>
-<a class="sourceLine" id="cb8-7" title="7">  <span class="dt">.turnover =</span> <span class="ot">NA</span>,</a>
-<a class="sourceLine" id="cb8-8" title="8">  <span class="dt">.turnover_start =</span> <span class="ot">NA</span></a>
-<a class="sourceLine" id="cb8-9" title="9">)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(...,</span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="dt">.method =</span> <span class="st">"present"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="dt">.datepos =</span> <span class="ot">NA</span>,</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="dt">.start =</span> <span class="dv">1</span>,</span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="dt">.skip =</span> <span class="ot">NA</span>,</span>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="dt">.breaks =</span> <span class="ot">NA</span>,</span>
+<span id="cb8-7"><a href="#cb8-7"></a>  <span class="dt">.turnover =</span> <span class="ot">NA</span>,</span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="dt">.turnover_start =</span> <span class="ot">NA</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>)</span></code></pre></div>
 <p>Where <code>...</code> is the set of variables that you want to combine into a single, <code>integer</code>-class time variable. The rest of the options determine how the variable(s) will be read or transformed; the need for each varies depending on the structure of the original data and which <code>.method</code> is used.</p>
 <p><code>.method</code> can take the values:</p>
 <ul>
@@ -314,85 +314,85 @@
 <li>
 <code>.method = "turnover"</code> can be used when you have more than one variable in variable and they are all numeric nonnegative integers. Set the <code>.turnover</code> option to indicate the highest value each variable takes before it starts over, and set <code>.turnover_start</code> to indicate what value it takes when it starts over. Cannot be combined with <code>.skip</code> or <code>.breaks</code>. Doesn’t work with any variable for which the turnover values change, i.e. it doesn’t play well with days-in-month - if you’d like to do something like year-month-day-hour, I recommend running <code>.method="day"</code> once with just the year-month-day variable, and then taking the result and combining <em>that</em> with hour in <code>.method = "turnover"</code>.</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(SPrail)</a>
-<a class="sourceLine" id="cb9-2" title="2"></a>
-<a class="sourceLine" id="cb9-3" title="3"><span class="co"># Since we have a date variable, we can easily create integers that increment for each</span></a>
-<a class="sourceLine" id="cb9-4" title="4"><span class="co"># year, or for each month, etc.</span></a>
-<a class="sourceLine" id="cb9-5" title="5"><span class="co"># Likely we'd only really need one of these four, depending on our purposes</span></a>
-<a class="sourceLine" id="cb9-6" title="6">SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-7" title="7"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb9-8" title="8">    <span class="dt">year_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"year"</span>),</a>
-<a class="sourceLine" id="cb9-9" title="9">    <span class="dt">month_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"month"</span>),</a>
-<a class="sourceLine" id="cb9-10" title="10">    <span class="dt">week_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"week"</span>),</a>
-<a class="sourceLine" id="cb9-11" title="11">    <span class="dt">day_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"day"</span>)</a>
-<a class="sourceLine" id="cb9-12" title="12">  )</a>
-<a class="sourceLine" id="cb9-13" title="13"></a>
-<a class="sourceLine" id="cb9-14" title="14"><span class="co"># Let's see what we've got</span></a>
-<a class="sourceLine" id="cb9-15" title="15">SPrail <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb9-16" title="16"><span class="st">  </span><span class="kw">select</span>(insert_date, <span class="kw">ends_with</span>(<span class="st">"time_id"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb9-17" title="17"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>()</a>
-<a class="sourceLine" id="cb9-18" title="18"><span class="co">#&gt; # A tibble: 6 x 5</span></a>
-<a class="sourceLine" id="cb9-19" title="19"><span class="co">#&gt;   insert_date         year_time_id month_time_id week_time_id day_time_id</span></a>
-<a class="sourceLine" id="cb9-20" title="20"><span class="co">#&gt;   &lt;dttm&gt;                     &lt;int&gt;         &lt;int&gt;        &lt;int&gt;       &lt;int&gt;</span></a>
-<a class="sourceLine" id="cb9-21" title="21"><span class="co">#&gt; 1 2019-04-12 20:17:04         2019             1            1           2</span></a>
-<a class="sourceLine" id="cb9-22" title="22"><span class="co">#&gt; 2 2019-04-16 09:33:08         2019             1            2           6</span></a>
-<a class="sourceLine" id="cb9-23" title="23"><span class="co">#&gt; 3 2019-05-08 09:04:07         2019             2            5          28</span></a>
-<a class="sourceLine" id="cb9-24" title="24"><span class="co">#&gt; 4 2019-04-16 06:21:42         2019             1            2           6</span></a>
-<a class="sourceLine" id="cb9-25" title="25"><span class="co">#&gt; 5 2019-05-02 07:03:34         2019             2            4          22</span></a>
-<a class="sourceLine" id="cb9-26" title="26"><span class="co">#&gt; 6 2019-04-13 06:03:43         2019             1            1           3</span></a>
-<a class="sourceLine" id="cb9-27" title="27"></a>
-<a class="sourceLine" id="cb9-28" title="28"><span class="co"># Perhaps I'd like quarterly data</span></a>
-<a class="sourceLine" id="cb9-29" title="29"><span class="co"># (although in this case there are only two months, not much variation there)</span></a>
-<a class="sourceLine" id="cb9-30" title="30">SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-31" title="31"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">quarter_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date,</a>
-<a class="sourceLine" id="cb9-32" title="32">    <span class="dt">.method =</span> <span class="st">"month"</span>,</a>
-<a class="sourceLine" id="cb9-33" title="33">    <span class="dt">.breaks =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb9-34" title="34">  ))</a>
-<a class="sourceLine" id="cb9-35" title="35"><span class="co"># Should line up properly with month</span></a>
-<a class="sourceLine" id="cb9-36" title="36">SPrail <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb9-37" title="37"><span class="st">  </span><span class="kw">count</span>(month_time_id, quarter_time_id)</a>
-<a class="sourceLine" id="cb9-38" title="38"><span class="co">#&gt; # A tibble: 2 x 3</span></a>
-<a class="sourceLine" id="cb9-39" title="39"><span class="co">#&gt;   month_time_id quarter_time_id     n</span></a>
-<a class="sourceLine" id="cb9-40" title="40"><span class="co">#&gt;           &lt;int&gt;           &lt;int&gt; &lt;int&gt;</span></a>
-<a class="sourceLine" id="cb9-41" title="41"><span class="co">#&gt; 1             1               1  1633</span></a>
-<a class="sourceLine" id="cb9-42" title="42"><span class="co">#&gt; 2             2               1   367</span></a>
-<a class="sourceLine" id="cb9-43" title="43"></a>
-<a class="sourceLine" id="cb9-44" title="44"><span class="co"># Maybe I'd like Monday to come immediately after Friday!</span></a>
-<a class="sourceLine" id="cb9-45" title="45">SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-46" title="46"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">weekday_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date,</a>
-<a class="sourceLine" id="cb9-47" title="47">    <span class="dt">.method =</span> <span class="st">"day"</span>,</a>
-<a class="sourceLine" id="cb9-48" title="48">    <span class="dt">.skip =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">6</span>, <span class="dv">7</span>)</a>
-<a class="sourceLine" id="cb9-49" title="49">  ))</a>
-<a class="sourceLine" id="cb9-50" title="50"></a>
-<a class="sourceLine" id="cb9-51" title="51"><span class="co"># Perhaps I'm interested in ANY time period in the data and just want to enumerate them in order</span></a>
-<a class="sourceLine" id="cb9-52" title="52">SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-53" title="53"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">any_present_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date,</a>
-<a class="sourceLine" id="cb9-54" title="54">    <span class="dt">.method =</span> <span class="st">"present"</span></a>
-<a class="sourceLine" id="cb9-55" title="55">  ))</a>
-<a class="sourceLine" id="cb9-56" title="56"></a>
-<a class="sourceLine" id="cb9-57" title="57"><span class="co"># Note the weekday_time_id NAs - these are weekends! We told it to skip those.</span></a>
-<a class="sourceLine" id="cb9-58" title="58"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(SPrail <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(insert_date, day_time_id, weekday_time_id, any_present_time_id))</a>
-<a class="sourceLine" id="cb9-59" title="59"><span class="co">#&gt; # A tibble: 6 x 4</span></a>
-<a class="sourceLine" id="cb9-60" title="60"><span class="co">#&gt;   insert_date         day_time_id weekday_time_id any_present_time_id</span></a>
-<a class="sourceLine" id="cb9-61" title="61"><span class="co">#&gt;   &lt;dttm&gt;                    &lt;int&gt;           &lt;int&gt;               &lt;int&gt;</span></a>
-<a class="sourceLine" id="cb9-62" title="62"><span class="co">#&gt; 1 2019-04-12 20:17:04           2              NA                  96</span></a>
-<a class="sourceLine" id="cb9-63" title="63"><span class="co">#&gt; 2 2019-04-16 09:33:08           6               4                 461</span></a>
-<a class="sourceLine" id="cb9-64" title="64"><span class="co">#&gt; 3 2019-05-08 09:04:07          28              20                1899</span></a>
-<a class="sourceLine" id="cb9-65" title="65"><span class="co">#&gt; 4 2019-04-16 06:21:42           6               4                 446</span></a>
-<a class="sourceLine" id="cb9-66" title="66"><span class="co">#&gt; 5 2019-05-02 07:03:34          22              16                1670</span></a>
-<a class="sourceLine" id="cb9-67" title="67"><span class="co">#&gt; 6 2019-04-13 06:03:43           3              NA                 130</span></a>
-<a class="sourceLine" id="cb9-68" title="68"></a>
-<a class="sourceLine" id="cb9-69" title="69"><span class="co"># Maybe instead of being given a nice time variable, I was given it in string form</span></a>
-<a class="sourceLine" id="cb9-70" title="70">SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">time_string =</span> <span class="kw"><a href="https://rdrr.io/r/base/character.html">as.character</a></span>(insert_date))</a>
-<a class="sourceLine" id="cb9-71" title="71"><span class="co"># As long as the character positions are consistent we can still use it</span></a>
-<a class="sourceLine" id="cb9-72" title="72">SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-73" title="73"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">day_from_string_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(time_string,</a>
-<a class="sourceLine" id="cb9-74" title="74">    <span class="dt">.method =</span> <span class="st">"day"</span>,</a>
-<a class="sourceLine" id="cb9-75" title="75">    <span class="dt">.datepos =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb9-76" title="76">  ))</a>
-<a class="sourceLine" id="cb9-77" title="77"><span class="co"># Results are identical from using the actual Date variable</span></a>
-<a class="sourceLine" id="cb9-78" title="78"><span class="kw"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(SPrail<span class="op">$</span>day_time_id, SPrail<span class="op">$</span>day_from_string_id)</a>
-<a class="sourceLine" id="cb9-79" title="79"><span class="co">#&gt; [1] 1</span></a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(SPrail)</span>
+<span id="cb9-2"><a href="#cb9-2"></a></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co"># Since we have a date variable, we can easily create integers that increment for each</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co"># year, or for each month, etc.</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co"># Likely we'd only really need one of these four, depending on our purposes</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a>SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</span>
+<span id="cb9-8"><a href="#cb9-8"></a>    <span class="dt">year_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"year"</span>),</span>
+<span id="cb9-9"><a href="#cb9-9"></a>    <span class="dt">month_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"month"</span>),</span>
+<span id="cb9-10"><a href="#cb9-10"></a>    <span class="dt">week_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"week"</span>),</span>
+<span id="cb9-11"><a href="#cb9-11"></a>    <span class="dt">day_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"day"</span>)</span>
+<span id="cb9-12"><a href="#cb9-12"></a>  )</span>
+<span id="cb9-13"><a href="#cb9-13"></a></span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="co"># Let's see what we've got</span></span>
+<span id="cb9-15"><a href="#cb9-15"></a>SPrail <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-16"><a href="#cb9-16"></a><span class="st">  </span><span class="kw">select</span>(insert_date, <span class="kw">ends_with</span>(<span class="st">"time_id"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>()</span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="co">#&gt; # A tibble: 6 x 5</span></span>
+<span id="cb9-19"><a href="#cb9-19"></a><span class="co">#&gt;   insert_date         year_time_id month_time_id week_time_id day_time_id</span></span>
+<span id="cb9-20"><a href="#cb9-20"></a><span class="co">#&gt;   &lt;dttm&gt;                     &lt;int&gt;         &lt;int&gt;        &lt;int&gt;       &lt;int&gt;</span></span>
+<span id="cb9-21"><a href="#cb9-21"></a><span class="co">#&gt; 1 2019-04-12 20:17:04         2019             1            1           2</span></span>
+<span id="cb9-22"><a href="#cb9-22"></a><span class="co">#&gt; 2 2019-04-16 09:33:08         2019             1            2           6</span></span>
+<span id="cb9-23"><a href="#cb9-23"></a><span class="co">#&gt; 3 2019-05-08 09:04:07         2019             2            5          28</span></span>
+<span id="cb9-24"><a href="#cb9-24"></a><span class="co">#&gt; 4 2019-04-16 06:21:42         2019             1            2           6</span></span>
+<span id="cb9-25"><a href="#cb9-25"></a><span class="co">#&gt; 5 2019-05-02 07:03:34         2019             2            4          22</span></span>
+<span id="cb9-26"><a href="#cb9-26"></a><span class="co">#&gt; 6 2019-04-13 06:03:43         2019             1            1           3</span></span>
+<span id="cb9-27"><a href="#cb9-27"></a></span>
+<span id="cb9-28"><a href="#cb9-28"></a><span class="co"># Perhaps I'd like quarterly data</span></span>
+<span id="cb9-29"><a href="#cb9-29"></a><span class="co"># (although in this case there are only two months, not much variation there)</span></span>
+<span id="cb9-30"><a href="#cb9-30"></a>SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></span>
+<span id="cb9-31"><a href="#cb9-31"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">quarter_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date,</span>
+<span id="cb9-32"><a href="#cb9-32"></a>    <span class="dt">.method =</span> <span class="st">"month"</span>,</span>
+<span id="cb9-33"><a href="#cb9-33"></a>    <span class="dt">.breaks =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">10</span>)</span>
+<span id="cb9-34"><a href="#cb9-34"></a>  ))</span>
+<span id="cb9-35"><a href="#cb9-35"></a><span class="co"># Should line up properly with month</span></span>
+<span id="cb9-36"><a href="#cb9-36"></a>SPrail <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-37"><a href="#cb9-37"></a><span class="st">  </span><span class="kw">count</span>(month_time_id, quarter_time_id)</span>
+<span id="cb9-38"><a href="#cb9-38"></a><span class="co">#&gt; # A tibble: 2 x 3</span></span>
+<span id="cb9-39"><a href="#cb9-39"></a><span class="co">#&gt;   month_time_id quarter_time_id     n</span></span>
+<span id="cb9-40"><a href="#cb9-40"></a><span class="co">#&gt;           &lt;int&gt;           &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb9-41"><a href="#cb9-41"></a><span class="co">#&gt; 1             1               1  1633</span></span>
+<span id="cb9-42"><a href="#cb9-42"></a><span class="co">#&gt; 2             2               1   367</span></span>
+<span id="cb9-43"><a href="#cb9-43"></a></span>
+<span id="cb9-44"><a href="#cb9-44"></a><span class="co"># Maybe I'd like Monday to come immediately after Friday!</span></span>
+<span id="cb9-45"><a href="#cb9-45"></a>SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></span>
+<span id="cb9-46"><a href="#cb9-46"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">weekday_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date,</span>
+<span id="cb9-47"><a href="#cb9-47"></a>    <span class="dt">.method =</span> <span class="st">"day"</span>,</span>
+<span id="cb9-48"><a href="#cb9-48"></a>    <span class="dt">.skip =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">6</span>, <span class="dv">7</span>)</span>
+<span id="cb9-49"><a href="#cb9-49"></a>  ))</span>
+<span id="cb9-50"><a href="#cb9-50"></a></span>
+<span id="cb9-51"><a href="#cb9-51"></a><span class="co"># Perhaps I'm interested in ANY time period in the data and just want to enumerate them in order</span></span>
+<span id="cb9-52"><a href="#cb9-52"></a>SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></span>
+<span id="cb9-53"><a href="#cb9-53"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">any_present_time_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(insert_date,</span>
+<span id="cb9-54"><a href="#cb9-54"></a>    <span class="dt">.method =</span> <span class="st">"present"</span></span>
+<span id="cb9-55"><a href="#cb9-55"></a>  ))</span>
+<span id="cb9-56"><a href="#cb9-56"></a></span>
+<span id="cb9-57"><a href="#cb9-57"></a><span class="co"># Note the weekday_time_id NAs - these are weekends! We told it to skip those.</span></span>
+<span id="cb9-58"><a href="#cb9-58"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(SPrail <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(insert_date, day_time_id, weekday_time_id, any_present_time_id))</span>
+<span id="cb9-59"><a href="#cb9-59"></a><span class="co">#&gt; # A tibble: 6 x 4</span></span>
+<span id="cb9-60"><a href="#cb9-60"></a><span class="co">#&gt;   insert_date         day_time_id weekday_time_id any_present_time_id</span></span>
+<span id="cb9-61"><a href="#cb9-61"></a><span class="co">#&gt;   &lt;dttm&gt;                    &lt;int&gt;           &lt;int&gt;               &lt;int&gt;</span></span>
+<span id="cb9-62"><a href="#cb9-62"></a><span class="co">#&gt; 1 2019-04-12 20:17:04           2              NA                  96</span></span>
+<span id="cb9-63"><a href="#cb9-63"></a><span class="co">#&gt; 2 2019-04-16 09:33:08           6               4                 461</span></span>
+<span id="cb9-64"><a href="#cb9-64"></a><span class="co">#&gt; 3 2019-05-08 09:04:07          28              20                1899</span></span>
+<span id="cb9-65"><a href="#cb9-65"></a><span class="co">#&gt; 4 2019-04-16 06:21:42           6               4                 446</span></span>
+<span id="cb9-66"><a href="#cb9-66"></a><span class="co">#&gt; 5 2019-05-02 07:03:34          22              16                1670</span></span>
+<span id="cb9-67"><a href="#cb9-67"></a><span class="co">#&gt; 6 2019-04-13 06:03:43           3              NA                 130</span></span>
+<span id="cb9-68"><a href="#cb9-68"></a></span>
+<span id="cb9-69"><a href="#cb9-69"></a><span class="co"># Maybe instead of being given a nice time variable, I was given it in string form</span></span>
+<span id="cb9-70"><a href="#cb9-70"></a>SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">time_string =</span> <span class="kw"><a href="https://rdrr.io/r/base/character.html">as.character</a></span>(insert_date))</span>
+<span id="cb9-71"><a href="#cb9-71"></a><span class="co"># As long as the character positions are consistent we can still use it</span></span>
+<span id="cb9-72"><a href="#cb9-72"></a>SPrail &lt;-<span class="st"> </span>SPrail <span class="op">%&gt;%</span></span>
+<span id="cb9-73"><a href="#cb9-73"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">day_from_string_id =</span> <span class="kw"><a href="../reference/time_variable.html">time_variable</a></span>(time_string,</span>
+<span id="cb9-74"><a href="#cb9-74"></a>    <span class="dt">.method =</span> <span class="st">"day"</span>,</span>
+<span id="cb9-75"><a href="#cb9-75"></a>    <span class="dt">.datepos =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">10</span>)</span>
+<span id="cb9-76"><a href="#cb9-76"></a>  ))</span>
+<span id="cb9-77"><a href="#cb9-77"></a><span class="co"># Results are identical from using the actual Date variable</span></span>
+<span id="cb9-78"><a href="#cb9-78"></a><span class="kw"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(SPrail<span class="op">$</span>day_time_id, SPrail<span class="op">$</span>day_from_string_id)</span>
+<span id="cb9-79"><a href="#cb9-79"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 </div>
 </div>
   </div>
