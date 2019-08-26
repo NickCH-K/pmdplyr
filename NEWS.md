@@ -7,3 +7,5 @@
 # pmdplyr 0.3.0
 
 * Includes fixes for full CRAN compliance.
+
+# pmdplyr 0.3.0.9000

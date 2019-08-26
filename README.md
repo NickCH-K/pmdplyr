@@ -11,32 +11,42 @@ maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www
 status](https://travis-ci.org/nickch-k/pmdplyr.svg?branch=master)](https://travis-ci.org/nickch-k/pmdplyr)
 [![Codecov test
 coverage](https://codecov.io/gh/nickch-k/pmdplyr/branch/master/graph/badge.svg)](https://codecov.io/gh/nickch-k/pmdplyr?branch=master)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/pmdplyr)](https://CRAN.R-project.org/package=pmdplyr)
 <!-- badges: end -->
 
-The `pmdplyr` package is an extension to `dplyr` designed for cleaning
-and managing panel and hierarchical data. It contains variations on the
-`dplyr` `mutate` and `_join` functions that address common panel data
+The pmdplyr package is an extension to dplyr designed for cleaning and
+managing panel and hierarchical data. It contains variations on the
+dplyr `mutate` and `_join` functions that address common panel data
 needs, and contains functions for managing and cleaning panel data. The
 goal is to get you a nice tidy `pibble` panel data object, which you can
 `panel_convert()` for use in one of the many packages that help you
 *analyze* panel data.
 
-Unlike other panel data packages, functions in `pmdplyr` are all
-designed to work even if there is more than one observation per
-individual per period. This comes in handy if each individual is
-observed multiple times per period - for example, multiple classes per
-student per term; or if you have hierarchical data - for example,
-multiple companies per country.
+Unlike other panel data packages, functions in pmdplyr are all designed
+to work even if there is more than one observation per individual per
+period. This comes in handy if each individual is observed multiple
+times per period - for example, multiple classes per student per term;
+or if you have hierarchical data - for example, multiple companies per
+country.
 
-Examples of `pmdplyr` use are below. These examples only cover some of
-the functionality of the package. See the
+Examples of pmdplyr use are below. These examples only cover some of the
+functionality of the package. See the
 [Reference](https://nickch-k.github.io/pmdplyr/reference/index.html)
 `pkgdown` page for a full list of functions, or `help(pmdplyr)`.
 
 ## Installation
 
-You can install the development version from
-[GitHub](https://github.com/) with:
+You can install pmdplyr from CRAN:
+
+``` r
+install.packages("pmdplyr")
+```
+
+### Development version
+
+The development version can be installed from
+[GitHub](https://github.com/):
 
 ``` r
 # install.packages("devtools")
