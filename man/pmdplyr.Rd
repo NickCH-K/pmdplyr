@@ -3,7 +3,6 @@
 \docType{package}
 \name{pmdplyr}
 \alias{pmdplyr}
-\alias{pmdplyr-package}
 \title{\code{pmdplyr} package}
 \description{
 Suite of tools extending the \code{dplyr} package to perform data manipulation. These tools are geared towards use in panel data and hierarchical data.

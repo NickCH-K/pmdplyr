@@ -21,7 +21,7 @@ Any grouping will be lost. You must have the relevant package installed to conve
 
 When using \code{panel_convert}, be aware of the requirements that each type has:
 
-\tabular{lcccc}{
+ \tabular{lcccc}{
    Feature/Requirement \tab  \code{pibble}   \tab  \code{tsibble} \tab  \code{pdata.frame} \tab  \code{panel_data} \cr
                          \tab           \tab                \tab                 \tab \cr
    ID                    \tab \code{.i} \tab \code{key}     \tab \code{index[1]} \tab \code{id} \cr
@@ -33,11 +33,11 @@ When using \code{panel_convert}, be aware of the requirements that each type has
    Unique identification \tab No        \tab Yes            \tab No[3]           \tab No[3]
  }
 
-[1] \code{pdata.frame} does not require that time be provided, but if not provided will create it based on original ordering of the data. The \code{pdata.frame} option to set \code{index} equal to an integer for a balanced panel and have it figure out the rest by itself is not supported.
+ [1] \code{pdata.frame} does not require that time be provided, but if not provided will create it based on original ordering of the data. The \code{pdata.frame} option to set \code{index} equal to an integer for a balanced panel and have it figure out the rest by itself is not supported.
 
-[2] Use \code{pmdplyr::id_variable()} to generate a single ID variable from multiple if one is required.
+ [2] Use \code{pmdplyr::id_variable()} to generate a single ID variable from multiple if one is required.
 
-[3] \code{pdata.frame} and \code{panel_data} do not require that ID and time uniquely identify the observations on declaring the data, but functions in these packages may not work correctly without unique identification.
+ [3] \code{pdata.frame} and \code{panel_data} do not require that ID and time uniquely identify the observations on declaring the data, but functions in these packages may not work correctly without unique identification.
 
 In addition to the above, be aware that the different packages have different requirements on which variable classes can be Time variables. \code{pmdplyr::time_variable()} can build an integer variable that will work in all packages.
 

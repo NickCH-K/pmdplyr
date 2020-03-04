@@ -4,9 +4,18 @@
 \alias{mutate_cascade}
 \title{Perform mutate one time period at a time ('Cascading mutate')}
 \usage{
-mutate_cascade(.df, ..., .skip = TRUE, .backwards = FALSE,
-  .group_i = TRUE, .i = NULL, .t = NULL, .d = NA,
-  .uniqcheck = FALSE, .setpanel = TRUE)
+mutate_cascade(
+  .df,
+  ...,
+  .skip = TRUE,
+  .backwards = FALSE,
+  .group_i = TRUE,
+  .i = NULL,
+  .t = NULL,
+  .d = NA,
+  .uniqcheck = FALSE,
+  .setpanel = TRUE
+)
 }
 \arguments{
 \item{.df}{Data frame or tibble.}
@@ -53,7 +62,9 @@ Scorecard <- Scorecard \%>\%
 Scorecard <- Scorecard \%>\%
   # Almost all instances involve a variable being set to a function of a lag of itself
   # we don't want to overwrite so let's make another
-  dplyr::mutate(decay_earnings = earnings_med) \%>\%
+  # Note that earnings_med is an integer -
+  # but we're about to make non-integer decay function, so call it a double!
+  dplyr::mutate(decay_earnings = as.double(earnings_med)) \%>\%
   # Now we can cascade
   mutate_cascade(
     decay_earnings = decay_earnings +

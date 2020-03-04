@@ -8,11 +8,13 @@
 
 <title>Convert between panel data types — panel_convert • pmdplyr</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -32,10 +34,11 @@
 
 
 
-<meta property="og:title" content="Convert between panel data types — panel_convert" />
 
+<meta property="og:title" content="Convert between panel data types — panel_convert" />
 <meta property="og:description" content="This function takes panel data objects declared using pmdplyr (pibble/tbl_pb), tsibble (tsibble/tbl_ts), plm (pdata.frame), and panelr (panel_data) and converts to one of the other three formats for use with functions in those packages." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -66,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9100</span>
       </span>
     </div>
 
@@ -103,7 +106,6 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/NickCH-K/pmdplyr">
@@ -130,13 +132,11 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This function takes panel data objects declared using <code>pmdplyr</code> (<code>pibble</code>/<code>tbl_pb</code>), <code>tsibble</code> (<code>tsibble</code>/<code>tbl_ts</code>), <code>plm</code> (<code>pdata.frame</code>), and <code>panelr</code> (<code>panel_data</code>) and converts to one of the other three formats for use with functions in those packages.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>panel_convert</span>(<span class='no'>data</span>, <span class='no'>to</span>, <span class='no'>...</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -153,12 +153,12 @@
       <td><p>Additional arguments to be sent to, respectively, <code><a href='as_pibble.html'>as_pibble()</a></code>, <code><a href='https://tsibble.tidyverts.org/reference/as-tsibble.html'>tsibble::as_tsibble()</a></code>, <code><a href='https://rdrr.io/pkg/plm/man/pdata.frame.html'>plm::pdata.frame()</a></code>, or <code><a href='https://rdrr.io/pkg/panelr/man/panel_data.html'>panelr::panel_data()</a></code>.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Any grouping will be lost. You must have the relevant package installed to convert to the type for that package. Conversions from <code>pdata.frame</code> will be improved if <code>sjlabelled</code> is also installed.</p>
 <p>When using <code>panel_convert</code>, be aware of the requirements that each type has:</p>
-<table class='table'>
+<p></p><table class='table'>
 <tr><td>Feature/Requirement</td><td><code>pibble</code></td><td><code>tsibble</code></td><td><code>pdata.frame</code></td><td><code>panel_data</code></td></tr>
 <tr><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td>ID</td><td><code>.i</code></td><td><code>key</code></td><td><code>index[1]</code></td><td><code>id</code></td></tr>
@@ -176,7 +176,6 @@
 <p>[3] <code>pdata.frame</code> and <code>panel_data</code> do not require that ID and time uniquely identify the observations on declaring the data, but functions in these packages may not work correctly without unique identification.</p>
 <p>In addition to the above, be aware that the different packages have different requirements on which variable classes can be Time variables. <code><a href='time_variable.html'>pmdplyr::time_variable()</a></code> can build an integer variable that will work in all packages.</p>
 <p>You may run into some trouble if your data contains variables by the names <code>panel_convert_id</code>, <code>panel_convert_time</code>, <code>pibble_d</code>, or <code>panel_convert_regular</code>.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Only run examples if the relevant packages are installed</span>
@@ -249,9 +248,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -265,7 +262,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

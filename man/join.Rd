@@ -11,22 +11,17 @@
 \alias{anti_join.tbl_pb}
 \title{Join two pibbles together}
 \usage{
-\method{left_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
+\method{left_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ...)
 
-\method{inner_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
+\method{inner_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ...)
 
-\method{right_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
+\method{right_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ...)
 
-\method{full_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  suffix = c(".x", ".y"), ...)
+\method{full_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y"), ...)
 
 \method{semi_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, ...)
 
-\method{nest_join}{tbl_pb}(x, y, by = NULL, copy = FALSE,
-  keep = FALSE, name = NULL, ...)
+\method{nest_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, keep = FALSE, name = NULL, ...)
 
 \method{anti_join}{tbl_pb}(x, y, by = NULL, copy = FALSE, ...)
 }
@@ -55,7 +50,7 @@ it is a potentially expensive operation so you must opt into it.}
 Should be a character vector of length 2.}
 
 \item{...}{other parameters passed onto methods, for instance, \code{na_matches}
-to control how \code{NA} values are matched.  See \link{join.tbl_df} for more.}
+to control how \code{NA} values are matched.  See \link[dplyr]{join.tbl_df} for more.}
 
 \item{keep}{If \code{TRUE} the by columns are kept in the nesting joins.}
 

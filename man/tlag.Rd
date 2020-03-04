@@ -4,10 +4,19 @@
 \alias{tlag}
 \title{Time-lag a variable}
 \usage{
-tlag(.var, .df = get(".", envir = parent.frame()), .n = 1,
-  .default = NA, .quick = FALSE, .resolve = "error",
-  .group_i = TRUE, .i = NULL, .t = NULL, .d = NA,
-  .uniqcheck = FALSE)
+tlag(
+  .var,
+  .df = get(".", envir = parent.frame()),
+  .n = 1,
+  .default = NA,
+  .quick = FALSE,
+  .resolve = "error",
+  .group_i = TRUE,
+  .i = NULL,
+  .t = NULL,
+  .d = NA,
+  .uniqcheck = FALSE
+)
 }
 \arguments{
 \item{.var}{Unquoted variable from \code{.df} to be lagged.}

@@ -4,9 +4,20 @@
 \alias{panel_fill}
 \title{Fill in gaps in panel data}
 \usage{
-panel_fill(.df, .set_NA = FALSE, .min = NA, .max = NA,
-  .backwards = FALSE, .group_i = TRUE, .flag = NA, .i = NULL,
-  .t = NULL, .d = 1, .uniqcheck = FALSE, .setpanel = TRUE)
+panel_fill(
+  .df,
+  .set_NA = FALSE,
+  .min = NA,
+  .max = NA,
+  .backwards = FALSE,
+  .group_i = TRUE,
+  .flag = NA,
+  .i = NULL,
+  .t = NULL,
+  .d = 1,
+  .uniqcheck = FALSE,
+  .setpanel = TRUE
+)
 }
 \arguments{
 \item{.df}{Tibble or data frame which either has the \code{.t} and \code{.d} (and perhaps \code{.i}) attributes included by \code{as_pibble()}, or the appropriate panel structure is declared in the function.}

@@ -6,13 +6,23 @@
 \alias{between_i}
 \title{Perform standard panel-data calculations}
 \usage{
-within_i(.var, .df = get(".", envir = parent.frame()),
-  .fcn = function(x) mean(x, na.rm = TRUE), .i = NULL, .t = NULL,
-  .uniqcheck = FALSE)
+within_i(
+  .var,
+  .df = get(".", envir = parent.frame()),
+  .fcn = function(x) mean(x, na.rm = TRUE),
+  .i = NULL,
+  .t = NULL,
+  .uniqcheck = FALSE
+)
 
-between_i(.var, .df = get(".", envir = parent.frame()),
-  .fcn = function(x) mean(x, na.rm = TRUE), .i = NULL, .t = NULL,
-  .uniqcheck = FALSE)
+between_i(
+  .var,
+  .df = get(".", envir = parent.frame()),
+  .fcn = function(x) mean(x, na.rm = TRUE),
+  .i = NULL,
+  .t = NULL,
+  .uniqcheck = FALSE
+)
 }
 \arguments{
 \item{.var}{Vector to be transformed}

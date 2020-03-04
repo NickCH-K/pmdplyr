@@ -8,11 +8,13 @@
 
 <title>Create a single integer time period index variable — time_variable • pmdplyr</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -32,10 +34,11 @@
 
 
 
-<meta property="og:title" content="Create a single integer time period index variable — time_variable" />
 
+<meta property="og:title" content="Create a single integer time period index variable — time_variable" />
 <meta property="og:description" content="This function takes either multiple time variables, or a single Date-class variable, and creates a single integer time variable easily usable with functions in pmdplyr and other packages like plm and panelr." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -66,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9100</span>
       </span>
     </div>
 
@@ -103,7 +106,6 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/NickCH-K/pmdplyr">
@@ -130,14 +132,20 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This function takes either multiple time variables, or a single Date-class variable, and creates a single integer time variable easily usable with functions in <code>pmdplyr</code> and other packages like <code>plm</code> and <code>panelr</code>.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>time_variable</span>(<span class='no'>...</span>, <span class='kw'>.method</span> <span class='kw'>=</span> <span class='st'>"present"</span>, <span class='kw'>.datepos</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.start</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>.skip</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.breaks</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.turnover</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>.turnover_start</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>time_variable</span>(
+  <span class='no'>...</span>,
+  <span class='kw'>.method</span> <span class='kw'>=</span> <span class='st'>"present"</span>,
+  <span class='kw'>.datepos</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>.start</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>.skip</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>.breaks</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>.turnover</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>.turnover_start</span> <span class='kw'>=</span> <span class='fl'>NA</span>
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -174,7 +182,7 @@
       <td><p>A numeric vector the same length as the number of variables included indicating the minimum value that the corresponding variable in the list of variables takes, where NA indicates no minimum value, for use with <code>method="turnover"</code>. For example, if the variable list is <code>year,month</code> then you might have <code>.turnover=c(NA,1)</code>. Or if the variable list is <code>days-since-jan1-1970,hour,minute,second</code> you might have <code>.turnover=c(NA,0,0,0)</code>. By default this is a vector of 1s the same length as the number of variables, except for the first element, which is NA. Note that in almost all cases, the first element of <code>.turnover_start</code> should be <code>NA</code>, and all others should be non-NA.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The <code>pmdplyr</code> library accepts only two kinds of time variables:</p>
@@ -192,7 +200,6 @@
 <li><p><code>.method="turnover"</code> can be used when you have more than one variable in variable and they are all numeric nonnegative integers. Set the <code>.turnover</code> option to indicate the highest value each variable takes before it starts over, and set <code>.turnover_start</code> to indicate what value it takes when it starts over. Cannot be combined with <code>.skip</code> or <code>.breaks</code>. Doesn't work with any variable for which the turnover values change, i.e. it doesn't play well with days-in-month - if you'd like to do something like year-month-day-hour, I recommend running <code>.method="day"</code> once with just the year-month-day variable, and then taking the result and combining *that* with hour in <code>.method="turnover"</code>.</p></li>
 </ul>
 
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -275,9 +282,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -291,7 +296,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

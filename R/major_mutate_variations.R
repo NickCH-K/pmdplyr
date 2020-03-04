@@ -32,7 +32,9 @@
 #' Scorecard <- Scorecard %>%
 #'   # Almost all instances involve a variable being set to a function of a lag of itself
 #'   # we don't want to overwrite so let's make another
-#'   dplyr::mutate(decay_earnings = earnings_med) %>%
+#'   # Note that earnings_med is an integer -
+#'   # but we're about to make non-integer decay function, so call it a double!
+#'   dplyr::mutate(decay_earnings = as.double(earnings_med)) %>%
 #'   # Now we can cascade
 #'   mutate_cascade(
 #'     decay_earnings = decay_earnings +
@@ -134,6 +136,7 @@ mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i 
         dplyr::filter(.data[[inp$t]] == !!t & .data[[indexnames[2]]] != !!t)
     }
   }
+
 
   # Rearrange by indexnames[1] if necessary here
 

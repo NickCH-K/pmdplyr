@@ -1,7 +1,7 @@
 Package: pmdplyr
 Type: Package
 Title: 'dplyr' Extension for Common Panel Data Maneuvers
-Version: 0.3.0.9000
+Version: 0.3.0.9100
 Authors@R: c(
     person(given = "Nick", family = "Huntington-Klein", role = c("aut","cre"), 
            email = "nhuntington-klein@fullerton.edu", 
@@ -36,6 +36,6 @@ Suggests:
     rmarkdown,
     testthat (>= 2.1.0),
     covr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 LazyData: true

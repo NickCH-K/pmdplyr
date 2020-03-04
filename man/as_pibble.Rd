@@ -10,17 +10,13 @@
 \usage{
 as_pibble(x, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE, ...)
 
-\method{as_pibble}{tbl_df}(x, .i = NULL, .t = NULL, .d = 1,
-  .uniqcheck = FALSE, ...)
+\method{as_pibble}{tbl_df}(x, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE, ...)
 
-\method{as_pibble}{grouped_df}(x, .i = NULL, .t = NULL, .d = 1,
-  .uniqcheck = FALSE, ...)
+\method{as_pibble}{grouped_df}(x, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE, ...)
 
-\method{as_pibble}{data.frame}(x, .i = NULL, .t = NULL, .d = 1,
-  .uniqcheck = FALSE, ...)
+\method{as_pibble}{data.frame}(x, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE, ...)
 
-\method{as_pibble}{list}(x, .i = NULL, .t = NULL, .d = 1,
-  .uniqcheck = FALSE, ...)
+\method{as_pibble}{list}(x, .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE, ...)
 }
 \arguments{
 \item{x}{A data frame, tibble or list}

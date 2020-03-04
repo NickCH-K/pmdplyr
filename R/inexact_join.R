@@ -451,7 +451,8 @@ inexact_join_prep <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
     dplyr::mutate(
       !!xidname := id_variable(.[, matchvars], .method = "character"),
       # We'll be matching additionally on jvar[1]
-      !!jvar[1] := NA
+      # Use vec_init
+      !!jvar[1] := vctrs::vec_init(y[[jvar[1]]][1],1)
     )
 
   # findIntervals lets us do the 'last' method quickly

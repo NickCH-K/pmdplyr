@@ -11,26 +11,95 @@
 \alias{inexact_anti_join}
 \title{Join two data frames inexactly}
 \usage{
-inexact_inner_join(x, y, by = NULL, copy = FALSE, suffix = c(".x",
-  ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE)
+inexact_inner_join(
+  x,
+  y,
+  by = NULL,
+  copy = FALSE,
+  suffix = c(".x", ".y"),
+  ...,
+  var = NULL,
+  jvar = NULL,
+  method,
+  exact = TRUE
+)
 
-inexact_left_join(x, y, by = NULL, copy = FALSE, suffix = c(".x",
-  ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE)
+inexact_left_join(
+  x,
+  y,
+  by = NULL,
+  copy = FALSE,
+  suffix = c(".x", ".y"),
+  ...,
+  var = NULL,
+  jvar = NULL,
+  method,
+  exact = TRUE
+)
 
-inexact_right_join(x, y, by = NULL, copy = FALSE, suffix = c(".x",
-  ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE)
+inexact_right_join(
+  x,
+  y,
+  by = NULL,
+  copy = FALSE,
+  suffix = c(".x", ".y"),
+  ...,
+  var = NULL,
+  jvar = NULL,
+  method,
+  exact = TRUE
+)
 
-inexact_full_join(x, y, by = NULL, copy = FALSE, suffix = c(".x",
-  ".y"), ..., var = NULL, jvar = NULL, method, exact = TRUE)
+inexact_full_join(
+  x,
+  y,
+  by = NULL,
+  copy = FALSE,
+  suffix = c(".x", ".y"),
+  ...,
+  var = NULL,
+  jvar = NULL,
+  method,
+  exact = TRUE
+)
 
-inexact_semi_join(x, y, by = NULL, copy = FALSE, ..., var = NULL,
-  jvar = NULL, method, exact = TRUE)
+inexact_semi_join(
+  x,
+  y,
+  by = NULL,
+  copy = FALSE,
+  ...,
+  var = NULL,
+  jvar = NULL,
+  method,
+  exact = TRUE
+)
 
-inexact_nest_join(x, y, by = NULL, copy = FALSE, keep = FALSE,
-  name = NULL, ..., var = NULL, jvar = NULL, method, exact = TRUE)
+inexact_nest_join(
+  x,
+  y,
+  by = NULL,
+  copy = FALSE,
+  keep = FALSE,
+  name = NULL,
+  ...,
+  var = NULL,
+  jvar = NULL,
+  method,
+  exact = TRUE
+)
 
-inexact_anti_join(x, y, by = NULL, copy = FALSE, ..., var = NULL,
-  jvar = NULL, method, exact = TRUE)
+inexact_anti_join(
+  x,
+  y,
+  by = NULL,
+  copy = FALSE,
+  ...,
+  var = NULL,
+  jvar = NULL,
+  method,
+  exact = TRUE
+)
 }
 \arguments{
 \item{x, y, by, copy, suffix, keep, name, ...}{Arguments to be passed to the relevant \code{join} function.}

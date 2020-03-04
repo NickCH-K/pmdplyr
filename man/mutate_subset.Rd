@@ -4,8 +4,17 @@
 \alias{mutate_subset}
 \title{Propagate a calculation performed on a subset of data to the rest of the data}
 \usage{
-mutate_subset(.df, ..., .filter, .group_i = TRUE, .i = NULL,
-  .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE)
+mutate_subset(
+  .df,
+  ...,
+  .filter,
+  .group_i = TRUE,
+  .i = NULL,
+  .t = NULL,
+  .d = NA,
+  .uniqcheck = FALSE,
+  .setpanel = TRUE
+)
 }
 \arguments{
 \item{.df}{Data frame or tibble.}

@@ -4,9 +4,18 @@
 \alias{panel_locf}
 \title{Fill in missing (or other) values of a panel data set using known data}
 \usage{
-panel_locf(.var, .df = get(".", envir = parent.frame()), .fill = NA,
-  .backwards = FALSE, .resolve = "error", .group_i = TRUE,
-  .i = NULL, .t = NULL, .d = 1, .uniqcheck = FALSE)
+panel_locf(
+  .var,
+  .df = get(".", envir = parent.frame()),
+  .fill = NA,
+  .backwards = FALSE,
+  .resolve = "error",
+  .group_i = TRUE,
+  .i = NULL,
+  .t = NULL,
+  .d = 1,
+  .uniqcheck = FALSE
+)
 }
 \arguments{
 \item{.var}{Vector to be modified.}

@@ -8,11 +8,13 @@
 
 <title>Join two data frames safely — safe_join • pmdplyr</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -32,10 +34,11 @@
 
 
 
-<meta property="og:title" content="Join two data frames safely — safe_join" />
 
+<meta property="og:title" content="Join two data frames safely — safe_join" />
 <meta property="og:description" content="This function is a wrapper for the standard dplyr join functions and the pmdplyr inexact_join functions." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -66,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9100</span>
       </span>
     </div>
 
@@ -103,7 +106,6 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/NickCH-K/pmdplyr">
@@ -130,13 +132,11 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This function is a wrapper for the standard <code>dplyr</code> <code>join</code> functions and the <code>pmdplyr</code> <code>inexact_join</code> functions.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>safe_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -157,14 +157,13 @@
       <td><p>Other arguments to be passed to the function specified in <code>join</code>. If performing an <code>inexact_join</code>, put the <code>var</code> and <code>jvar</code> arguments in as quoted variables.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>When performing a join, we generally expect that one or both of the joined data sets is uniquely identified by the set of joining variables.</p>
 <p>If this is not true, the results of the join will often not be what you expect. Unfortunately, <code>join</code> does not warn you that you may have just done something strange.</p>
 <p>This issue is especially likely to arise with panel data, where you may have multiple different data sets at different observation levels.</p>
 <p><code>safe_join</code> forces you to specify which of your data sets you think are uniquely identified by the joining variables. If you are wrong, it will return an error. If you are right, it will pass you on to your preferred <code>join</code> function, given in <code>join</code>. If <code>join</code> is not specified, it will just return <code>TRUE</code>.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># left is panel data and i does not uniquely identify observations</span>
@@ -181,9 +180,11 @@
 
 <span class='co'># I think that I can do a one-to-one merge on i</span>
 <span class='co'># Forgetting that left is identified by i and t together</span>
-<span class='co'># So, this produces an error</span></div><span class='co'># NOT RUN {</span>
+<span class='co'># So, this produces an error</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='st'>"1:1"</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)
-<span class='co'># }</span><div class='input'>
+}
+
 <span class='co'># If I realize I'm doing a many-to-one merge, that is correct,</span>
 <span class='co'># so safe_join will perform it for us</span>
 <span class='fu'>safe_join</span>(<span class='no'>left</span>, <span class='no'>right</span>, <span class='kw'>expect</span> <span class='kw'>=</span> <span class='st'>"m:1"</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>left_join</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "i"</span></div><div class='output co'>#&gt;   i t a b
@@ -196,9 +197,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -212,7 +211,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

@@ -4,8 +4,16 @@
 \alias{time_variable}
 \title{Create a single integer time period index variable}
 \usage{
-time_variable(..., .method = "present", .datepos = NA, .start = 1,
-  .skip = NA, .breaks = NA, .turnover = NA, .turnover_start = NA)
+time_variable(
+  ...,
+  .method = "present",
+  .datepos = NA,
+  .start = 1,
+  .skip = NA,
+  .breaks = NA,
+  .turnover = NA,
+  .turnover_start = NA
+)
 }
 \arguments{
 \item{...}{variables (vectors) to be used to generate the time variable, in order of increasing specificity. So if you have a variable each for year, month, and day (with the names year, month, and day), you would use \code{year,month,day} (if a data set containing those variables has been attached using \code{with} or \code{dplyr}) or \code{data$year,data$month,data$day} (if not).}
