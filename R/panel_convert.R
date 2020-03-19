@@ -161,19 +161,35 @@ panel_convert <- function(data, to, ...) {
     panel_convert_id <- names(data %@% "index")[1]
     panel_convert_time <- names(data %@% "index")[2]
 
+    # Get rid of pdata.frame or else it will keep us from converting types
+    class(data) <- class(data)[class(data) != 'pdata.frame']
+    attr(data,"index") <- NULL
+
     # Instead of the pseries we want a number back
     # If we have sjlabelled we can turn it into the original values
     if ("sjlabelled" %in% rownames(utils::installed.packages())) {
       data[[panel_convert_id]] <- sjlabelled::remove_all_labels(
         sjlabelled::as_labelled(data[[panel_convert_id]])
       )
+      class(data[[panel_convert_id]]) <- class(class(data[[panel_convert_id]]))[class(data[[panel_convert_id]]) != 'pseries']
+      # It will default to a character vector
+      if (identical(data[[panel_convert_id]],as.character(as.numeric(data[[panel_convert_id]])))) {
+        data[[panel_convert_id]] <- as.numeric(data[[panel_convert_id]])
+      }
       data[[panel_convert_time]] <- sjlabelled::remove_all_labels(
         sjlabelled::as_labelled(data[[panel_convert_time]])
       )
+      class(data[[panel_convert_time]]) <- class(data[[panel_convert_time]])[class(data[[panel_convert_time]]) != "pseries"]
     } else {
       # Otherwise just make 'em valueless numbers
       data[[panel_convert_id]] <- as.numeric(data[[panel_convert_id]])
+      class(data[[panel_convert_id]]) <- class(data[[panel_convert_id]])[class(data[[panel_convert_id]]) != "pseries"]
+      # It will default to a character vector
+      if (identical(data[[panel_convert_id]],as.character(as.numeric(data[[panel_convert_id]])))) {
+        data[[panel_convert_id]] <- as.numeric(data[[panel_convert_id]])
+      }
       data[[panel_convert_time]] <- as.numeric(data[[panel_convert_time]])
+      class(data[[panel_convert_time]]) <- class(data[[panel_convert_time]])[class(data[[panel_convert_time]]) != "pseries"]
     }
   } else if ("panel_data" %in% dataclass) {
     # Finally, panel_data

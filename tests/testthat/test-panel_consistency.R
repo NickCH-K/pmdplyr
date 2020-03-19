@@ -6,7 +6,7 @@ df <- pibble(
   .t = t
 )
 
-nonpib <- data.frame(
+nonpib <- tibble(
   i = c(1, 1, 1, 2, 2, 2, 2),
   t = c(1, 3, 4, 2, 4, 6, 7),
   x = c(1, 2, NA, 4, NA, NA, 7)
@@ -20,7 +20,7 @@ proper_fill <- pibble(
   .t = t
 )
 
-nonpib_proper_fill <- data.frame(
+nonpib_proper_fill <- tibble(
   i = c(1, 1, 1, 1, 2, 2, 2, 2, 2, 2),
   t = c(1, 2, 3, 4, 2, 3, 4, 5, 6, 7),
   x = c(1, 1, 2, NA, 4, 4, NA, NA, NA, 7)
@@ -82,7 +82,7 @@ test_that("panel_fill works", {
     panel_fill(df %>% as_pibble(.i = NULL, .t = NULL),
       .i = i, .t = t
     ),
-    proper_fill %>% as_pibble(.i = NULL, .t = NULL)
+    proper_fill
   )
   expect_equal(panel_fill(df, .group_i = FALSE), ungroup_fill)
   expect_equal(panel_fill(df,

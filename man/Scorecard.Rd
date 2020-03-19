@@ -5,7 +5,8 @@
 \name{Scorecard}
 \alias{Scorecard}
 \title{Earnings and Loan Repayment in US Four-Year Colleges}
-\format{A data frame with 48,445 rows and 8 variables:
+\format{
+A data frame with 48,445 rows and 8 variables:
 \describe{
   \item{unitid}{College identifiers.}
   \item{inst_name}{Name of the college or university.}
@@ -16,7 +17,8 @@
   \item{count_not_working}{Number of students who are (a) not working (not necessarily unemployed), (b) received federal financial aid, and (c) who began as undergraduates at the institution ten years prior.}
   \item{count_working}{Number of students who are (a) working, (b) who received federal financial aid, and (c) who began as undergraduates at the institution ten years prior.}
   \item{repay_rate}{Proportion of students who (a) received federal loans as an undergraduate at this institution, (b) entered repayment seven years ago, (c) are not in default, (d) have paid off all accrued interest, and (e) are still making progress on payment. Only available 2013-2016.}
-}}
+}
+}
 \source{
 Education Data Portal (Version 0.4.0 - Beta), Urban Institute, Center on Education Data and Policy, accessed June 28, 2019. https://educationdata.urban.org/documentation/, Scorecard.
 }

@@ -8,8 +8,10 @@
 
 * Includes fixes for full CRAN compliance.
 
-# pmdplyr 0.3.0.9000
-
-# pmdplyr 0.3.0.9100
+# pmdplyr 0.3.1
 
 * Fixes for compliance with **tibble** 3.0.0
+
+# pmdplyr 0.3.2
+
+* Fixes for compliance with **dplyr** 1.0.0

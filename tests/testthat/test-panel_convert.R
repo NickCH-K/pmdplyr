@@ -87,6 +87,7 @@ if ("plm" %in% pkgs) {
   })
 }
 
+# THIS IS THE ONE WITH THE GROUP BY ADD WARNING
 if ("panelr" %in% pkgs) {
   pb <- pibble(
     i = as.factor(c(1, 1, 2, 2)),

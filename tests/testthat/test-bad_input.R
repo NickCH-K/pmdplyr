@@ -402,3 +402,4 @@ test_that("tlag input failstates", {
     dplyr::mutate(x = 1:6) %>%
     dplyr::mutate(y = tlag(x)))
 })
+

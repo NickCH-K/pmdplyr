@@ -197,6 +197,11 @@ left_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
+  # Remove pibble status for y too
+  if (is_pibble(y,.silent = TRUE)) {
+    class(y) <- class(y)[!(class(x) %in% "tbl_pb")]
+  }
+
   return(build_pibble(dplyr::left_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
@@ -212,6 +217,11 @@ inner_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
 
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
+
+  # Remove pibble status for y too
+  if (is_pibble(y,.silent = TRUE)) {
+    class(y) <- class(y)[!(class(x) %in% "tbl_pb")]
+  }
 
   return(build_pibble(dplyr::inner_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
@@ -229,6 +239,11 @@ right_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
+  # Remove pibble status for y too
+  if (is_pibble(y,.silent = TRUE)) {
+    class(y) <- class(y)[!(class(x) %in% "tbl_pb")]
+  }
+
   return(build_pibble(dplyr::right_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
 
@@ -244,6 +259,11 @@ full_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, suffix = c(".x", ".y
 
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
+
+  # Remove pibble status for y too
+  if (is_pibble(y,.silent = TRUE)) {
+    class(y) <- class(y)[!(class(x) %in% "tbl_pb")]
+  }
 
   return(build_pibble(dplyr::full_join(x, y, by, copy, suffix, ...), .i, .t, .d))
 }
@@ -261,6 +281,11 @@ semi_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, ...) {
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
+  # Remove pibble status for y too
+  if (is_pibble(y,.silent = TRUE)) {
+    class(y) <- class(y)[!(class(x) %in% "tbl_pb")]
+  }
+
   return(build_pibble(dplyr::semi_join(x, y, by, copy, ...), .i, .t, .d))
 }
 
@@ -277,6 +302,11 @@ nest_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name =
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
 
+  # Remove pibble status for y too
+  if (is_pibble(y,.silent = TRUE)) {
+    class(y) <- class(y)[!(class(x) %in% "tbl_pb")]
+  }
+
   return(build_pibble(dplyr::nest_join(x, y, by, copy, keep, name, ...), .i, .t, .d))
 }
 
@@ -292,6 +322,11 @@ anti_join.tbl_pb <- function(x, y, by = NULL, copy = FALSE, ...) {
 
   # remove tbl_pb status so regular version is run
   class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
+
+  # Remove pibble status for y too
+  if (is_pibble(y,.silent = TRUE)) {
+    class(y) <- class(y)[!(class(x) %in% "tbl_pb")]
+  }
 
   return(build_pibble(dplyr::anti_join(x, y, by, copy, ...), .i, .t, .d))
 }
@@ -376,7 +411,7 @@ dropchecker <- function(.data, .i, .t, .d, method) {
 
   if (length(checknames) > 0) {
     if (min(checknames %in% names(.data)) == 0) {
-      warning(paste(method, "() function leaves data without variables listed in .i or .t. Removing pibble status.", sep = ""))
+      #warning(paste(method, "() function leaves data without variables listed in .i or .t. Removing pibble status.", sep = ""))
 
       class(.data) <- class(.data)[!(class(.data) %in% "tbl_pb")]
 

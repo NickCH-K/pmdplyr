@@ -138,7 +138,6 @@ test_that("inexact join methods work", {
     data.frame(t = c(2, 3, 4), t2 = c(3, 4, 5))
   )
 })
-
 # Left is already well-covered
 test_that("Different inexact joins work", {
   expect_equal(
@@ -179,10 +178,10 @@ test_that("Different inexact joins work", {
       var = t, jvar = t2, by = "i", method = "last"
     )[["y"]],
     list(
-      pibble(b = 1),
-      pibble(b = 1),
-      pibble(b = 2),
-      pibble(b = 2)
+      tibble(b = 1),
+      tibble(b = 1),
+      tibble(b = 2),
+      tibble(b = 2)
     )
   )
   expect_equal(
@@ -223,10 +222,10 @@ test_that("Different inexact joins work", {
       var = t, jvar = t2, method = "last"
     )[["y"]],
     list(
-      pibble(b = 1),
-      pibble(b = 1),
-      pibble(b = 2),
-      pibble(b = 2)
+      tibble(b = 1),
+      tibble(b = 1),
+      tibble(b = 2),
+      tibble(b = 2)
     )
   )
 })

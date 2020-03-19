@@ -5,7 +5,8 @@
 \name{SPrail}
 \alias{SPrail}
 \title{2,000 Spanish train trips}
-\format{A data frame with 2,000 rows and 9 variables:
+\format{
+A data frame with 2,000 rows and 9 variables:
 \describe{
   \item{insert_date}{Date and time when ticket was paid for.}
   \item{origin}{Origin City}
@@ -16,7 +17,8 @@
   \item{price}{Price of ticket in Euros.}
   \item{train_class}{Class of ticket: tourist, business, etc.. Variable in Spanish.}
   \item{fare}{Type of ticket fare.}
-}}
+}
+}
 \source{
 \url{https://www.kaggle.com/thegurusteam/spanish-high-speed-rail-system-ticket-pricing}
 }

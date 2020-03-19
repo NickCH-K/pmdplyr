@@ -331,14 +331,43 @@ inexact_nest_join <- function(x, y, by = NULL, copy = FALSE, keep = FALSE, name 
   # Get the proper matching variable in x
   x <- inexact_join_prep(x = x, y = y, by = by, copy = copy, suffix = c(".x", ".y"), var = varcall, jvar = jvarcall, method = method, exact = exact)
 
+  # nest_join will try to make the nested column a pibble and that's bad
+  # So let's make x and y tibbles and then recover the whole thing
+  if (is_pibble(y, .silent = TRUE)) {
+    class(y) <- class(y)[!(class(y) %in% "tbl_pb")]
+    attr(y, ".i") <- NULL
+    attr(y, ".t") <- NULL
+    attr(y, ".d") <- NULL
+  }
+  reassign_pibble <- is_pibble(x, .silent = TRUE)
+  if (reassign_pibble) {
+    i <- attr(x,".i")
+    j <- attr(x,".j")
+    d <- attr(x,".d")
+    class(x) <- class(x)[!(class(x) %in% "tbl_pb")]
+    attr(x, ".i") <- NULL
+    attr(x, ".t") <- NULL
+    attr(x, ".d") <- NULL
+  }
+
   # If by was specified, extend our list of matching variables. Then join!
   # then run with specifying by. Do it this way to preserve the "joining by..." behavior
   if (!is.null(by)) {
     matchvars <- c(by, jvarcall[1])
-    return(dplyr::nest_join(x, y, by = matchvars, copy = copy, keep = FALSE, name = NULL, ...))
+    if (!reassign_pibble) {
+      return(dplyr::nest_join(x, y, by = matchvars, copy = copy, keep = FALSE, name = NULL, ...))
+    } else {
+      return(dplyr::nest_join(x, y, by = matchvars, copy = copy, keep = FALSE, name = NULL, ...) %>%
+               as_pibble(.i = i, .t = t, .d = d))
+    }
   }
   else {
-    return(dplyr::nest_join(x, y, copy = copy, keep = FALSE, name = NULL, ...))
+    if (!reassign_pibble) {
+      return(dplyr::nest_join(x, y, copy = copy, keep = FALSE, name = NULL, ...))
+    } else {
+      return(dplyr::nest_join(x, y, copy = copy, keep = FALSE, name = NULL, ...) %>%
+               as_pibble(.i = i, .t = t, .d = d))
+    }
   }
 }
 

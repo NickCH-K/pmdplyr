@@ -30,7 +30,7 @@ test_that("students' grades over time", {
       group_by(i) %>%
       filter(FALSE)
   ),
-  regexp = "# Groups:\\s+i \\[\\?\\]"
+  regexp = "# Groups:\\s+i \\[0\\]"
   )
 })
 

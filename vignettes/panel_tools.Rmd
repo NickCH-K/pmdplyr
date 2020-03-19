@@ -220,7 +220,7 @@ Some handy `fixed_check()` tips:
 `fixed_force()` will take a data set `.df`, find any inconsistencies in the variables `.var` within combinations of the variables `.within`, and will "fix" those inconsistencies, using the function `.resolve` to select the correct values. It can flag any changed values with a new variable named `.flag`.
 
 ```{r, eval = FALSE}
-fixed_force(..df,
+fixed_force(.df,
   .var = NULL,
   .within = NULL,
   .resolve = mode_order,
