@@ -176,11 +176,12 @@ setdiff.tbl_pb <- function(x, y, ...) {
 
 #' Join two pibbles together
 #'
-#' These are generic functions that dispatch to individual pibble methods. See  \link[dplyr]{join} for
+#' These are generic functions that dispatch to individual pibble methods. pibble structure from \code{x} will be maintained. pibble structure from \code{y} will be lost. See  \link[dplyr]{join} for
 #' complete documentation.
 #'
 #' @rdname join
 #' @inheritParams dplyr::join
+#' @param name The name of the list column nesting joins create. If \code{NULL} the name of \code{y} is used.
 #' @name join.tbl_pb
 NULL
 
