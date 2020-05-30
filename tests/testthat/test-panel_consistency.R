@@ -40,7 +40,8 @@ ungroup_fill <- pibble(
   x = c(1, 2, NA, NA, 4, NA, NA, NA, 7),
   .i = i,
   .t = t
-)
+) %>%
+  dplyr::arrange(t,i)
 
 na_fill <- pibble(
   i = c(1, 1, 1, 1, 2, 2, 2, 2, 2, 2),

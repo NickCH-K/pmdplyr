@@ -156,7 +156,7 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
 
   if (.quick == TRUE) {
     dat <- dplyr::bind_cols(
-      .df,
+      as.data.frame(.df),
       data.frame(.var)
     )
 
@@ -190,7 +190,7 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
   # Create lookup table.
   lookup <- .df
   lookup <- dplyr::bind_cols(
-    lookup,
+    as.data.frame(lookup),
     data.frame(.var)
   )
   varname <- names(lookup)[ncol(lookup)]
@@ -208,7 +208,7 @@ tlag <- function(.var, .df = get(".", envir = parent.frame()), .n = 1, .default 
       # drop duplicates
       dplyr::distinct() %>%
       # go to just arrnames
-      dplyr::select(arrnames) %>%
+      dplyr::select(dplyr::all_of(arrnames)) %>%
       # if there are any duplicated arrnames, that means there were multiple vals within 'em
       anyDuplicated()) > 0) {
       stop("Values are not consistent within (.i, if specified, and) .t. See .resolve option.")

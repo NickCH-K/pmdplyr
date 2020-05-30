@@ -139,17 +139,23 @@ panel_convert <- function(data, to, ...) {
       # Or regular data
     } else if (tsibble::is_regular(data)) {
       # Complex time gaps
-      if (sum(as.numeric(data %@% "interval") > 0) > 1) {
-        warning("This time variable varies at more than one level. Non-tsibble formats may have difficulty with it, or it may not work as intended.")
+      if (any((tsibble::has_gaps(data)$.gaps))) {
+        warning("This time variable varies at more than one level, or has gaps. Non-tsibble formats may have difficulty with it, or conversion may not work as intended.")
       }
 
+      # Find the gap in a way that works with both old and new tsibble
+      gaps <- (sort(data[[tsibble::index_var(data)]]) - dplyr::lag(sort(data[[tsibble::index_var(data)]])))
+      gaps <- min(gaps[gaps > 0 & !is.na(gaps)])
+
       # Longer-than-1 gaps
-      if (max(as.numeric(data %@% "interval")) > 1 & !(to %in% c("pmdplyr", "pibble", "tbl_pb"))) {
+      if (gaps > 1 & !(to %in% c("pmdplyr", "pibble", "tbl_pb"))) {
         warning("plm and panelr functions may not work as expected with gaps greater than 1.")
-      } else if (max(as.numeric(data %@% "interval")) > 1 &
-        sum(as.numeric(data %@% "interval") > 0) == 1 &
-        to %in% c("pmdplyr", "pibble", "tbl_pb")) {
-        pibble_d <- max(as.numeric(data %@% "interval"))
+      } else if (gaps > 1 &
+                 !(tsibble::has_gaps(data)$.gaps[1]) &
+                  to %in% c("pmdplyr", "pibble", "tbl_pb")) {
+        # Do this wild thing to get the smallest gap size
+
+        pibble_d <- gaps
       }
     }
   } else if ("pdata.frame" %in% dataclass) {
@@ -212,9 +218,9 @@ panel_convert <- function(data, to, ...) {
 
     # Check if we made a .d (possible if coming from tsibble)
     if (exists("pibble_d")) {
-      out <- as_pibble(data, .i = panel_convert_id, .t = panel_convert_time, .d = pibble_d, ...)
+      out <- as_pibble(data, .i = dplyr::all_of(panel_convert_id), .t = dplyr::all_of(panel_convert_time), .d = pibble_d, ...)
     } else {
-      out <- as_pibble(data, .i = panel_convert_id, .t = panel_convert_time, ...)
+      out <- as_pibble(data, .i = dplyr::all_of(panel_convert_id), .t = dplyr::all_of(panel_convert_time), ...)
     }
   } else if (to %in% c("tsibble", "tbl_ts")) {
 

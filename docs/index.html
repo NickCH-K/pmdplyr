@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>dplyr Extension for Common Panel Data Maneuvers • pmdplyr</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="dplyr Extension for Common Panel Data Maneuvers">
 <meta property="og:description" content="Using the dplyr package as a base, adds a family of functions designed to make manipulating panel data easier. Allows the addition of indexing variables to a tibble to create a pibble, and the manipulation of data based on those indexing variables.">
-<meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">pmdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.9100</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
       </span>
     </div>
 
@@ -70,7 +70,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/NickCH-K/pmdplyr">
+  <a href="https://github.com/NickCH-K/pmdplyr/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -94,102 +94,102 @@
 
 <p>The pmdplyr package is an extension to dplyr designed for cleaning and managing panel and hierarchical data. It contains variations on the dplyr <code>mutate</code> and <code>_join</code> functions that address common panel data needs, and contains functions for managing and cleaning panel data. The goal is to get you a nice tidy <code>pibble</code> panel data object, which you can <code><a href="reference/panel_convert.html">panel_convert()</a></code> for use in one of the many packages that help you <em>analyze</em> panel data.</p>
 <p>Unlike other panel data packages, functions in pmdplyr are all designed to work even if there is more than one observation per individual per period. This comes in handy if each individual is observed multiple times per period - for example, multiple classes per student per term; or if you have hierarchical data - for example, multiple companies per country.</p>
-<p>Examples of pmdplyr use are below. These examples only cover some of the functionality of the package. See the <a href="https://nickch-k.github.io/pmdplyr/reference/index.html">Reference</a> <code>pkgdown</code> page for a full list of functions, or <code><a href="https://rdrr.io/r/utils/help.html">help(pmdplyr)</a></code>.</p>
+<p>Examples of pmdplyr use are below. These examples only cover some of the functionality of the package. See the <a href="https://nickch-k.github.io/pmdplyr/reference/index.html">Reference</a> <code>pkgdown</code> page for a full list of functions, or <code><a href="reference/pmdplyr.html">help(pmdplyr)</a></code>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install pmdplyr from CRAN:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"pmdplyr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"pmdplyr"</span>)</pre></div>
 <div id="development-version" class="section level3">
 <h3 class="hasAnchor">
 <a href="#development-version" class="anchor"></a>Development version</h3>
 <p>The development version can be installed from <a href="https://github.com/">GitHub</a>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb2-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"NickCH-K/pmdplyr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="r"><span class="co"># install.packages("devtools")</span>
+<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"NickCH-K/pmdplyr"</span>)</pre></div>
 </div>
 </div>
 <div id="college-scorecard-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#college-scorecard-example" class="anchor"></a>College Scorecard Example</h2>
 <p>Let’s start with the fairly straightforward <code>Scorecard</code> data, which describes how well students who attended that college are doing years after attendance. <code>Scorecard</code> observations are uniquely identified by college ID <code>unitid</code> and year <code>year</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># Note that pmdplyr automatically loads dplyr as well</span></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(pmdplyr)</a>
-<a class="sourceLine" id="cb3-3" title="3"></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(Scorecard)</a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="co"># Let's declare it as a pibble panel-data tibble</span></a>
-<a class="sourceLine" id="cb3-6" title="6">Scorecard &lt;-<span class="st"> </span><span class="kw"><a href="reference/as_pibble.html">as_pibble</a></span>(Scorecard, <span class="dt">.i =</span> unitid, <span class="dt">.t =</span> year)</a>
-<a class="sourceLine" id="cb3-7" title="7"></a>
-<a class="sourceLine" id="cb3-8" title="8"><span class="co"># We also have this data on the December unemployment rate for US college grads nationally</span></a>
-<a class="sourceLine" id="cb3-9" title="9"><span class="co"># but only every other year</span></a>
-<a class="sourceLine" id="cb3-10" title="10">unemp_data &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(</a>
-<a class="sourceLine" id="cb3-11" title="11">  <span class="dt">unemp_year =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2006</span>, <span class="dv">2008</span>, <span class="dv">2010</span>, <span class="dv">2012</span>, <span class="dv">2014</span>, <span class="dv">2016</span>, <span class="dv">2018</span>),</a>
-<a class="sourceLine" id="cb3-12" title="12">  <span class="dt">unemp =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">017</span>, <span class="fl">.036</span>, <span class="fl">.048</span>, <span class="fl">.040</span>, <span class="fl">.028</span>, <span class="fl">.025</span>, <span class="fl">.020</span>)</a>
-<a class="sourceLine" id="cb3-13" title="13">)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="r"><span class="co"># Note that pmdplyr automatically loads dplyr as well</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">pmdplyr</span>)
+
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">Scorecard</span>)
+<span class="co"># Let's declare it as a pibble panel-data tibble</span>
+<span class="no">Scorecard</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/as_pibble.html">as_pibble</a></span>(<span class="no">Scorecard</span>, <span class="kw">.i</span> <span class="kw">=</span> <span class="no">unitid</span>, <span class="kw">.t</span> <span class="kw">=</span> <span class="no">year</span>)
+
+<span class="co"># We also have this data on the December unemployment rate for US college grads nationally</span>
+<span class="co"># but only every other year</span>
+<span class="no">unemp_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(
+  <span class="kw">unemp_year</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2006</span>, <span class="fl">2008</span>, <span class="fl">2010</span>, <span class="fl">2012</span>, <span class="fl">2014</span>, <span class="fl">2016</span>, <span class="fl">2018</span>),
+  <span class="kw">unemp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.017</span>, <span class="fl">.036</span>, <span class="fl">.048</span>, <span class="fl">.040</span>, <span class="fl">.028</span>, <span class="fl">.025</span>, <span class="fl">.020</span>)
+)</pre></div>
 <p>I am interested in measuring the differences in ex-student earnings <code>earnings_med</code> between two-year and four-year colleges (<code>pred_degree_awarded_ipeds == 2</code> or <code>3</code>, respectively). But before we can do that we need to clean the data.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">Scorecard <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="st">  </span><span class="co"># We want pred_degree_awarded_ipeds to be consistent within college. No changers!</span></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="st">  </span><span class="co"># So let's drop them by using fixed_check with .resolve = "drop" to lose inconsistencies</span></a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="st">  </span><span class="kw"><a href="reference/fixed_force.html">fixed_force</a></span>(</a>
-<a class="sourceLine" id="cb4-5" title="5">    <span class="dt">.var =</span> pred_degree_awarded_ipeds,</a>
-<a class="sourceLine" id="cb4-6" title="6">    <span class="dt">.within =</span> unitid,</a>
-<a class="sourceLine" id="cb4-7" title="7">    <span class="dt">.resolve =</span> <span class="st">"drop"</span></a>
-<a class="sourceLine" id="cb4-8" title="8">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-9" title="9"><span class="st">  </span><span class="co"># Then, get rid of pred_degree_awarded_ipeds == 1</span></a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="st">  </span><span class="co"># And simplify our terms</span></a>
-<a class="sourceLine" id="cb4-11" title="11"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(pred_degree_awarded_ipeds <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span>, <span class="dv">3</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">FourYear =</span> pred_degree_awarded_ipeds <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-13" title="13"><span class="st">  </span><span class="co"># earnings_med has some missing values - let's fill them in with</span></a>
-<a class="sourceLine" id="cb4-14" title="14"><span class="st">  </span><span class="co"># the most recent nonmissing observations we have</span></a>
-<a class="sourceLine" id="cb4-15" title="15"><span class="st">  </span><span class="co"># - panel_locf respects the panel structure declared above with as_pibble()</span></a>
-<a class="sourceLine" id="cb4-16" title="16"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">earnings_med =</span> <span class="kw"><a href="reference/panel_locf.html">panel_locf</a></span>(earnings_med)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-17" title="17"><span class="st">  </span><span class="co"># Now let's bring in that unemployment data!</span></a>
-<a class="sourceLine" id="cb4-18" title="18"><span class="st">  </span><span class="co"># Since it's every other year, it won't line up properly</span></a>
-<a class="sourceLine" id="cb4-19" title="19"><span class="st">  </span><span class="co"># in the join. So let's use inexact_join to get the MOST RECENT</span></a>
-<a class="sourceLine" id="cb4-20" title="20"><span class="st">  </span><span class="co"># year to join with</span></a>
-<a class="sourceLine" id="cb4-21" title="21"><span class="st">  </span><span class="kw"><a href="reference/inexact_join.html">inexact_left_join</a></span>(unemp_data, <span class="dt">var =</span> year, <span class="dt">jvar =</span> unemp_year, <span class="dt">method =</span> <span class="st">"last"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-22" title="22"><span class="st">  </span><span class="co"># To adjust for state-level trends, let's also control for a tlag of</span></a>
-<a class="sourceLine" id="cb4-23" title="23"><span class="st">  </span><span class="co"># average earnings within state.</span></a>
-<a class="sourceLine" id="cb4-24" title="24"><span class="st">  </span><span class="co"># The lag is at the state level, and state-year doesn't uniquely identify,</span></a>
-<a class="sourceLine" id="cb4-25" title="25"><span class="st">  </span><span class="co"># But that's okay! We just pick a .resolve function to handle disagreements.</span></a>
-<a class="sourceLine" id="cb4-26" title="26"><span class="st">  </span><span class="co"># (We could also do this straight in the regression model itself)</span></a>
-<a class="sourceLine" id="cb4-27" title="27"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lag_state_earnings =</span> <span class="kw"><a href="reference/tlag.html">tlag</a></span>(earnings_med,</a>
-<a class="sourceLine" id="cb4-28" title="28">    <span class="dt">.i =</span> state_abbr,</a>
-<a class="sourceLine" id="cb4-29" title="29">    <span class="dt">.t =</span> year,</a>
-<a class="sourceLine" id="cb4-30" title="30">    <span class="dt">.resolve =</span> mean</a>
-<a class="sourceLine" id="cb4-31" title="31">  )) -&gt;<span class="st"> </span>scorecard_clean</a>
-<a class="sourceLine" id="cb4-32" title="32"></a>
-<a class="sourceLine" id="cb4-33" title="33"><span class="co"># Now we can run a basic regression.</span></a>
-<a class="sourceLine" id="cb4-34" title="34"></a>
-<a class="sourceLine" id="cb4-35" title="35"><span class="kw"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(</a>
-<a class="sourceLine" id="cb4-36" title="36">  earnings_med <span class="op">~</span></a>
-<a class="sourceLine" id="cb4-37" title="37"><span class="st">  </span>FourYear <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-38" title="38"><span class="st">    </span>unemp <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-39" title="39"><span class="st">    </span>lag_state_earnings,</a>
-<a class="sourceLine" id="cb4-40" title="40">  <span class="dt">data =</span> scorecard_clean</a>
-<a class="sourceLine" id="cb4-41" title="41">) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb4-42" title="42"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()</a>
-<a class="sourceLine" id="cb4-43" title="43"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb4-44" title="44"><span class="co">#&gt; Call:</span></a>
-<a class="sourceLine" id="cb4-45" title="45"><span class="co">#&gt; lm(formula = earnings_med ~ FourYear + unemp + lag_state_earnings, </span></a>
-<a class="sourceLine" id="cb4-46" title="46"><span class="co">#&gt;     data = scorecard_clean)</span></a>
-<a class="sourceLine" id="cb4-47" title="47"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb4-48" title="48"><span class="co">#&gt; Residuals:</span></a>
-<a class="sourceLine" id="cb4-49" title="49"><span class="co">#&gt;    Min     1Q Median     3Q    Max </span></a>
-<a class="sourceLine" id="cb4-50" title="50"><span class="co">#&gt; -25341  -4917   -528   4091  54587 </span></a>
-<a class="sourceLine" id="cb4-51" title="51"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb4-52" title="52"><span class="co">#&gt; Coefficients:</span></a>
-<a class="sourceLine" id="cb4-53" title="53"><span class="co">#&gt;                      Estimate Std. Error t value Pr(&gt;|t|)    </span></a>
-<a class="sourceLine" id="cb4-54" title="54"><span class="co">#&gt; (Intercept)         5.933e+03  1.772e+03   3.348 0.000826 ***</span></a>
-<a class="sourceLine" id="cb4-55" title="55"><span class="co">#&gt; FourYearTRUE        9.088e+03  3.511e+02  25.886  &lt; 2e-16 ***</span></a>
-<a class="sourceLine" id="cb4-56" title="56"><span class="co">#&gt; unemp              -4.564e+04  2.529e+04  -1.805 0.071215 .  </span></a>
-<a class="sourceLine" id="cb4-57" title="57"><span class="co">#&gt; lag_state_earnings  7.348e-01  4.027e-02  18.244  &lt; 2e-16 ***</span></a>
-<a class="sourceLine" id="cb4-58" title="58"><span class="co">#&gt; ---</span></a>
-<a class="sourceLine" id="cb4-59" title="59"><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></a>
-<a class="sourceLine" id="cb4-60" title="60"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb4-61" title="61"><span class="co">#&gt; Residual standard error: 8209 on 2474 degrees of freedom</span></a>
-<a class="sourceLine" id="cb4-62" title="62"><span class="co">#&gt;   (25161 observations deleted due to missingness)</span></a>
-<a class="sourceLine" id="cb4-63" title="63"><span class="co">#&gt; Multiple R-squared:  0.3431, Adjusted R-squared:  0.3423 </span></a>
-<a class="sourceLine" id="cb4-64" title="64"><span class="co">#&gt; F-statistic: 430.6 on 3 and 2474 DF,  p-value: &lt; 2.2e-16</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="r"><span class="no">Scorecard</span> <span class="kw">%&gt;%</span>
+  <span class="co"># We want pred_degree_awarded_ipeds to be consistent within college. No changers!</span>
+  <span class="co"># So let's drop them by using fixed_check with .resolve = "drop" to lose inconsistencies</span>
+  <span class="fu"><a href="reference/fixed_force.html">fixed_force</a></span>(
+    <span class="kw">.var</span> <span class="kw">=</span> <span class="no">pred_degree_awarded_ipeds</span>,
+    <span class="kw">.within</span> <span class="kw">=</span> <span class="no">unitid</span>,
+    <span class="kw">.resolve</span> <span class="kw">=</span> <span class="st">"drop"</span>
+  ) <span class="kw">%&gt;%</span>
+  <span class="co"># Then, get rid of pred_degree_awarded_ipeds == 1</span>
+  <span class="co"># And simplify our terms</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">pred_degree_awarded_ipeds</span> <span class="kw">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">3</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">FourYear</span> <span class="kw">=</span> <span class="no">pred_degree_awarded_ipeds</span> <span class="kw">==</span> <span class="fl">3</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># earnings_med has some missing values - let's fill them in with</span>
+  <span class="co"># the most recent nonmissing observations we have</span>
+  <span class="co"># - panel_locf respects the panel structure declared above with as_pibble()</span>
+  <span class="fu">mutate</span>(<span class="kw">earnings_med</span> <span class="kw">=</span> <span class="fu"><a href="reference/panel_locf.html">panel_locf</a></span>(<span class="no">earnings_med</span>)) <span class="kw">%&gt;%</span>
+  <span class="co"># Now let's bring in that unemployment data!</span>
+  <span class="co"># Since it's every other year, it won't line up properly</span>
+  <span class="co"># in the join. So let's use inexact_join to get the MOST RECENT</span>
+  <span class="co"># year to join with</span>
+  <span class="fu"><a href="reference/inexact_join.html">inexact_left_join</a></span>(<span class="no">unemp_data</span>, <span class="kw">var</span> <span class="kw">=</span> <span class="no">year</span>, <span class="kw">jvar</span> <span class="kw">=</span> <span class="no">unemp_year</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"last"</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># To adjust for state-level trends, let's also control for a tlag of</span>
+  <span class="co"># average earnings within state.</span>
+  <span class="co"># The lag is at the state level, and state-year doesn't uniquely identify,</span>
+  <span class="co"># But that's okay! We just pick a .resolve function to handle disagreements.</span>
+  <span class="co"># (We could also do this straight in the regression model itself)</span>
+  <span class="fu">mutate</span>(<span class="kw">lag_state_earnings</span> <span class="kw">=</span> <span class="fu"><a href="reference/tlag.html">tlag</a></span>(<span class="no">earnings_med</span>,
+    <span class="kw">.i</span> <span class="kw">=</span> <span class="no">state_abbr</span>,
+    <span class="kw">.t</span> <span class="kw">=</span> <span class="no">year</span>,
+    <span class="kw">.resolve</span> <span class="kw">=</span> <span class="no">mean</span>
+  )) <span class="kw">-&gt;</span> <span class="no">scorecard_clean</span>
+
+<span class="co"># Now we can run a basic regression.</span>
+
+<span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span>(
+  <span class="no">earnings_med</span> ~
+  <span class="no">FourYear</span> +
+    <span class="no">unemp</span> +
+    <span class="no">lag_state_earnings</span>,
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">scorecard_clean</span>
+) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>()
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = earnings_med ~ FourYear + unemp + lag_state_earnings, </span>
+<span class="co">#&gt;     data = scorecard_clean)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residuals:</span>
+<span class="co">#&gt;    Min     1Q Median     3Q    Max </span>
+<span class="co">#&gt; -25341  -4917   -528   4091  54587 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;                      Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">#&gt; (Intercept)         5.933e+03  1.772e+03   3.348 0.000826 ***</span>
+<span class="co">#&gt; FourYearTRUE        9.088e+03  3.511e+02  25.886  &lt; 2e-16 ***</span>
+<span class="co">#&gt; unemp              -4.564e+04  2.529e+04  -1.805 0.071215 .  </span>
+<span class="co">#&gt; lag_state_earnings  7.348e-01  4.027e-02  18.244  &lt; 2e-16 ***</span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residual standard error: 8209 on 2474 degrees of freedom</span>
+<span class="co">#&gt;   (25161 observations deleted due to missingness)</span>
+<span class="co">#&gt; Multiple R-squared:  0.3431, Adjusted R-squared:  0.3423 </span>
+<span class="co">#&gt; F-statistic: 430.6 on 3 and 2474 DF,  p-value: &lt; 2.2e-16</span></pre></div>
 <p>We could even improve that code - why not run the <code>anti_join()</code> and <code><a href="reference/inexact_join.html">inexact_left_join()</a></code> using <code><a href="reference/safe_join.html">safe_join()</a></code>? When we do the <code><a href="reference/inexact_join.html">inexact_left_join()</a></code>, for example, we’re assuming that <code>unemp_data</code> is uniquely identified by <code>unemp_year</code>—is it really? <code><a href="reference/safe_join.html">safe_join()</a></code> would check for us and minimize error.</p>
 </div>
 <div id="spanish-rail-example" class="section level2">
@@ -198,43 +198,43 @@
 <p>Let’s shift focus to the <code>SPrail</code> data set, which is not nearly as well behaved as <code>Scorecard</code>! This data contains the <code>price</code> of 2,000 train trips taken on the Spanish rail system. At any given time period, there are multiple tickets sold per route, which is identified by <code>origin</code> and <code>destination</code>. And the <code>insert_date</code> of sale is down to the minute - far more precise than we might actually want to use.</p>
 <p>Let’s say we are interested in how much of a premium you’ll have to pay for different ticket types relative to the cheapo option - a tourist ticket with a transfer (<code>train_class == "Turista con enlace"</code>), accounting for differences in prices between routes.</p>
 <p>We have some difficulties to cover: making the ID and time variables behave, accounting for the between-route differences, and figuring out how to compare each price to the cheapo price.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(SPrail)</a>
-<a class="sourceLine" id="cb5-2" title="2"></a>
-<a class="sourceLine" id="cb5-3" title="3">SPrail <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="st">  </span><span class="co"># We have two ID variables - origin and destination.</span></a>
-<a class="sourceLine" id="cb5-5" title="5"><span class="st">  </span><span class="co"># pmdplyr has no problem with this, but maybe we want to export</span></a>
-<a class="sourceLine" id="cb5-6" title="6"><span class="st">  </span><span class="co"># to something like plm later, which can't handle it.</span></a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="st">  </span><span class="co"># So let's use id_variable to combine them into one</span></a>
-<a class="sourceLine" id="cb5-8" title="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">route_ID =</span> <span class="kw"><a href="reference/id_variable.html">id_variable</a></span>(origin, destination)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-9" title="9"><span class="st">  </span><span class="co"># We have a time variable down to the minute. Too fine-grained!</span></a>
-<a class="sourceLine" id="cb5-10" title="10"><span class="st">  </span><span class="co"># Let's back things up to the daily level, and</span></a>
-<a class="sourceLine" id="cb5-11" title="11"><span class="st">  </span><span class="co"># create a nice integer time variable that's easy to use</span></a>
-<a class="sourceLine" id="cb5-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">day =</span> <span class="kw"><a href="reference/time_variable.html">time_variable</a></span>(insert_date, <span class="dt">.method =</span> <span class="st">"day"</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-13" title="13"><span class="st">  </span><span class="co"># Now we can declare a pibble</span></a>
-<a class="sourceLine" id="cb5-14" title="14"><span class="st">  </span><span class="kw"><a href="reference/as_pibble.html">as_pibble</a></span>(<span class="dt">.i =</span> route_ID, <span class="dt">.t =</span> day) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-15" title="15"><span class="st">  </span><span class="co"># We want to account for between-route differences in price,</span></a>
-<a class="sourceLine" id="cb5-16" title="16"><span class="st">  </span><span class="co"># so let's isolate the within variation</span></a>
-<a class="sourceLine" id="cb5-17" title="17"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">price_w =</span> <span class="kw"><a href="reference/panel_calculations.html">within_i</a></span>(price)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-18" title="18"><span class="st">  </span><span class="co"># We want to compare to the cheapo option, so let's use</span></a>
-<a class="sourceLine" id="cb5-19" title="19"><span class="st">  </span><span class="co"># mutate_subset to get the average price of the cheapo option</span></a>
-<a class="sourceLine" id="cb5-20" title="20"><span class="st">  </span><span class="co"># and propogate that to the other options for comparison</span></a>
-<a class="sourceLine" id="cb5-21" title="21"><span class="st">  </span><span class="kw"><a href="reference/mutate_subset.html">mutate_subset</a></span>(</a>
-<a class="sourceLine" id="cb5-22" title="22">    <span class="dt">cheapo_price =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(price, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb5-23" title="23">    <span class="dt">.filter =</span> train_class <span class="op">==</span><span class="st"> "Turista con enlace"</span></a>
-<a class="sourceLine" id="cb5-24" title="24">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-25" title="25"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">premium =</span> price <span class="op">-</span><span class="st"> </span>cheapo_price) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-26" title="26"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(train_class <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Preferente"</span>, <span class="st">"Turista"</span>, <span class="st">"Turista Plus"</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-27" title="27"><span class="st">  </span><span class="co"># Now let's compare premia</span></a>
-<a class="sourceLine" id="cb5-28" title="28"><span class="st">  </span><span class="kw">group_by</span>(train_class) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-29" title="29"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">premium =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(premium, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) -&gt;<span class="st"> </span>sprail_compare_premia</a>
-<a class="sourceLine" id="cb5-30" title="30"></a>
-<a class="sourceLine" id="cb5-31" title="31">sprail_compare_premia</a>
-<a class="sourceLine" id="cb5-32" title="32"><span class="co">#&gt; # A tibble: 3 x 2</span></a>
-<a class="sourceLine" id="cb5-33" title="33"><span class="co">#&gt;   train_class  premium</span></a>
-<a class="sourceLine" id="cb5-34" title="34"><span class="co">#&gt;   &lt;fct&gt;          &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-35" title="35"><span class="co">#&gt; 1 Preferente     29.9 </span></a>
-<a class="sourceLine" id="cb5-36" title="36"><span class="co">#&gt; 2 Turista         8.36</span></a>
-<a class="sourceLine" id="cb5-37" title="37"><span class="co">#&gt; 3 Turista Plus   14.4</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">SPrail</span>)
+
+<span class="no">SPrail</span> <span class="kw">%&gt;%</span>
+  <span class="co"># We have two ID variables - origin and destination.</span>
+  <span class="co"># pmdplyr has no problem with this, but maybe we want to export</span>
+  <span class="co"># to something like plm later, which can't handle it.</span>
+  <span class="co"># So let's use id_variable to combine them into one</span>
+  <span class="fu">mutate</span>(<span class="kw">route_ID</span> <span class="kw">=</span> <span class="fu"><a href="reference/id_variable.html">id_variable</a></span>(<span class="no">origin</span>, <span class="no">destination</span>)) <span class="kw">%&gt;%</span>
+  <span class="co"># We have a time variable down to the minute. Too fine-grained!</span>
+  <span class="co"># Let's back things up to the daily level, and</span>
+  <span class="co"># create a nice integer time variable that's easy to use</span>
+  <span class="fu">mutate</span>(<span class="kw">day</span> <span class="kw">=</span> <span class="fu"><a href="reference/time_variable.html">time_variable</a></span>(<span class="no">insert_date</span>, <span class="kw">.method</span> <span class="kw">=</span> <span class="st">"day"</span>)) <span class="kw">%&gt;%</span>
+  <span class="co"># Now we can declare a pibble</span>
+  <span class="fu"><a href="reference/as_pibble.html">as_pibble</a></span>(<span class="kw">.i</span> <span class="kw">=</span> <span class="no">route_ID</span>, <span class="kw">.t</span> <span class="kw">=</span> <span class="no">day</span>) <span class="kw">%&gt;%</span>
+  <span class="co"># We want to account for between-route differences in price,</span>
+  <span class="co"># so let's isolate the within variation</span>
+  <span class="fu">mutate</span>(<span class="kw">price_w</span> <span class="kw">=</span> <span class="fu"><a href="reference/panel_calculations.html">within_i</a></span>(<span class="no">price</span>)) <span class="kw">%&gt;%</span>
+  <span class="co"># We want to compare to the cheapo option, so let's use</span>
+  <span class="co"># mutate_subset to get the average price of the cheapo option</span>
+  <span class="co"># and propogate that to the other options for comparison</span>
+  <span class="fu"><a href="reference/mutate_subset.html">mutate_subset</a></span>(
+    <span class="kw">cheapo_price</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">price</span>, <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
+    <span class="kw">.filter</span> <span class="kw">=</span> <span class="no">train_class</span> <span class="kw">==</span> <span class="st">"Turista con enlace"</span>
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu">mutate</span>(<span class="kw">premium</span> <span class="kw">=</span> <span class="no">price</span> - <span class="no">cheapo_price</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">train_class</span> <span class="kw">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Preferente"</span>, <span class="st">"Turista"</span>, <span class="st">"Turista Plus"</span>)) <span class="kw">%&gt;%</span>
+  <span class="co"># Now let's compare premia</span>
+  <span class="fu">group_by</span>(<span class="no">train_class</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarize</span>(<span class="kw">premium</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">premium</span>, <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)) <span class="kw">-&gt;</span> <span class="no">sprail_compare_premia</span>
+
+<span class="no">sprail_compare_premia</span>
+<span class="co">#&gt; # A tibble: 3 x 2</span>
+<span class="co">#&gt;   train_class  premium</span>
+<span class="co">#&gt;   &lt;fct&gt;          &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Preferente     29.9 </span>
+<span class="co">#&gt; 2 Turista         8.36</span>
+<span class="co">#&gt; 3 Turista Plus   14.4</span></pre></div>
 <p>And so there we have it—<code>Preferente</code> will really set you back relative to the cheapo ticket on the same route.</p>
 <hr>
 <p>Please note that the ‘pmdplyr’ project is released with a <a href="https://nickch-k.github.io/pmdplyr/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
@@ -242,13 +242,13 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=pmdplyr">https://​cloud.r-project.org/​package=pmdplyr</a>
 </li>
-<li>Browse source code at <br><a href="https://github.com/NickCH-K/pmdplyr">https://​github.com/​NickCH-K/​pmdplyr</a>
+<li>Browse source code at <br><a href="https://github.com/NickCH-K/pmdplyr/">https://​github.com/​NickCH-K/​pmdplyr/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/NickCH-K/pmdplyr/issues">https://​github.com/​NickCH-K/​pmdplyr/​issues</a>
 </li>
@@ -272,8 +272,8 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Nick Huntington-Klein <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7352-3991" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
-<li>Philip Khor <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-8333-1256" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
+<li>Nick Huntington-Klein <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7352-3991" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Philip Khor <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-8333-1256" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
@@ -295,7 +295,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

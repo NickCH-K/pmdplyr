@@ -12,6 +12,10 @@
 
 * Fixes for compliance with **tibble** 3.0.0
 
-# pmdplyr 0.3.2
+# pmdplyr 0.3.3
 
 * Fixes for compliance with **dplyr** 1.0.0
+* Prepares for compliance with upcoming **tsibble** update
+* Fixes for compliance with **sjlabelled** update
+
+

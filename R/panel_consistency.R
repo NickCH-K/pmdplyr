@@ -129,6 +129,15 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
   arrnames <- c(inp$i, inp$t)
   arrnames <- arrnames[!is.na(arrnames)]
 
+  if (.group_i == FALSE) {
+    arrnames <- inp$t
+    arrnames <- arrnames[!is.na(arrnames)]
+  }
+
+  # pibble now confuses tibble
+  .df <- .df %>%
+    tibble::as_tibble()
+
   # see if we can skip this because we're already grouped by inp$i
   if (.group_i == TRUE & !anyNA(inp$i) & !setequal(origgroups, inp$i)) {
     .df <- .df %>%
@@ -161,11 +170,18 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
         dplyr::select(-!!.set_NA)
     }
 
+    # This will kill the grouping if there is one
+    currentgroups <- utils::head(names(.df %@% "groups"),-1)
+
     .df <- dplyr::bind_rows(
-      .df,
+      tibble::as_tibble(.df),
       # Make you a new obs if your earliest obs isn't the minimum
-      earlydat
+      tibble::as_tibble(earlydat)
     )
+    if (!is.null(currentgroups)) {
+      .df <- .df %>%
+        dplyr::group_by_at(currentgroups)
+    }
 
     rm(earlyobs, earlydat)
   }
@@ -194,18 +210,26 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
         dplyr::select(-!!.set_NA)
     }
 
+    # This will kill the grouping if there is one
+    currentgroups <- utils::head(names(.df %@% "groups"),-1)
+
     .df <- dplyr::bind_rows(
-      .df,
+      tibble::as_tibble(.df),
       # Make you a new obs if your latest obs isn't the maximum
-      latedat
+      tibble::as_tibble(latedat)
     )
+
+    if (!is.null(currentgroups)) {
+      .df <- .df %>%
+        dplyr::group_by_at(currentgroups)
+    }
 
     rm(latedat, lateobs)
   }
 
   # Put in order
   .df <- .df %>%
-    dplyr::arrange_at(inp$t)
+    dplyr::arrange_at(arrnames)
   if (.backwards == TRUE) {
     .df <- .df %>%
       dplyr::arrange(nrow(.):1)
@@ -294,7 +318,7 @@ panel_fill <- function(.df, .set_NA = FALSE, .min = NA, .max = NA, .backwards = 
       dplyr::ungroup() %>%
       dplyr::as_tibble() %>%
       dplyr::select(-!!copyname),
-    tocopy
+    tibble::as_tibble(tocopy)
   ) %>%
     dplyr::arrange_at(arrnames)
 
