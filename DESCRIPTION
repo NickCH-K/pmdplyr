@@ -1,10 +1,10 @@
 Package: pmdplyr
 Type: Package
 Title: 'dplyr' Extension for Common Panel Data Maneuvers
-Version: 0.3.3
+Version: 0.3.4
 Authors@R: c(
     person(given = "Nick", family = "Huntington-Klein", role = c("aut","cre"), 
-           email = "nhuntington-klein@fullerton.edu", 
+           email = "nhuntington-klein@seattleu.edu", 
            comment = c(ORCID = "0000-0002-7352-3991")), 
     person("Philip", "Khor", role = "aut", email = "pk.qa@outlook.com", 
            comment = c(ORCID = "0000-0002-8333-1256")))
@@ -38,6 +38,6 @@ Suggests:
     rmarkdown,
     testthat (>= 2.1.0),
     covr
-RoxygenNote: 7.1.0.9000
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 LazyData: true

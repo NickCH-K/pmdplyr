@@ -46,6 +46,7 @@ To apply \code{mutate_cascade()} to non-panel data and without any grouping (per
 }
 \examples{
 
+if(interactive()){
 data(Scorecard)
 # I'd like to build a decaying function that remembers previous earnings but at a declining rate
 # Let's only use nonmissing earnings
@@ -70,4 +71,5 @@ Scorecard <- Scorecard \%>\%
     decay_earnings = decay_earnings +
       .5 * tlag(decay_earnings, .quick = TRUE)
   )
+  }
 }

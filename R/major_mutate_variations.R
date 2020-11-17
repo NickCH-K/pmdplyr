@@ -16,6 +16,7 @@
 #' @param .setpanel Logical parameter. \code{TRUE} by default, and so if \code{.i}, \code{.t}, and/or \code{.d} are declared, will return a \code{pibble} set in that way.
 #' @examples
 #'
+#' if(interactive()){
 #' data(Scorecard)
 #' # I'd like to build a decaying function that remembers previous earnings but at a declining rate
 #' # Let's only use nonmissing earnings
@@ -40,6 +41,7 @@
 #'     decay_earnings = decay_earnings +
 #'       .5 * tlag(decay_earnings, .quick = TRUE)
 #'   )
+#'   }
 #' @export
 mutate_cascade <- function(.df, ..., .skip = TRUE, .backwards = FALSE, .group_i = TRUE, .i = NULL, .t = NULL, .d = NA, .uniqcheck = FALSE, .setpanel = TRUE) {
   if (!is.logical(.backwards)) {

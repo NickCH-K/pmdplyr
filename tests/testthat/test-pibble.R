@@ -18,12 +18,14 @@ test_that("students' grades over time", {
   expect_s3_class(grades, "tbl_pb")
   expect_identical(attr(grades, ".i") %>% unname(), c("student_id", "module_id"))
   expect_identical(attr(grades, ".t") %>% unname(), "semester")
+  expect_identical(type_sum(df), "pibble")
+
+  skip_on_cran()
   expect_output(print(grades), regexp = "# A pibble:\\s+5 ")
   expect_output(print(grades), regexp = "identifiers ")
   expect_output(print(df), regexp = "identifier ")
-  expect_identical(type_sum(df), "pibble")
   expect_output(print(df %>% dplyr::group_by(i)),
-    regexp = "# Groups:\\s+i "
+                regexp = "# Groups:\\s+i "
   )
   expect_output(print(
     df %>%
@@ -35,6 +37,8 @@ test_that("students' grades over time", {
   regexp = "# Groups:\\s+i"
   )
 })
+
+
 
 test_that("is_pibble", {
   expect_message(is_pibble(grades),
