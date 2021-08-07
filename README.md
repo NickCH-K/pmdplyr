@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![](http://cranlogs.r-pkg.org/badges/grand-total/pmdplyr?color=orange)](https://cran.r-project.org/package=pmdplyr)
+[![](http://cranlogs.r-pkg.org/badges/last-month/pmdplyr?color=green)](https://cran.r-project.org/package=pmdplyr)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis build
