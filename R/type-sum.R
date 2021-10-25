@@ -1,6 +1,6 @@
 #' @importFrom tibble type_sum
 #' @export
-type_sum.tbl_pb <- function(x) "pibble"
+type_sum.tbl_pb <- function(x, ...) "pibble"
 
 brackets <- function(x) {
   paste0("[", x, "]")
@@ -15,7 +15,7 @@ unique_brackets <- function(x, col) {
 #' @importFrom rlang is_empty syms
 #' @importFrom dplyr group_vars
 #' @importFrom pillar dim_desc
-tbl_sum.tbl_pb <- function(x) {
+tbl_sum.tbl_pb <- function(x, ...) {
   res <- c("A pibble" = dim_desc(x))
 
   # .t and .i are named vectors and this causes problems
